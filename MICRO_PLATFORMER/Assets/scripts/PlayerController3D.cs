@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,9 +19,31 @@ public class PlayerController3D : MonoBehaviour
     Vector2 moveInput;
     bool jumpHeld;
 
+    [Header("Player Differentiation")]
+    int playerIndex;
+    int playerNumber;
+    [SerializeField] GameObject[] playerVisuals;
+    public GameObject p1Tag;
+    public GameObject p2Tag;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void Start()
+    {
+        playerIndex = GetComponent<PlayerInput>().playerIndex;
+        playerNumber = playerIndex + 1;
+
+        Debug.Log($"Player {playerNumber} joined");
+       
+        for (int i = 0; i < playerVisuals.Length; i++)
+        {
+            playerVisuals[i].SetActive(i == playerIndex);
+        }
+
+        StartCoroutine(TurnOffP1Tag());
+        StartCoroutine(TurnOffP2Tag());
     }
 
     void FixedUpdate()
@@ -87,5 +111,17 @@ public class PlayerController3D : MonoBehaviour
     bool IsGrounded()
     {
         return Physics.Raycast(transform.position, Vector3.down, 1.1f);
+    }
+
+    public IEnumerator TurnOffP1Tag()
+    {
+        yield return new WaitForSeconds(5f);
+        p1Tag.SetActive(false);
+    }
+
+    public IEnumerator TurnOffP2Tag()
+    {
+        yield return new WaitForSeconds(5f);
+        p2Tag.SetActive(false);
     }
 }
