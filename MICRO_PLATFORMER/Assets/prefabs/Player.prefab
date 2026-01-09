@@ -464,7 +464,19 @@ MonoBehaviour:
     m_ActionId: 6bd65209-b067-4b07-8abd-7b42db8358ae
     m_ActionName: 'Gameplay/Interact[/DualShock4GamepadHID/buttonWest]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7924320095436716568}
+        m_TargetAssemblyTypeName: PlayerController3D, Assembly-CSharp
+        m_MethodName: OnGroundPound
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 82850a99-a09e-457d-aa17-30ab162ce6f7
     m_ActionName: 'Gameplay/GroundPound[/DualShock4GamepadHID/rightTrigger]'
   m_NeverAutoSwitchControlSchemes: 0
@@ -489,6 +501,8 @@ MonoBehaviour:
   rotationSpeed: 12
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
+  groundPoundForce: 20
+  groundPoundLockTime: 0.15
   playerVisuals:
   - {fileID: 5684176787951792568}
   - {fileID: 4190054723139197412}

@@ -19,6 +19,14 @@ public class PlayerController3D : MonoBehaviour
     Vector2 moveInput;
     bool jumpHeld;
 
+    [Header("Ground Pound")]
+    [SerializeField] float groundPoundForce = 20f;
+    [SerializeField] float groundPoundLockTime = 0.15f;
+
+    bool isGroundPounding;
+    bool groundPoundQueued;
+
+
     [Header("Player Differentiation")]
     int playerIndex;
     int playerNumber;
@@ -48,7 +56,11 @@ public class PlayerController3D : MonoBehaviour
 
     void FixedUpdate()
     {
-        Move();
+        HandleGroundPound();
+
+        if (!isGroundPounding)
+            Move();
+
         RotateTowardsMovement();
         ApplyBetterGravity();
     }
@@ -79,6 +91,9 @@ public class PlayerController3D : MonoBehaviour
 
     void ApplyBetterGravity()
     {
+        if (isGroundPounding)
+            return; // gravity is overridden
+
         if (rb.linearVelocity.y < 0)
         {
             rb.linearVelocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
@@ -88,6 +103,36 @@ public class PlayerController3D : MonoBehaviour
             rb.linearVelocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
         }
     }
+
+    void HandleGroundPound()
+    {
+        if (groundPoundQueued && !isGroundPounding)
+        {
+            isGroundPounding = true;
+            groundPoundQueued = false;
+
+            // Kill upward or sideways motion
+            rb.linearVelocity = Vector3.zero;
+
+            // Slam downward
+            rb.AddForce(Vector3.down * groundPoundForce, ForceMode.Impulse);
+        }
+
+        // Detect landing
+        if (isGroundPounding && IsGrounded())
+        {
+            OnGroundPoundImpact();
+        }
+    }
+
+    void OnGroundPoundImpact()
+    {
+        isGroundPounding = false;
+
+        // Small lockout to avoid instant movement
+        StartCoroutine(GroundPoundRecovery());
+    }
+
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -108,6 +153,15 @@ public class PlayerController3D : MonoBehaviour
         }
     }
 
+    public void OnGroundPound(InputAction.CallbackContext context)
+    {
+        if (context.performed && !IsGrounded())
+        {
+            groundPoundQueued = true;
+        }
+    }
+
+
     bool IsGrounded()
     {
         return Physics.Raycast(transform.position, Vector3.down, 1.1f);
@@ -124,4 +178,10 @@ public class PlayerController3D : MonoBehaviour
         yield return new WaitForSeconds(5f);
         p2Tag.SetActive(false);
     }
+
+    public IEnumerator GroundPoundRecovery()
+    {
+        yield return new WaitForSeconds(groundPoundLockTime);
+    }
+
 }
