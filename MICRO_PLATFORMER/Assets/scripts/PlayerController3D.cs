@@ -33,6 +33,10 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] GameObject[] playerVisuals;
     public GameObject p1Tag;
     public GameObject p2Tag;
+
+    [Header("Camera Stuff")]
+    CoopCameraController coopCamera;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -40,6 +44,11 @@ public class PlayerController3D : MonoBehaviour
 
     private void Start()
     {
+        coopCamera = FindFirstObjectByType<CoopCameraController>();
+        coopCamera.RegisterPlayer(transform);
+
+
+
         playerIndex = GetComponent<PlayerInput>().playerIndex;
         playerNumber = playerIndex + 1;
 
@@ -65,9 +74,27 @@ public class PlayerController3D : MonoBehaviour
         ApplyBetterGravity();
     }
 
+    Vector3 GetCameraRelativeMovement()
+    {
+        Camera cam = Camera.main;
+
+        Vector3 forward = cam.transform.forward;
+        Vector3 right = cam.transform.right;
+
+        forward.y = 0f;
+        right.y = 0f;
+
+        forward.Normalize();
+        right.Normalize();
+
+        return forward * moveInput.y + right * moveInput.x;
+    }
+
+
     void Move()
     {
-        Vector3 move = new Vector3(moveInput.x, 0f, moveInput.y);
+        Vector3 move = GetCameraRelativeMovement();
+
         rb.linearVelocity = new Vector3(
             move.x * moveSpeed,
             rb.linearVelocity.y,
@@ -75,17 +102,21 @@ public class PlayerController3D : MonoBehaviour
         );
     }
 
+
     void RotateTowardsMovement()
     {
-        if (moveInput.sqrMagnitude < 0.01f) return;
+        Vector3 move = GetCameraRelativeMovement();
 
-        Vector3 direction = new Vector3(moveInput.x, 0f, moveInput.y);
-        Quaternion targetRotation = Quaternion.LookRotation(-direction);
+        if (move.sqrMagnitude < 0.01f) return;
 
-        transform.rotation = Quaternion.Slerp(
-            transform.rotation,
-            targetRotation,
-            rotationSpeed * Time.fixedDeltaTime
+        Quaternion targetRotation = Quaternion.LookRotation(-move);
+
+        rb.MoveRotation(
+            Quaternion.Slerp(
+                rb.rotation,
+                targetRotation,
+                rotationSpeed * Time.fixedDeltaTime
+            )
         );
     }
 
@@ -124,6 +155,14 @@ public class PlayerController3D : MonoBehaviour
             OnGroundPoundImpact();
         }
     }
+
+    public void OnCameraRotate(InputAction.CallbackContext context)
+    {
+        float input = context.ReadValue<Vector2>().x;
+        coopCamera.AddRotationInput(input);
+    }
+
+
 
     void OnGroundPoundImpact()
     {

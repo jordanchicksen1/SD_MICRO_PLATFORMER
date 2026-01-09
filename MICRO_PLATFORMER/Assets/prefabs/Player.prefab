@@ -479,6 +479,26 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 82850a99-a09e-457d-aa17-30ab162ce6f7
     m_ActionName: 'Gameplay/GroundPound[/DualShock4GamepadHID/rightTrigger]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 274de239-8bad-4dcb-b609-add91d0214db
+    m_ActionName: 'Gameplay/Pause[/DualShock4GamepadHID/start,/XInputControllerWindows/start]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7924320095436716568}
+        m_TargetAssemblyTypeName: PlayerController3D, Assembly-CSharp
+        m_MethodName: OnCameraRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1c8f0263-939f-4261-a53a-e3a35fb13477
+    m_ActionName: 'Gameplay/Camera[/DualShock4GamepadHID/rightStick,/XInputControllerWindows/rightStick]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Gameplay
