@@ -36,6 +36,7 @@ public class PlayerController3D : MonoBehaviour
 
     [Header("Camera Stuff")]
     CoopCameraController coopCamera;
+    OffScreenIndicatorManager indicatorManager;
 
     void Awake()
     {
@@ -47,13 +48,14 @@ public class PlayerController3D : MonoBehaviour
         coopCamera = FindFirstObjectByType<CoopCameraController>();
         coopCamera.RegisterPlayer(transform);
 
-
-
         playerIndex = GetComponent<PlayerInput>().playerIndex;
         playerNumber = playerIndex + 1;
 
         Debug.Log($"Player {playerNumber} joined");
-       
+        
+        indicatorManager = FindFirstObjectByType<OffScreenIndicatorManager>();
+        indicatorManager.RegisterPlayer(this);
+
         for (int i = 0; i < playerVisuals.Length; i++)
         {
             playerVisuals[i].SetActive(i == playerIndex);
