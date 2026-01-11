@@ -56,6 +56,11 @@ public class PlayerController3D : MonoBehaviour
         indicatorManager = FindFirstObjectByType<OffScreenIndicatorManager>();
         indicatorManager.RegisterPlayer(this);
 
+        PlayerHealthUIManager healthUIManager =
+        FindFirstObjectByType<PlayerHealthUIManager>();
+
+        healthUIManager.RegisterPlayer(GetComponent<PlayerHealth>());
+
         for (int i = 0; i < playerVisuals.Length; i++)
         {
             playerVisuals[i].SetActive(i == playerIndex);
@@ -206,6 +211,20 @@ public class PlayerController3D : MonoBehaviour
     bool IsGrounded()
     {
         return Physics.Raycast(transform.position, Vector3.down, 1.1f);
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Bullet")
+        {
+            GetComponent<PlayerHealth>().TakeDamage(1);
+        }
+
+        if(other.tag == "Heart")
+        {
+            GetComponent<PlayerHealth>().Heal(1);
+
+        }
     }
 
     public IEnumerator TurnOffP1Tag()
