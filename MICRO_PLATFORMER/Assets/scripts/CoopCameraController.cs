@@ -20,6 +20,8 @@ public class CoopCameraController : MonoBehaviour
     [SerializeField] float fixedPitch = 35f;
     [SerializeField] bool snapYaw = true;
     [SerializeField] float snapAngle = 90f;
+    float currentYaw; 
+    bool wasRotating;
 
 
     Transform pivot;
@@ -30,6 +32,8 @@ public class CoopCameraController : MonoBehaviour
     {
         pivot = transform.GetChild(0);
         cam = pivot.GetComponentInChildren<Camera>();
+
+        currentYaw = pivot.eulerAngles.y;
     }
 
     public void RegisterPlayer(Transform player)
@@ -111,25 +115,28 @@ public class CoopCameraController : MonoBehaviour
 
     void Rotate()
     {
-        if (Mathf.Abs(rotationInput) > 0.01f)
+        bool isRotating = Mathf.Abs(rotationInput) > 0.1f;
+
+        // Accumulate yaw while rotating
+        if (isRotating)
         {
-            pivot.Rotate(
-                Vector3.up,
-                rotationInput * rotationSpeed * Time.deltaTime,
-                Space.World
-            );
+            currentYaw += rotationInput * rotationSpeed * Time.deltaTime;
         }
 
-        Vector3 euler = pivot.eulerAngles;
+        // Snap ONCE when rotation stops
+        if (snapYaw && wasRotating && !isRotating)
+        {
+            currentYaw = Mathf.Round(currentYaw / snapAngle) * snapAngle;
+        }
 
-        float yaw = snapYaw
-            ? Mathf.Round(euler.y / snapAngle) * snapAngle
-            : euler.y;
+        pivot.rotation = Quaternion.Euler(fixedPitch, currentYaw, 0f);
 
-        pivot.eulerAngles = new Vector3(fixedPitch, yaw, 0f);
-
+        wasRotating = isRotating;
         rotationInput = 0f;
     }
+
+
+
 
 
 
