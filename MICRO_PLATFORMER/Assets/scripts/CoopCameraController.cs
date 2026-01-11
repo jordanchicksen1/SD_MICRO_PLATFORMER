@@ -100,7 +100,7 @@ public class CoopCameraController : MonoBehaviour
             -targetZoom
         );
 
-        Debug.Log($"Distance: {greatestDistance}, Zoom: {targetZoom}");
+        //Debug.Log($"Distance: {greatestDistance}, Zoom: {targetZoom}");
     }
 
 

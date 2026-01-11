@@ -44,6 +44,7 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] float knockbackLockTime = 0.2f;
     [SerializeField] Renderer[] renderers;
     [SerializeField] float flashInterval = 0.1f;
+    Material[][] cachedMaterials;
 
 
     bool isKnockedBack;
@@ -52,6 +53,13 @@ public class PlayerController3D : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        renderers = GetComponentsInChildren<Renderer>();
+
+        cachedMaterials = new Material[renderers.Length][];
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            cachedMaterials[i] = renderers[i].materials;
+        }
     }
 
     private void Start()
@@ -74,7 +82,7 @@ public class PlayerController3D : MonoBehaviour
 
         PlayerHealth health = GetComponent<PlayerHealth>();
         health.OnDamaged += ApplyKnockback;
-        health.OnDamaged += _ => StartCoroutine(FlashCoroutine());
+        
 
         for (int i = 0; i < playerVisuals.Length; i++)
         {
@@ -236,7 +244,35 @@ public class PlayerController3D : MonoBehaviour
             return;
 
         StartCoroutine(KnockbackCoroutine(sourcePosition));
+
+        PlayerHealth health = GetComponent<PlayerHealth>();
+        StartCoroutine(FlashCoroutine(health.InvulnerabilityDuration));
     }
+
+
+    void SetFlash(bool normal)
+    {
+        for (int i = 0; i < cachedMaterials.Length; i++)
+        {
+            foreach (Material m in cachedMaterials[i])
+            {
+                if (!m.HasProperty("_EmissionColor")) continue;
+
+                m.EnableKeyword("_EMISSION");
+
+                if (normal)
+                {
+                    m.SetColor("_EmissionColor", Color.black);
+                }
+                else
+                {
+                    m.SetColor("_EmissionColor", Color.white * 3f);
+                }
+            }
+        }
+    }
+
+
 
 
     public void OnTriggerEnter(Collider other)
@@ -289,28 +325,28 @@ public class PlayerController3D : MonoBehaviour
         isKnockedBack = false;
     }
 
-    IEnumerator FlashCoroutine()
+    IEnumerator FlashCoroutine(float duration)
     {
-        Debug.Log("Flash started");
+        float timer = 0f;
 
-        PlayerHealth health = GetComponent<PlayerHealth>();
-
-        while (health.IsInvulnerable)
+        while (timer < duration)
         {
-            SetRenderers(false);
+            SetFlash(false);
             yield return new WaitForSeconds(flashInterval);
-            SetRenderers(true);
+
+            SetFlash(true);
             yield return new WaitForSeconds(flashInterval);
+
+            timer += flashInterval * 2f;
         }
 
-        SetRenderers(true);
+        SetFlash(true); // hard reset
     }
 
 
-    void SetRenderers(bool enabled)
-    {
-        foreach (Renderer r in renderers)
-            r.enabled = enabled;
-    }
+
+
+
+
 
 }

@@ -10,8 +10,9 @@ public class PlayerHealth : MonoBehaviour
     public int CurrentHealth => currentHealth;
 
     public bool IsInvulnerable { get; private set; }
-
+    
     [SerializeField] float invulnerabilityTime = 1f;
+    public float InvulnerabilityDuration => invulnerabilityTime;
 
     public event Action<int> OnHealthChanged;
     public event Action<Vector3> OnDamaged;
@@ -46,6 +47,7 @@ public class PlayerHealth : MonoBehaviour
 
     System.Collections.IEnumerator InvulnerabilityCoroutine()
     {
+        Debug.Log("invulnerability on");
         IsInvulnerable = true;
         yield return new WaitForSeconds(invulnerabilityTime);
         IsInvulnerable = false;
