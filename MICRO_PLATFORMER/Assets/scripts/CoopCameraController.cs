@@ -22,6 +22,8 @@ public class CoopCameraController : MonoBehaviour
     [SerializeField] float snapAngle = 90f;
     float currentYaw; 
     bool wasRotating;
+    [SerializeField] float rotationSmoothTime = 0.05f; // small lag for smoothness
+    float rotationVelocity; // used for SmoothDamp
 
 
     Transform pivot;
@@ -61,8 +63,9 @@ public class CoopCameraController : MonoBehaviour
 
         Follow();
         Zoom();
-        Rotate();
+        Rotate(); // this will use rotationInput
     }
+
 
     void Follow()
     {
@@ -110,30 +113,23 @@ public class CoopCameraController : MonoBehaviour
 
     public void AddRotationInput(float value)
     {
-        rotationInput += value;
+        // store raw stick input
+        rotationVelocity = value * rotationSpeed;
     }
 
     void Rotate()
     {
-        bool isRotating = Mathf.Abs(rotationInput) > 0.1f;
+        // Directly add input scaled by deltaTime
+        currentYaw += rotationVelocity * Time.deltaTime;
 
-        // Accumulate yaw while rotating
-        if (isRotating)
-        {
-            currentYaw += rotationInput * rotationSpeed * Time.deltaTime;
-        }
+        // Optional smoothing (feels like inertia)
+        float smoothedYaw = Mathf.LerpAngle(pivot.eulerAngles.y, currentYaw, 1f - Mathf.Exp(-10f * Time.deltaTime));
+        pivot.rotation = Quaternion.Euler(fixedPitch, smoothedYaw, 0f);
 
-        // Snap ONCE when rotation stops
-        if (snapYaw && wasRotating && !isRotating)
-        {
-            currentYaw = Mathf.Round(currentYaw / snapAngle) * snapAngle;
-        }
-
-        pivot.rotation = Quaternion.Euler(fixedPitch, currentYaw, 0f);
-
-        wasRotating = isRotating;
-        rotationInput = 0f;
+        // Reset velocity so input doesn’t stack
+       // rotationVelocity = 0f;
     }
+
 
 
 

@@ -190,8 +190,8 @@ public class PlayerController3D : MonoBehaviour
 
     public void OnCameraRotate(InputAction.CallbackContext context)
     {
-        float input = context.ReadValue<Vector2>().x;
-        coopCamera.AddRotationInput(input);
+        float stickX = context.ReadValue<Vector2>().x; // current frame value
+        coopCamera.AddRotationInput(stickX); // pass it directly to the camera
     }
 
 
