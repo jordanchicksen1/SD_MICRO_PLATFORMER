@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 4252382112277094447}
   - component: {fileID: 5255879815755586580}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: nose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -529,6 +529,15 @@ MonoBehaviour:
   - {fileID: 4190054723139197412}
   p1Tag: {fileID: 3241811395168068341}
   p2Tag: {fileID: 8617135903842174020}
+  knockbackForce: 8
+  knockbackUpwardForce: 3
+  knockbackLockTime: 0.2
+  renderers:
+  - {fileID: 2786444989738169007}
+  - {fileID: 5803944077783211148}
+  - {fileID: 6026969614518391639}
+  - {fileID: 5255879815755586580}
+  flashInterval: 0.1
 --- !u!114 &472012963499164859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -542,6 +551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 3
+  invulnerabilityTime: 1
 --- !u!1 &2946752872592983619
 GameObject:
   m_ObjectHideFlags: 0

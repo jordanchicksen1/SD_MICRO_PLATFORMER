@@ -8,20 +8,23 @@ public class PlayerHealthUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI healthText;
 
     PlayerHealth playerHealth;
+    int maxHealth;
 
     public void Bind(PlayerHealth health)
     {
         playerHealth = health;
+        maxHealth = health.MaxHealth;
 
         playerHealth.OnHealthChanged += UpdateUI;
-        UpdateUI(playerHealth.CurrentHealth, playerHealth.MaxHealth);
+        UpdateUI(playerHealth.CurrentHealth);
     }
 
-    void UpdateUI(int current, int max)
+    void UpdateUI(int current)
     {
-        healthFill.fillAmount = (float)current / max;
+        healthFill.fillAmount = (float)current / maxHealth;
 
         if (healthText != null)
             healthText.text = current.ToString();
     }
 }
+

@@ -38,6 +38,17 @@ public class PlayerController3D : MonoBehaviour
     CoopCameraController coopCamera;
     OffScreenIndicatorManager indicatorManager;
 
+    [Header("Knockback")]
+    [SerializeField] float knockbackForce = 8f;
+    [SerializeField] float knockbackUpwardForce = 3f;
+    [SerializeField] float knockbackLockTime = 0.2f;
+    [SerializeField] Renderer[] renderers;
+    [SerializeField] float flashInterval = 0.1f;
+
+
+    bool isKnockedBack;
+
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -61,6 +72,10 @@ public class PlayerController3D : MonoBehaviour
 
         healthUIManager.RegisterPlayer(GetComponent<PlayerHealth>());
 
+        PlayerHealth health = GetComponent<PlayerHealth>();
+        health.OnDamaged += ApplyKnockback;
+        health.OnDamaged += _ => StartCoroutine(FlashCoroutine());
+
         for (int i = 0; i < playerVisuals.Length; i++)
         {
             playerVisuals[i].SetActive(i == playerIndex);
@@ -74,10 +89,12 @@ public class PlayerController3D : MonoBehaviour
     {
         HandleGroundPound();
 
-        if (!isGroundPounding)
+        if (!isGroundPounding && !isKnockedBack)
             Move();
 
-        RotateTowardsMovement();
+        if (!isKnockedBack)
+            RotateTowardsMovement();
+
         ApplyBetterGravity();
     }
 
@@ -213,11 +230,20 @@ public class PlayerController3D : MonoBehaviour
         return Physics.Raycast(transform.position, Vector3.down, 1.1f);
     }
 
+    void ApplyKnockback(Vector3 sourcePosition)
+    {
+        if (isKnockedBack)
+            return;
+
+        StartCoroutine(KnockbackCoroutine(sourcePosition));
+    }
+
+
     public void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Bullet")
         {
-            GetComponent<PlayerHealth>().TakeDamage(1);
+            GetComponent<PlayerHealth>().TakeDamage(1, other.transform.position);
         }
 
         if(other.tag == "Heart")
@@ -242,6 +268,49 @@ public class PlayerController3D : MonoBehaviour
     public IEnumerator GroundPoundRecovery()
     {
         yield return new WaitForSeconds(groundPoundLockTime);
+    }
+
+    IEnumerator KnockbackCoroutine(Vector3 sourcePosition)
+    {
+        isKnockedBack = true;
+
+        Vector3 direction = (transform.position - sourcePosition).normalized;
+
+        rb.linearVelocity = Vector3.zero;
+
+        Vector3 force =
+            direction * knockbackForce +
+            Vector3.up * knockbackUpwardForce;
+
+        rb.AddForce(force, ForceMode.Impulse);
+
+        yield return new WaitForSeconds(knockbackLockTime);
+
+        isKnockedBack = false;
+    }
+
+    IEnumerator FlashCoroutine()
+    {
+        Debug.Log("Flash started");
+
+        PlayerHealth health = GetComponent<PlayerHealth>();
+
+        while (health.IsInvulnerable)
+        {
+            SetRenderers(false);
+            yield return new WaitForSeconds(flashInterval);
+            SetRenderers(true);
+            yield return new WaitForSeconds(flashInterval);
+        }
+
+        SetRenderers(true);
+    }
+
+
+    void SetRenderers(bool enabled)
+    {
+        foreach (Renderer r in renderers)
+            r.enabled = enabled;
     }
 
 }
