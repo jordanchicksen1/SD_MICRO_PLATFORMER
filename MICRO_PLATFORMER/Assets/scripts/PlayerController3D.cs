@@ -34,6 +34,7 @@ public class PlayerController3D : MonoBehaviour
     public GameObject p1Tag;
     public GameObject p2Tag;
 
+
     [Header("Camera Stuff")]
     CoopCameraController coopCamera;
     OffScreenIndicatorManager indicatorManager;
@@ -48,6 +49,11 @@ public class PlayerController3D : MonoBehaviour
 
 
     bool isKnockedBack;
+
+    [Header("Ground Indicator")]
+    [SerializeField] GameObject groundIndicatorPrefab;
+    [SerializeField] Material player1Mat;
+    [SerializeField] Material player2Mat;
 
 
     void Awake()
@@ -91,6 +97,18 @@ public class PlayerController3D : MonoBehaviour
 
         StartCoroutine(TurnOffP1Tag());
         StartCoroutine(TurnOffP2Tag());
+
+        GameObject indicator = Instantiate(groundIndicatorPrefab, transform.position, Quaternion.identity);
+
+        GroundIndicator gi = indicator.GetComponent<GroundIndicator>();
+        gi.SetTarget(transform);
+
+        Renderer r = indicator.GetComponentInChildren<Renderer>();
+
+        if (playerIndex == 0)
+            r.material = player1Mat;
+        else
+            r.material = player2Mat;
     }
 
     void FixedUpdate()
@@ -221,6 +239,7 @@ public class PlayerController3D : MonoBehaviour
         if (context.performed && IsGrounded())
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+          
         }
     }
 
@@ -236,6 +255,8 @@ public class PlayerController3D : MonoBehaviour
     bool IsGrounded()
     {
         return Physics.Raycast(transform.position, Vector3.down, 1.1f);
+        
+
     }
 
     void ApplyKnockback(Vector3 sourcePosition)

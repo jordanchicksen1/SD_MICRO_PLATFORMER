@@ -624,11 +624,18 @@ MonoBehaviour:
   knockbackUpwardForce: 3
   knockbackLockTime: 0.2
   renderers:
-  - {fileID: 2786444989738169007}
+  - {fileID: 8485739486258117469}
   - {fileID: 5803944077783211148}
   - {fileID: 6026969614518391639}
   - {fileID: 5255879815755586580}
+  - {fileID: 3901492116800052749}
+  - {fileID: 4465346532878877766}
+  - {fileID: 2524894209803863018}
+  - {fileID: 6012810932889176944}
   flashInterval: 0.1
+  groundIndicatorPrefab: {fileID: 5632946183400775603, guid: 67d415a42dea31f428aaaee93f60fb17, type: 3}
+  player1Mat: {fileID: 2100000, guid: fa4ce82ec46d54948994ea68ca013516, type: 2}
+  player2Mat: {fileID: 2100000, guid: 0d378cef7be53b647841cf7caefcad9a, type: 2}
 --- !u!114 &472012963499164859
 MonoBehaviour:
   m_ObjectHideFlags: 0
