@@ -55,6 +55,8 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] Material player1Mat;
     [SerializeField] Material player2Mat;
 
+    PlayerAnimator playerAnimator;
+
 
     void Awake()
     {
@@ -98,6 +100,9 @@ public class PlayerController3D : MonoBehaviour
         StartCoroutine(TurnOffP1Tag());
         StartCoroutine(TurnOffP2Tag());
 
+        playerAnimator = GetComponentInChildren<PlayerAnimator>();
+
+
         GameObject indicator = Instantiate(groundIndicatorPrefab, transform.position, Quaternion.identity);
 
         GroundIndicator gi = indicator.GetComponent<GroundIndicator>();
@@ -109,6 +114,8 @@ public class PlayerController3D : MonoBehaviour
             r.material = player1Mat;
         else
             r.material = player2Mat;
+
+
     }
 
     void FixedUpdate()
@@ -199,6 +206,8 @@ public class PlayerController3D : MonoBehaviour
             rb.AddForce(Vector3.down * groundPoundForce, ForceMode.Impulse);
         }
 
+       
+
         // Detect landing
         if (isGroundPounding && IsGrounded())
         {
@@ -220,6 +229,7 @@ public class PlayerController3D : MonoBehaviour
 
         // Small lockout to avoid instant movement
         StartCoroutine(GroundPoundRecovery());
+        
     }
 
 
@@ -301,6 +311,7 @@ public class PlayerController3D : MonoBehaviour
         if(other.tag == "Bullet")
         {
             GetComponent<PlayerHealth>().TakeDamage(1, other.transform.position);
+           
         }
 
         if(other.tag == "Heart")
