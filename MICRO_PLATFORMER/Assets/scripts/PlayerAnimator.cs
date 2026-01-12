@@ -13,6 +13,14 @@ public class PlayerAnimator : MonoBehaviour
     Quaternion leftLegStartRot;
     Quaternion rightLegStartRot;
 
+    [Header("Idle Animation")]
+    [SerializeField] float idleArmBobAmount = 6f;
+    [SerializeField] float idleArmBobSpeed = 2f;
+    [SerializeField] float idleBlendSpeed = 6f;
+
+    float idleBlend; // 0 = active, 1 = idle
+
+
     [Header("Walk Animation")]
     [SerializeField] float armSwingAmount = 30f;
     [SerializeField] float legSwingAmount = 50f; // ? bigger than arms
@@ -66,6 +74,15 @@ public class PlayerAnimator : MonoBehaviour
     {
         bool grounded = IsGrounded();
 
+        float horizontalSpeed =
+            new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude;
+
+        bool shouldIdle = grounded && horizontalSpeed < 0.1f && !isDiving;
+
+        float idleTarget = shouldIdle ? 1f : 0f;
+
+        idleBlend = Mathf.MoveTowards(idleBlend,idleTarget,Time.deltaTime * idleBlendSpeed);
+
         float diveTarget = isDiving ? 1f : 0f;
         diveBlend = Mathf.MoveTowards(
             diveBlend,
@@ -82,14 +99,9 @@ public class PlayerAnimator : MonoBehaviour
         
         AnimateJumpPose(jumpBlend);
 
-        if (rb.linearVelocity.magnitude < 0.1f && grounded)
-        {
-            float breathe = Mathf.Sin(Time.time * 2f) * 0.05f;
-            body.localPosition = bodyStartPos + Vector3.up * breathe;
-        }
-
         AnimateDivePose(diveBlend);
 
+        AnimateIdle(idleBlend);
     }
 
     void AnimateWalk()
@@ -201,5 +213,44 @@ public class PlayerAnimator : MonoBehaviour
         );
     }
 
+    void AnimateIdle(float blend)
+    {
+        if (blend <= 0f) return;
+
+        float t = Time.time * idleArmBobSpeed;
+        float armBob = Mathf.Sin(t) * idleArmBobAmount;
+
+        // Arms: subtle up/down
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            leftArmStartRot * Quaternion.Euler(armBob, 0, 0),
+            blend
+        );
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            rightArmStartRot * Quaternion.Euler(armBob, 0, 0),
+            blend
+        );
+
+        // Legs: straight
+        leftLeg.localRotation = Quaternion.Lerp(
+            leftLeg.localRotation,
+            leftLegStartRot,
+            blend
+        );
+
+        rightLeg.localRotation = Quaternion.Lerp(
+            rightLeg.localRotation,
+            rightLegStartRot,
+            blend
+        );
+
+        //body
+        {
+            float breathe = Mathf.Sin(Time.time * 2f) * 0.05f;
+            body.localPosition = bodyStartPos + Vector3.up * breathe;
+        }
+    }
 
 }
