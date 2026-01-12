@@ -13,8 +13,9 @@ public class PlayerAnimator : MonoBehaviour
     Quaternion leftLegStartRot;
     Quaternion rightLegStartRot;
 
-    [Header("Animation Settings")]
-    [SerializeField] float walkSwingAmount = 30f;
+    [Header("Walk Animation")]
+    [SerializeField] float armSwingAmount = 30f;
+    [SerializeField] float legSwingAmount = 50f; // ? bigger than arms
     [SerializeField] float walkSpeed = 8f;
     [SerializeField] float bodyBobAmount = 0.1f;
     [SerializeField] float bodyBobSpeed = 6f;
@@ -26,8 +27,10 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] float jumpLean = 15f;
     [SerializeField] float airLegSpread = 20f;
     float jumpBlend; // 0 = grounded, 1 = airborne
-
    
+
+
+
 
 
     Vector3 bodyStartPos;
@@ -77,16 +80,37 @@ public class PlayerAnimator : MonoBehaviour
 
         float t = Time.time * walkSpeed;
 
-        float swing = Mathf.Sin(t) * walkSwingAmount;
+        float armSwing = Mathf.Sin(t) * armSwingAmount;
+        float legSwing = Mathf.Sin(t) * legSwingAmount;
 
-        leftArm.localRotation = leftArmStartRot * Quaternion.Euler(swing, 0, 0);
-        rightArm.localRotation = rightArmStartRot * Quaternion.Euler(-swing, 0, 0);
+        // Arms (slightly softer)
+        leftArm.localRotation = leftArmStartRot * Quaternion.Euler(armSwing, 0, 0);
+        rightArm.localRotation = rightArmStartRot * Quaternion.Euler(-armSwing, 0, 0);
 
-        leftLeg.localRotation = leftLegStartRot * Quaternion.Euler(-swing, 0, 0);
-        rightLeg.localRotation = rightLegStartRot * Quaternion.Euler(swing, 0, 0);
+        // Legs (walk ? air blend)
+        Quaternion walkLeftLeg =
+            leftLegStartRot * Quaternion.Euler(-legSwing, 0, 0);
 
-        body.localPosition = bodyStartPos + Vector3.up * Mathf.Sin(t * bodyBobSpeed) * bodyBobAmount;
+        Quaternion walkRightLeg =
+            rightLegStartRot * Quaternion.Euler(legSwing, 0, 0);
+
+        Quaternion airLeftLeg =
+            leftLegStartRot * Quaternion.Euler(airLegSpread, 0, 0);
+
+        Quaternion airRightLeg =
+            rightLegStartRot * Quaternion.Euler(airLegSpread, 0, 0);
+
+        leftLeg.localRotation =
+            Quaternion.Lerp(walkLeftLeg, airLeftLeg, jumpBlend);
+
+        rightLeg.localRotation =
+            Quaternion.Lerp(walkRightLeg, airRightLeg, jumpBlend);
+
+
+        body.localPosition =
+            bodyStartPos + Vector3.up * Mathf.Sin(t * bodyBobSpeed) * bodyBobAmount;
     }
+
 
     void AnimateJumpPose(float blend)
     {
@@ -97,19 +121,7 @@ public class PlayerAnimator : MonoBehaviour
             blend
         );
 
-        // Legs
-        leftLeg.localRotation = Quaternion.Lerp(
-            leftLegStartRot,
-            leftLegStartRot * Quaternion.Euler(airLegSpread, 0, 0),
-            blend
-        );
-
-        rightLeg.localRotation = Quaternion.Lerp(
-            rightLegStartRot,
-            rightLegStartRot * Quaternion.Euler(airLegSpread, 0, 0),
-            blend
-        );
-
+        
         // Arms swing back
         Quaternion leftJumpArm =
             leftArmStartRot * Quaternion.Euler(-jumpArmBackAngle, -jumpArmSideAngle, 0);
