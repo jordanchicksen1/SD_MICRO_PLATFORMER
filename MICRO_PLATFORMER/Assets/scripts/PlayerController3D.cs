@@ -67,6 +67,11 @@ public class PlayerController3D : MonoBehaviour
     PlayerAnimator playerAnimator;
 
 
+    public bool IsGroundPounding()
+    {
+        return isGroundPounding;
+    }
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();

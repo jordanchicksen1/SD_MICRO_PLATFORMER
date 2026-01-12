@@ -70,4 +70,5 @@ public class EnemyChaser : MonoBehaviour
             health.TakeDamage(damage, transform.position);
         }
     }
+
 }
