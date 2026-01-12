@@ -476,7 +476,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1751935968643041694}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 4260e443cfb7bb140b1e6aacf03df977, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1588,6 +1588,9 @@ MonoBehaviour:
   leftLeg: {fileID: 4282180500909100410}
   rightLeg: {fileID: 7464993858723858299}
   body: {fileID: 5974815712758450438}
+  idleArmBobAmount: 6
+  idleArmBobSpeed: 2
+  idleBlendSpeed: 6
   armSwingAmount: 30
   legSwingAmount: 50
   walkSpeed: 9
