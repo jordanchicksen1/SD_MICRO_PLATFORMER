@@ -616,6 +616,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 1c8f0263-939f-4261-a53a-e3a35fb13477
     m_ActionName: 'Gameplay/Camera[/DualShock4GamepadHID/rightStick,/XInputControllerWindows/rightStick]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7924320095436716568}
+        m_TargetAssemblyTypeName: PlayerController3D, Assembly-CSharp
+        m_MethodName: OnDive
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: eb07e6f1-4e68-43dc-b985-975e41338eb4
+    m_ActionName: 'Gameplay/Dive[/XInputControllerWindows/buttonWest,/DualShock4GamepadHID/buttonWest]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Gameplay
@@ -640,6 +656,10 @@ MonoBehaviour:
   lowJumpMultiplier: 2
   groundPoundForce: 20
   groundPoundLockTime: 0.15
+  diveForwardForce: 16
+  diveDownForce: 2
+  diveDuration: 0.45
+  diveControlLockTime: 0.2
   playerVisuals:
   - {fileID: 5684176787951792568}
   - {fileID: 4190054723139197412}
@@ -1568,12 +1588,20 @@ MonoBehaviour:
   leftLeg: {fileID: 4282180500909100410}
   rightLeg: {fileID: 7464993858723858299}
   body: {fileID: 5974815712758450438}
-  walkSwingAmount: 25
+  armSwingAmount: 30
+  legSwingAmount: 50
   walkSpeed: 9
   bodyBobAmount: 0.05
   bodyBobSpeed: 1
+  jumpArmBackAngle: 35
+  jumpArmSideAngle: 10
+  jumpBlendSpeed: 8
   jumpLean: 15
   airLegSpread: 20
+  diveArmForwardAngle: 65
+  diveBodyPitch: 40
+  diveLegBackAngle: 20
+  diveBlendSpeed: 10
 --- !u!1 &7303057037023528442
 GameObject:
   m_ObjectHideFlags: 0

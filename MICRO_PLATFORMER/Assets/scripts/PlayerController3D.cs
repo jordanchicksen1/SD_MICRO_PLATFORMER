@@ -26,6 +26,15 @@ public class PlayerController3D : MonoBehaviour
     bool isGroundPounding;
     bool groundPoundQueued;
 
+    [Header("Dive")]
+    [SerializeField] float diveForwardForce = 12f;
+    [SerializeField] float diveDownForce = 4f;
+    [SerializeField] float diveDuration = 0.35f;
+    [SerializeField] float diveControlLockTime = 0.2f;
+
+    bool isDiving;
+
+
 
     [Header("Player Differentiation")]
     int playerIndex;
@@ -122,11 +131,12 @@ public class PlayerController3D : MonoBehaviour
     {
         HandleGroundPound();
 
-        if (!isGroundPounding && !isKnockedBack)
+        if (!isGroundPounding && !isKnockedBack && !isDiving)
             Move();
 
-        if (!isKnockedBack)
+        if (!isKnockedBack && !isDiving)
             RotateTowardsMovement();
+
 
         ApplyBetterGravity();
     }
@@ -179,8 +189,9 @@ public class PlayerController3D : MonoBehaviour
 
     void ApplyBetterGravity()
     {
-        if (isGroundPounding)
-            return; // gravity is overridden
+        if (isGroundPounding || isDiving)
+            return;
+
 
         if (rb.linearVelocity.y < 0)
         {
@@ -230,6 +241,14 @@ public class PlayerController3D : MonoBehaviour
         // Small lockout to avoid instant movement
         StartCoroutine(GroundPoundRecovery());
         
+    }
+
+    public void OnDive(InputAction.CallbackContext context)
+    {
+        if (context.performed && !IsGrounded() && !isDiving && !isGroundPounding)
+        {
+            StartCoroutine(DiveCoroutine());
+        }
     }
 
 
@@ -376,6 +395,39 @@ public class PlayerController3D : MonoBehaviour
     }
 
 
+    IEnumerator DiveCoroutine()
+    {
+        isDiving = true;
+
+        // Kill current motion
+        rb.linearVelocity = Vector3.zero;
+
+        // Forward dive direction (character facing)
+        Vector3 diveDir = -transform.forward;
+
+        Vector3 force =
+            diveDir * diveForwardForce +
+            Vector3.down * diveDownForce;
+
+        rb.AddForce(force, ForceMode.Impulse);
+
+        // Notify animator
+        if (playerAnimator != null)
+            playerAnimator.SetDive(true);
+
+        float timer = 0f;
+
+        while (timer < diveDuration && !IsGrounded())
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        isDiving = false;
+
+        if (playerAnimator != null)
+            playerAnimator.SetDive(false);
+    }
 
 
 

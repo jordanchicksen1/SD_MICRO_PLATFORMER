@@ -27,11 +27,15 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] float jumpLean = 15f;
     [SerializeField] float airLegSpread = 20f;
     float jumpBlend; // 0 = grounded, 1 = airborne
-   
 
+    [Header("Dive Pose")]
+    [SerializeField] float diveArmForwardAngle = 65f;
+    [SerializeField] float diveBodyPitch = 40f;
+    [SerializeField] float diveLegBackAngle = 20f;
+    [SerializeField] float diveBlendSpeed = 10f;
 
-
-
+    float diveBlend;
+    bool isDiving;
 
     Vector3 bodyStartPos;
 
@@ -52,9 +56,23 @@ public class PlayerAnimator : MonoBehaviour
         return Physics.Raycast(transform.position, Vector3.down, 1.1f);
     }
 
+    public void SetDive(bool diving)
+    {
+        isDiving = diving;
+    }
+
+
     void Update()
     {
         bool grounded = IsGrounded();
+
+        float diveTarget = isDiving ? 1f : 0f;
+        diveBlend = Mathf.MoveTowards(
+            diveBlend,
+            diveTarget,
+            Time.deltaTime * diveBlendSpeed
+        );
+
 
         // Smooth blend
         float target = grounded ? 0f : 1f;
@@ -69,6 +87,9 @@ public class PlayerAnimator : MonoBehaviour
             float breathe = Mathf.Sin(Time.time * 2f) * 0.05f;
             body.localPosition = bodyStartPos + Vector3.up * breathe;
         }
+
+        AnimateDivePose(diveBlend);
+
     }
 
     void AnimateWalk()
@@ -142,6 +163,43 @@ public class PlayerAnimator : MonoBehaviour
         );
     }
 
-    
+    void AnimateDivePose(float blend)
+    {
+        if (blend <= 0f) return;
+
+        // Body pitch down
+        body.localRotation = Quaternion.Lerp(
+            body.localRotation,
+            Quaternion.Euler(-diveBodyPitch, 0, 0),
+            blend
+        );
+
+        // Arms forward
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            leftArmStartRot * Quaternion.Euler(diveArmForwardAngle, 0, 0),
+            blend
+        );
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            rightArmStartRot * Quaternion.Euler(diveArmForwardAngle, 0, 0),
+            blend
+        );
+
+        // Legs back
+        leftLeg.localRotation = Quaternion.Lerp(
+            leftLeg.localRotation,
+            leftLegStartRot * Quaternion.Euler(-diveLegBackAngle, 0, 0),
+            blend
+        );
+
+        rightLeg.localRotation = Quaternion.Lerp(
+            rightLeg.localRotation,
+            rightLegStartRot * Quaternion.Euler(-diveLegBackAngle, 0, 0),
+            blend
+        );
+    }
+
 
 }
