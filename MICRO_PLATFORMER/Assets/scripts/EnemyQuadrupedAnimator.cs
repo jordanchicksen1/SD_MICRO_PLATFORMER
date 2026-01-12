@@ -13,6 +13,7 @@ public class EnemyQuadrupedAnimator : MonoBehaviour
     [SerializeField] float legSwing = 30f;
     [SerializeField] float walkSpeed = 6f;
     [SerializeField] float bodyBobAmount = 0.08f;
+    [SerializeField] float idleLegResetSpeed = 8f;
 
     Rigidbody rb;
     Vector3 bodyStartPos;
@@ -46,9 +47,24 @@ public class EnemyQuadrupedAnimator : MonoBehaviour
 
     void Idle()
     {
+        // Subtle body breathing
         float breathe = Mathf.Sin(Time.time * 2f) * 0.03f;
         body.localPosition = bodyStartPos + Vector3.up * breathe;
+
+        // Legs perfectly straight
+        frontLeft.localRotation =
+            Quaternion.Slerp(frontLeft.localRotation, flStart, Time.deltaTime * idleLegResetSpeed);
+
+        frontRight.localRotation =
+            Quaternion.Slerp(frontRight.localRotation, frStart, Time.deltaTime * idleLegResetSpeed);
+
+        backLeft.localRotation =
+            Quaternion.Slerp(backLeft.localRotation, blStart, Time.deltaTime * idleLegResetSpeed);
+
+        backRight.localRotation =
+            Quaternion.Slerp(backRight.localRotation, brStart, Time.deltaTime * idleLegResetSpeed);
     }
+
 
     void Walk()
     {

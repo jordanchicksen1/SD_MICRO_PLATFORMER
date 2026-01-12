@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 public class EnemyShooter : MonoBehaviour
@@ -18,6 +19,14 @@ public class EnemyShooter : MonoBehaviour
     Vector3 startPos;
     float shootTimer;
     int direction = 1;
+
+
+    EnemyBipedAnimator animator;
+
+    void Start()
+    {
+        animator = GetComponentInChildren<EnemyBipedAnimator>();
+    }
 
     void Awake()
     {
@@ -40,8 +49,12 @@ public class EnemyShooter : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (animator != null && animator.IsShooting())
+            return; // don't move while shooting
+
         Patrol();
     }
+
 
     void Patrol()
     {
@@ -100,25 +113,37 @@ public class EnemyShooter : MonoBehaviour
 
         shootTimer = shootInterval;
 
+        // Play throw animation
+        if (animator != null)
+            animator.PlayShoot();
+
+        // Start the delayed projectile spawn
+        StartCoroutine(SpawnProjectileDelayed(0.3f));
+    }
+
+    IEnumerator SpawnProjectileDelayed(float delay)
+    {
+        // Stop movement while shooting
+        rb.linearVelocity = Vector3.zero;
+
+        yield return new WaitForSeconds(delay);
+
+        if (target == null)
+            yield break;
+
+        // Spawn projectile
         Vector3 dir = (target.position - firePoint.position).normalized;
-
-        GameObject proj = Instantiate(
-            projectilePrefab,
-            firePoint.position,
-            Quaternion.identity
-        );
-
+        GameObject proj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
         EnemyProjectile ep = proj.GetComponent<EnemyProjectile>();
         ep.Init(dir);
 
-        // Ignore collision with this enemy
+        // Ignore collision with self
         Collider projCol = proj.GetComponent<Collider>();
         Collider enemyCol = GetComponent<Collider>();
-
         if (projCol != null && enemyCol != null)
-        {
             Physics.IgnoreCollision(projCol, enemyCol);
-        }
     }
+
+
 
 }
