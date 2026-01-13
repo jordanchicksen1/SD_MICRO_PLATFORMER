@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
@@ -6,30 +7,33 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameObject deathEffect;
 
     int currentHealth;
+    bool isDead;
 
-    Collider enemyCollider;
+    public bool IsDead => isDead;
 
     void Awake()
     {
         currentHealth = maxHealth;
-        enemyCollider = GetComponent<Collider>();
     }
-
 
     public void TakeHit()
     {
-        if (enemyCollider)
-            enemyCollider.enabled = false;
+        if (isDead)
+            return;
 
-        currentHealth--;
+        isDead = true;
 
-        if (currentHealth <= 0)
-            Die();
+        EnemySquash squash = GetComponentInChildren<EnemySquash>();
+        if (squash != null)
+            squash.PlaySquash();
+
+        StartCoroutine(DieDelayed());
     }
 
-
-    void Die()
+    IEnumerator DieDelayed()
     {
+        yield return new WaitForSeconds(1f);
+
         if (deathEffect)
             Instantiate(deathEffect, transform.position, Quaternion.identity);
 

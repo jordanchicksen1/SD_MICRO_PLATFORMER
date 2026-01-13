@@ -5,10 +5,12 @@ public class EnemyStompDetector : MonoBehaviour
     [SerializeField] float stompTolerance = 0.05f;
 
     Enemy enemy;
+    Collider enemyCollider; 
 
     void Awake()
     {
         enemy = GetComponentInParent<Enemy>();
+        enemyCollider = enemy.GetComponent<Collider>(); 
     }
 
     void OnTriggerEnter(Collider other)
@@ -32,6 +34,13 @@ public class EnemyStompDetector : MonoBehaviour
         if (stomped || groundPound)
         {
             enemy.TakeHit();
+
+           
+            if (enemyCollider != null && playerCol != null)
+            {
+                Physics.IgnoreCollision(enemyCollider, playerCol);
+            }
+
             BouncePlayer(rb);
         }
     }

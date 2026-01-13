@@ -22,6 +22,7 @@ public class EnemyShooter : MonoBehaviour
 
 
     EnemyBipedAnimator animator;
+    Enemy enemy;
 
     void Start()
     {
@@ -32,25 +33,32 @@ public class EnemyShooter : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         startPos = transform.position;
+        enemy = GetComponent<Enemy>();
     }
+
 
     void Update()
     {
+        if (enemy != null && enemy.IsDead)
+            return;
+
         FindTarget();
 
         if (target != null)
-        {
             FaceTarget();
-        }
 
         HandleShooting();
     }
 
 
+
     void FixedUpdate()
     {
+        if (enemy != null && enemy.IsDead)
+            return;
+
         if (animator != null && animator.IsShooting())
-            return; // don't move while shooting
+            return;
 
         Patrol();
     }
@@ -104,6 +112,9 @@ public class EnemyShooter : MonoBehaviour
 
     void HandleShooting()
     {
+        if (enemy != null && enemy.IsDead)
+            return;
+
         if (target == null)
             return;
 
@@ -113,13 +124,12 @@ public class EnemyShooter : MonoBehaviour
 
         shootTimer = shootInterval;
 
-        // Play throw animation
         if (animator != null)
             animator.PlayShoot();
 
-        // Start the delayed projectile spawn
         StartCoroutine(SpawnProjectileDelayed(0.3f));
     }
+
 
     IEnumerator SpawnProjectileDelayed(float delay)
     {
