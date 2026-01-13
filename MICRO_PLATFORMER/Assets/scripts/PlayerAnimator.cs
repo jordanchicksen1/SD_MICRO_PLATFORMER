@@ -45,6 +45,16 @@ public class PlayerAnimator : MonoBehaviour
     float diveBlend;
     bool isDiving;
 
+    [Header("Ground Pound Pose")]
+    [SerializeField] float poundArmDownAngle = -80f;
+    [SerializeField] float poundLegStraightAngle = 0f;
+    [SerializeField] float poundBodyLean = 25f;
+    [SerializeField] float poundBlendSpeed = 12f;
+
+    float poundBlend;
+    bool isGroundPounding;
+
+
     Vector3 bodyStartPos;
 
     Rigidbody rb;
@@ -69,6 +79,17 @@ public class PlayerAnimator : MonoBehaviour
         isDiving = diving;
     }
 
+    public void SetGroundPound(bool active)
+    {
+        isGroundPounding = active;
+    }
+
+    public bool IsGroundPounding()
+    {
+        return isGroundPounding;
+    }
+
+
 
     void Update()
     {
@@ -90,16 +111,28 @@ public class PlayerAnimator : MonoBehaviour
             Time.deltaTime * diveBlendSpeed
         );
 
+        float poundTarget = isGroundPounding ? 1f : 0f;
+        poundBlend = Mathf.MoveTowards(
+            poundBlend,
+            poundTarget,
+            Time.deltaTime * poundBlendSpeed
+        );
 
         // Smooth blend
         float target = grounded ? 0f : 1f;
         jumpBlend = Mathf.MoveTowards(jumpBlend, target, Time.deltaTime * jumpBlendSpeed);
 
         AnimateWalk();
-        
-        AnimateJumpPose(jumpBlend);
+
+        if (!isGroundPounding)
+        {
+            AnimateJumpPose(jumpBlend);
+        }
+
 
         AnimateDivePose(diveBlend);
+
+        AnimateGroundPound(poundBlend);
 
         AnimateIdle(idleBlend);
     }
@@ -142,6 +175,9 @@ public class PlayerAnimator : MonoBehaviour
 
         body.localPosition =
             bodyStartPos + Vector3.up * Mathf.Sin(t * bodyBobSpeed) * bodyBobAmount;
+
+        if (isGroundPounding)
+            return;
     }
 
 
@@ -213,8 +249,50 @@ public class PlayerAnimator : MonoBehaviour
         );
     }
 
+    void AnimateGroundPound(float blend)
+    {
+        if (blend <= 0f) return;
+
+        // Body lean forward
+        body.localRotation = Quaternion.Lerp(
+            body.localRotation,
+            Quaternion.Euler(poundBodyLean, 0, 0),
+            blend
+        );
+
+        // Arms straight down
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            leftArmStartRot * Quaternion.Euler(poundArmDownAngle, 0, 0),
+            blend
+        );
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            rightArmStartRot * Quaternion.Euler(poundArmDownAngle, 0, 0),
+            blend
+        );
+
+        // Legs straight / stiff
+        leftLeg.localRotation = Quaternion.Lerp(
+            leftLeg.localRotation,
+            leftLegStartRot * Quaternion.Euler(poundLegStraightAngle, 0, 0),
+            blend
+        );
+
+        rightLeg.localRotation = Quaternion.Lerp(
+            rightLeg.localRotation,
+            rightLegStartRot * Quaternion.Euler(poundLegStraightAngle, 0, 0),
+            blend
+        );
+    }
+
+
     void AnimateIdle(float blend)
     {
+        if (isGroundPounding)
+            return;
+
         if (blend <= 0f) return;
 
         float t = Time.time * idleArmBobSpeed;

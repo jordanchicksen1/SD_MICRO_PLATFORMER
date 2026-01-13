@@ -215,21 +215,26 @@ public class PlayerController3D : MonoBehaviour
             isGroundPounding = true;
             groundPoundQueued = false;
 
-            // Kill upward or sideways motion
+            // Stop motion
             rb.linearVelocity = Vector3.zero;
 
-            // Slam downward
+            // Slam down
             rb.AddForce(Vector3.down * groundPoundForce, ForceMode.Impulse);
+
+            // ?? TELL ANIMATOR
+            if (playerAnimator != null)
+            {
+                playerAnimator.SetGroundPound(true);
+                Debug.Log("GROUND POUND START");
+            }
         }
 
-       
-
-        // Detect landing
         if (isGroundPounding && IsGrounded())
         {
             OnGroundPoundImpact();
         }
     }
+
 
     public void OnCameraRotate(InputAction.CallbackContext context)
     {
@@ -243,10 +248,15 @@ public class PlayerController3D : MonoBehaviour
     {
         isGroundPounding = false;
 
-        // Small lockout to avoid instant movement
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetGroundPound(false);
+            Debug.Log("GROUND POUND END");
+        }
+
         StartCoroutine(GroundPoundRecovery());
-        
     }
+
 
     public void OnDive(InputAction.CallbackContext context)
     {
