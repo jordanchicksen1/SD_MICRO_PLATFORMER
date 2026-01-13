@@ -13,15 +13,23 @@ public class EnemyChaser : MonoBehaviour
 
     Rigidbody rb;
     Transform target;
+    Enemy enemy;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        enemy = GetComponent<Enemy>();
     }
 
     void FixedUpdate()
     {
+        if (enemy != null && enemy.IsDead)
+        {
+            rb.linearVelocity = Vector3.zero;
+            return;
+        }
+
         FindTarget();
 
         if (target == null)

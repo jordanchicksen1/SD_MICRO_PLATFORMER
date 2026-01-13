@@ -18,6 +18,11 @@ public class Enemy : MonoBehaviour
 
     public void TakeHit()
     {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.linearVelocity = Vector3.zero;
+
+
         if (isDead)
             return;
 
