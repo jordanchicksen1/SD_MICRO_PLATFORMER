@@ -66,6 +66,9 @@ public class PlayerController3D : MonoBehaviour
 
     PlayerAnimator playerAnimator;
 
+    [Header("Interactables")]
+    [SerializeField] float interactRange = 2f;
+    [SerializeField] LayerMask interactLayer;
 
     public bool IsGroundPounding()
     {
@@ -295,6 +298,12 @@ public class PlayerController3D : MonoBehaviour
         }
     }
 
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            TryInteract();
+    }
+
 
     bool IsGrounded()
     {
@@ -354,6 +363,20 @@ public class PlayerController3D : MonoBehaviour
 
         }
     }
+
+    void TryInteract()
+    {
+        Ray ray = new Ray(transform.position + Vector3.up * 0.5f, transform.forward);
+        if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactLayer))
+        {
+            IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+            if (interactable != null)
+            {
+                interactable.Interact(this);
+            }
+        }
+    }
+
 
     public IEnumerator TurnOffP1Tag()
     {
