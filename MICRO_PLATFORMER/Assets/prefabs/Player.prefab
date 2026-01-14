@@ -654,7 +654,7 @@ MonoBehaviour:
   rotationSpeed: 12
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
-  groundPoundForce: 15
+  groundPoundForce: 10
   groundPoundLockTime: 0.15
   diveForwardForce: 16
   diveDownForce: 2
@@ -1605,6 +1605,10 @@ MonoBehaviour:
   diveBodyPitch: 40
   diveLegBackAngle: 20
   diveBlendSpeed: 10
+  poundArmDownAngle: 90
+  poundLegStraightAngle: 90
+  poundBodyLean: 25
+  poundBlendSpeed: 12
 --- !u!1 &7303057037023528442
 GameObject:
   m_ObjectHideFlags: 0

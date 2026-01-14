@@ -183,6 +183,9 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateJumpPose(float blend)
     {
+        if (isGroundPounding)
+            return;
+
         // Body lean
         body.localRotation = Quaternion.Lerp(
             Quaternion.identity,
@@ -213,6 +216,9 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateDivePose(float blend)
     {
+        if (isGroundPounding)
+            return;
+
         if (blend <= 0f) return;
 
         // Body pitch down
