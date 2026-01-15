@@ -34,6 +34,14 @@ public class PlayerController3D : MonoBehaviour
 
     bool isDiving;
 
+    [Header("Long Jump")]
+    [SerializeField] float longJumpForwardForce = 14f;
+    [SerializeField] float longJumpUpForce = 3f;
+    [SerializeField] float longJumpDuration = 0.25f;
+    [SerializeField] float longJumpLockTime = 0.2f;
+
+    bool isLongJumping;
+
 
 
     [Header("Player Differentiation")]
@@ -139,11 +147,13 @@ public class PlayerController3D : MonoBehaviour
     {
         HandleGroundPound();
 
-        if (!isGroundPounding && !isKnockedBack && !isDiving)
+        if (!isGroundPounding && !isKnockedBack && !isDiving && !isLongJumping)
             Move();
 
-        if (!isKnockedBack && !isDiving)
+
+        if (!isKnockedBack && !isDiving && !isLongJumping)
             RotateTowardsMovement();
+
 
 
         ApplyBetterGravity();
@@ -197,8 +207,9 @@ public class PlayerController3D : MonoBehaviour
 
     void ApplyBetterGravity()
     {
-        if (isGroundPounding || isDiving)
+        if (isGroundPounding || isDiving || isLongJumping)
             return;
+
 
 
         if (rb.linearVelocity.y < 0)
@@ -263,11 +274,27 @@ public class PlayerController3D : MonoBehaviour
 
     public void OnDive(InputAction.CallbackContext context)
     {
-        if (context.performed && !IsGrounded() && !isDiving && !isGroundPounding)
+        if (!context.performed)
+            return;
+
+        if (IsGrounded())
         {
-            StartCoroutine(DiveCoroutine());
+            // Ground ? Long Jump
+            if (!isLongJumping && !isGroundPounding && !isKnockedBack)
+            {
+                StartCoroutine(LongJumpCoroutine());
+            }
+        }
+        else
+        {
+            // Air ? Dive (existing behavior)
+            if (!isDiving && !isGroundPounding)
+            {
+                StartCoroutine(DiveCoroutine());
+            }
         }
     }
+
 
 
     public void OnMove(InputAction.CallbackContext context)
@@ -467,6 +494,37 @@ public class PlayerController3D : MonoBehaviour
             playerAnimator.SetDive(false);
     }
 
+    IEnumerator LongJumpCoroutine()
+    {
+        isLongJumping = true;
+
+        // Stop current motion
+        rb.linearVelocity = Vector3.zero;
+
+        // Forward direction
+        Vector3 jumpDir = GetCameraRelativeMovement();
+        if (jumpDir.sqrMagnitude < 0.01f)
+            jumpDir = -transform.forward;
+
+        Vector3 force =
+            jumpDir.normalized * longJumpForwardForce +
+            Vector3.up * longJumpUpForce;
+
+        rb.AddForce(force, ForceMode.Impulse);
+
+        // Reuse dive / ground pound animation pose
+        if (playerAnimator != null)
+            playerAnimator.SetDive(true);
+
+        yield return new WaitForSeconds(longJumpDuration);
+
+        if (playerAnimator != null)
+            playerAnimator.SetDive(false);
+
+        yield return new WaitForSeconds(longJumpLockTime);
+
+        isLongJumping = false;
+    }
 
 
 

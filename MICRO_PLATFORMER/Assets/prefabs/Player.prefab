@@ -662,7 +662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 6
-  jumpForce: 7
+  jumpForce: 8
   rotationSpeed: 12
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
@@ -672,6 +672,10 @@ MonoBehaviour:
   diveDownForce: 2
   diveDuration: 0.45
   diveControlLockTime: 0.2
+  longJumpForwardForce: 14
+  longJumpUpForce: 5
+  longJumpDuration: 0.25
+  longJumpLockTime: 0.2
   playerVisuals:
   - {fileID: 5684176787951792568}
   - {fileID: 4190054723139197412}
