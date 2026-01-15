@@ -4,7 +4,7 @@ public class OneButtonDoor : MonoBehaviour
 {
     [SerializeField] Door door;
 
-    public void Interact(PlayerController3D player)
+    public void OnTriggerEnter(Collider other)
     {
         door.Toggle();
     }
