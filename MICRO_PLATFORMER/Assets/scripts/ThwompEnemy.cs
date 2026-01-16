@@ -31,6 +31,11 @@ public class ThwompEnemy : MonoBehaviour
     [Header("Damage")]
     [SerializeField] int damage = 1;
 
+    [Header("Shadow")]
+    [SerializeField] GameObject groundIndicatorPrefab;
+    [SerializeField] Material shadowMaterial;
+
+
     Rigidbody rb;
     Vector3 startPos;
     ThwompState state = ThwompState.Idle;
@@ -43,6 +48,19 @@ public class ThwompEnemy : MonoBehaviour
         rb.useGravity = false;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         startPos = transform.position;
+
+        GameObject shadow = Instantiate(groundIndicatorPrefab, transform.position, Quaternion.identity);
+
+        GroundIndicator gi = shadow.GetComponent<GroundIndicator>();
+        gi.SetTarget(transform);
+
+        // Apply shadow material
+        Renderer r = shadow.GetComponentInChildren<Renderer>();
+        if (r != null && shadowMaterial != null)
+        {
+            r.material = shadowMaterial;
+        }
+
     }
 
     void FixedUpdate()

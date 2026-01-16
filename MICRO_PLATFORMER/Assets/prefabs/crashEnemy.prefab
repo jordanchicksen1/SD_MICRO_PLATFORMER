@@ -366,6 +366,8 @@ MonoBehaviour:
   shakeDuration: 0.25
   shakeAmount: 0.08
   damage: 1
+  groundIndicatorPrefab: {fileID: 8806414568157480080, guid: 3dd9574634287574382d0e672e4204a1, type: 3}
+  shadowMaterial: {fileID: 2100000, guid: 461d1e9e8185f8545b16db48c2bc0cfa, type: 2}
 --- !u!1 &2927173220548762690
 GameObject:
   m_ObjectHideFlags: 0
