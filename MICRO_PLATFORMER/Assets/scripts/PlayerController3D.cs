@@ -260,6 +260,13 @@ public class PlayerController3D : MonoBehaviour
         }
     }
 
+    public void OnPause(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        // Find pause manager and toggle
+        FindFirstObjectByType<PauseManager>()?.TogglePause();
+    }
 
     public void OnCameraRotate(InputAction.CallbackContext context)
     {
