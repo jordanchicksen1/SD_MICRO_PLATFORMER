@@ -15,6 +15,12 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] float fallMultiplier = 2.5f;
     [SerializeField] float lowJumpMultiplier = 2f;
 
+    [Header("Jump Assist")]
+    [SerializeField] float coyoteTime = 0.15f;
+
+    float lastGroundedTime;
+
+
     Rigidbody rb;
     Vector2 moveInput;
     bool jumpHeld;
@@ -145,6 +151,11 @@ public class PlayerController3D : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (IsGrounded())
+        {
+            lastGroundedTime = Time.time;
+        }
+
         HandleGroundPound();
 
         if (!isGroundPounding && !isKnockedBack && !isDiving && !isLongJumping)
@@ -310,12 +321,24 @@ public class PlayerController3D : MonoBehaviour
         if (context.canceled)
             jumpHeld = false;
 
-        if (context.performed && IsGrounded())
+        if (!context.performed)
+            return;
+
+        bool canCoyoteJump = Time.time - lastGroundedTime <= coyoteTime;
+
+        if (canCoyoteJump && !isGroundPounding && !isDiving && !isLongJumping)
         {
+            // Clear downward velocity so jump is consistent
+            rb.linearVelocity = new Vector3(
+                rb.linearVelocity.x,
+                0f,
+                rb.linearVelocity.z
+            );
+
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-          
         }
     }
+
 
     public void OnGroundPound(InputAction.CallbackContext context)
     {
