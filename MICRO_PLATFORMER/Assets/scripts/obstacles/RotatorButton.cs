@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class RotatorButton : MonoBehaviour
 {
@@ -23,5 +24,13 @@ public class RotatorButton : MonoBehaviour
 
         if (targetPlatform != null)
             targetPlatform.RotateNow();
+
+        StartCoroutine(ResetButton());
+    }
+
+    IEnumerator ResetButton()
+    {
+        yield return new WaitForSeconds(0.5f);
+        pressed = false;
     }
 }

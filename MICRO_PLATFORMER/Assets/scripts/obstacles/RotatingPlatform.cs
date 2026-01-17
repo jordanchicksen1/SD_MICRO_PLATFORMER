@@ -3,32 +3,26 @@ using UnityEngine;
 
 public class RotatePlatform90 : MonoBehaviour
 {
-    [SerializeField] Vector3 rotateAxis = Vector3.up; // rotate around Y by default
+    [SerializeField] Vector3 rotateAxis = Vector3.up;
     [SerializeField] float rotateAngle = 90f;
     [SerializeField] float rotateDuration = 0.25f;
 
     bool isRotating;
-    Quaternion startRot;
-    Quaternion targetRot;
-
-    void Awake()
-    {
-        startRot = transform.rotation;
-        targetRot = startRot * Quaternion.AngleAxis(rotateAngle, rotateAxis.normalized);
-    }
 
     public void RotateNow()
     {
         if (isRotating) return;
-        StartCoroutine(RotateRoutine());
+
+        // ?? Compute a NEW target every time
+        Quaternion from = transform.rotation;
+        Quaternion to = from * Quaternion.AngleAxis(rotateAngle, rotateAxis.normalized);
+
+        StartCoroutine(RotateRoutine(from, to));
     }
 
-    IEnumerator RotateRoutine()
+    IEnumerator RotateRoutine(Quaternion from, Quaternion to)
     {
         isRotating = true;
-
-        Quaternion from = transform.rotation;
-        Quaternion to = targetRot;
 
         float t = 0f;
         while (t < 1f)
