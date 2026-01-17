@@ -172,6 +172,8 @@ public class ThwompEnemy : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             state = ThwompState.BottomWait;      
             StartCoroutine(RiseAfterDelay());
+
+
         }
 
 
