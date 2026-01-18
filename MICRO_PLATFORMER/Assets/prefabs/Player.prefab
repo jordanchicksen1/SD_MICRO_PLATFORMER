@@ -118,6 +118,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &865455949134422901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1758257361112299101}
+  m_Layer: 0
+  m_Name: HoldPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1758257361112299101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 865455949134422901}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -1.069}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4881151161573125792}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &924427403208852396
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,6 +445,7 @@ Transform:
   m_Children:
   - {fileID: 8656675331107104454}
   - {fileID: 850524608211631530}
+  - {fileID: 1758257361112299101}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2398046072453190077
@@ -656,6 +688,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: eb07e6f1-4e68-43dc-b985-975e41338eb4
     m_ActionName: 'Gameplay/Dive[/XInputControllerWindows/buttonWest,/DualShock4GamepadHID/buttonWest]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7245b683-4d78-427c-9929-964d22a1412f
+    m_ActionName: 'UI/Navigate[/DualShock4GamepadHID/dpad,/DualShock4GamepadHID/leftStick]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d7af4d8f-0aab-4d60-bfca-eae24f256c26
+    m_ActionName: 'UI/Submit[/DualShock4GamepadHID/buttonSouth]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3de158c8-9692-46ea-adfe-0c44534320b2
+    m_ActionName: 'UI/Cancel[/DualShock4GamepadHID/buttonEast]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c6050ef4-8e98-460f-bca8-573e6b1907db
+    m_ActionName: 'UI/Pause[/DualShock4GamepadHID/start]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Gameplay
@@ -689,6 +737,7 @@ MonoBehaviour:
   longJumpUpForce: 5
   longJumpDuration: 0.25
   longJumpLockTime: 0.2
+  holdPoint: {fileID: 1758257361112299101}
   playerVisuals:
   - {fileID: 5684176787951792568}
   - {fileID: 4190054723139197412}
@@ -713,7 +762,7 @@ MonoBehaviour:
   interactRange: 2
   interactLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
 --- !u!114 &472012963499164859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1642,6 +1691,9 @@ MonoBehaviour:
   poundLegStraightAngle: 90
   poundBodyLean: 25
   poundBlendSpeed: 12
+  carryArmForwardAngle: 80
+  carryArmOutAngle: -35
+  carryBlendSpeed: 12
 --- !u!1 &7303057037023528442
 GameObject:
   m_ObjectHideFlags: 0

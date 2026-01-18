@@ -54,6 +54,14 @@ public class PlayerAnimator : MonoBehaviour
     float poundBlend;
     bool isGroundPounding;
 
+    [Header("Carry Pose")]
+    [SerializeField] float carryArmForwardAngle = 55f;   // tweak in inspector
+    [SerializeField] float carryArmOutAngle = 10f;       // slight outward spread
+    [SerializeField] float carryBlendSpeed = 12f;
+
+    bool isCarrying;
+    float carryBlend;
+
 
     Vector3 bodyStartPos;
 
@@ -83,6 +91,12 @@ public class PlayerAnimator : MonoBehaviour
     {
         isGroundPounding = active;
     }
+
+    public void SetCarrying(bool carrying)
+    {
+        isCarrying = carrying;
+    }
+
 
     public bool IsGroundPounding()
     {
@@ -122,6 +136,9 @@ public class PlayerAnimator : MonoBehaviour
         float target = grounded ? 0f : 1f;
         jumpBlend = Mathf.MoveTowards(jumpBlend, target, Time.deltaTime * jumpBlendSpeed);
 
+        float carryTarget = isCarrying ? 1f : 0f;
+        carryBlend = Mathf.MoveTowards(carryBlend, carryTarget, Time.deltaTime * carryBlendSpeed);
+
         AnimateWalk();
 
         if (!isGroundPounding)
@@ -133,6 +150,8 @@ public class PlayerAnimator : MonoBehaviour
         AnimateDivePose(diveBlend);
 
         AnimateGroundPound(poundBlend);
+
+        AnimateCarryPose(carryBlend);
 
         AnimateIdle(idleBlend);
     }
@@ -301,23 +320,11 @@ public class PlayerAnimator : MonoBehaviour
 
         if (blend <= 0f) return;
 
-        float t = Time.time * idleArmBobSpeed;
-        float armBob = Mathf.Sin(t) * idleArmBobAmount;
+        // Body breathe ALWAYS (even while carrying)
+        float breathe = Mathf.Sin(Time.time * 2f) * 0.05f;
+        body.localPosition = bodyStartPos + Vector3.up * breathe;
 
-        // Arms: subtle up/down
-        leftArm.localRotation = Quaternion.Lerp(
-            leftArm.localRotation,
-            leftArmStartRot * Quaternion.Euler(armBob, 0, 0),
-            blend
-        );
-
-        rightArm.localRotation = Quaternion.Lerp(
-            rightArm.localRotation,
-            rightArmStartRot * Quaternion.Euler(armBob, 0, 0),
-            blend
-        );
-
-        // Legs: straight
+        // Legs straight ALWAYS (even while carrying)
         leftLeg.localRotation = Quaternion.Lerp(
             leftLeg.localRotation,
             leftLegStartRot,
@@ -330,11 +337,43 @@ public class PlayerAnimator : MonoBehaviour
             blend
         );
 
-        //body
-        {
-            float breathe = Mathf.Sin(Time.time * 2f) * 0.05f;
-            body.localPosition = bodyStartPos + Vector3.up * breathe;
-        }
+        // Arms only if NOT carrying
+        if (isCarrying)
+            return;
+
+        float t = Time.time * idleArmBobSpeed;
+        float armBob = Mathf.Sin(t) * idleArmBobAmount;
+
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            leftArmStartRot * Quaternion.Euler(armBob, 0, 0),
+            blend
+        );
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            rightArmStartRot * Quaternion.Euler(armBob, 0, 0),
+            blend
+        );
     }
+
+
+
+    void AnimateCarryPose(float blend)
+    {
+        if (blend <= 0f) return;
+        if (isGroundPounding) return; // optional: ground pound overrides carry
+
+        // Arms forward like holding something
+        Quaternion leftCarry =
+            leftArmStartRot * Quaternion.Euler(carryArmForwardAngle, -carryArmOutAngle, 0);
+
+        Quaternion rightCarry =
+            rightArmStartRot * Quaternion.Euler(carryArmForwardAngle, carryArmOutAngle, 0);
+
+        leftArm.localRotation = Quaternion.Lerp(leftArm.localRotation, leftCarry, blend);
+        rightArm.localRotation = Quaternion.Lerp(rightArm.localRotation, rightCarry, blend);
+    }
+
 
 }

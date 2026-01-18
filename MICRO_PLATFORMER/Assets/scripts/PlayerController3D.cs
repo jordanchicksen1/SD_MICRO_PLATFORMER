@@ -47,8 +47,12 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] float longJumpLockTime = 0.2f;
 
     bool isLongJumping;
+    
 
-
+    [Header("Carrying")] 
+    [SerializeField] Transform holdPoint;
+    public Transform HoldPoint => holdPoint;
+    CarryBall carriedBall;   // null = not holding anything
 
     [Header("Player Differentiation")]
     int playerIndex;
@@ -84,6 +88,16 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] float interactRange = 2f;
     [SerializeField] LayerMask interactLayer;
 
+    float carryMoveMul = 1f;
+    float carryJumpMul = 1f;
+
+    public void SetCarryModifiers(float moveMultiplier, float jumpMultiplier)
+    {
+        carryMoveMul = Mathf.Clamp(moveMultiplier, 0.1f, 1f);
+        carryJumpMul = Mathf.Clamp(jumpMultiplier, 0.1f, 1f);
+    }
+
+
     public bool IsGroundPounding()
     {
         return isGroundPounding;
@@ -93,7 +107,7 @@ public class PlayerController3D : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         renderers = GetComponentsInChildren<Renderer>();
-
+        
         cachedMaterials = new Material[renderers.Length][];
         for (int i = 0; i < renderers.Length; i++)
         {
@@ -191,11 +205,7 @@ public class PlayerController3D : MonoBehaviour
     {
         Vector3 move = GetCameraRelativeMovement();
 
-        rb.linearVelocity = new Vector3(
-            move.x * moveSpeed,
-            rb.linearVelocity.y,
-            move.z * moveSpeed
-        );
+        rb.linearVelocity = new Vector3(move.x * (moveSpeed * carryMoveMul), rb.linearVelocity.y, move.z * (moveSpeed * carryMoveMul));
     }
 
 
@@ -342,7 +352,7 @@ public class PlayerController3D : MonoBehaviour
                 rb.linearVelocity.z
             );
 
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * (jumpForce * carryJumpMul), ForceMode.Impulse);
         }
     }
 
@@ -357,8 +367,18 @@ public class PlayerController3D : MonoBehaviour
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (context.performed)
-            TryInteract();
+        if (!context.performed) return;
+
+        // If already holding something, drop it
+        if (carriedBall != null)
+        {
+            carriedBall.Drop();
+            carriedBall = null;
+            return;
+        }
+
+        // Otherwise try pick up
+        TryInteract();
     }
 
 
@@ -423,16 +443,26 @@ public class PlayerController3D : MonoBehaviour
 
     void TryInteract()
     {
-        Ray ray = new Ray(transform.position + Vector3.up * 0.5f, transform.forward);
+        Ray ray = new Ray(transform.position + Vector3.down * 0.5f, -transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactLayer))
         {
-            IInteractable interactable = hit.collider.GetComponent<IInteractable>();
-            if (interactable != null)
+            // Look for a carryable ball
+            CarryBall ball = hit.collider.GetComponentInParent<CarryBall>();
+            if (ball != null)
             {
-                interactable.Interact(this);
+                ball.PickUp(this);
+                carriedBall = ball;
+            }
+            else
+            {
+                // other interactables (buttons/doors etc)
+                IInteractable interactable = hit.collider.GetComponentInParent<IInteractable>();
+                if (interactable != null)
+                    interactable.Interact(this);
             }
         }
     }
+
 
 
     public IEnumerator TurnOffP1Tag()
