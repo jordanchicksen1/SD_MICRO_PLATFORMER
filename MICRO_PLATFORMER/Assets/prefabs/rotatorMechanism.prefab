@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4031837383996377127}
   - component: {fileID: 5586551015659749190}
   - component: {fileID: 8003317765188599151}
-  - component: {fileID: 98751249867379008}
   m_Layer: 0
   m_Name: Cube (2)
   m_TagString: Untagged
@@ -109,18 +108,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &98751249867379008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 167749460642579423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5aa75992b4d79344282a8df5ca4b9bb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1129374670719910582
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,7 +120,6 @@ GameObject:
   - component: {fileID: 3673270943588065453}
   - component: {fileID: 2405960647704588565}
   - component: {fileID: 6105695853078596085}
-  - component: {fileID: 9023457837060336881}
   m_Layer: 0
   m_Name: Cube (4)
   m_TagString: Untagged
@@ -230,18 +216,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9023457837060336881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1129374670719910582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5aa75992b4d79344282a8df5ca4b9bb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6054650710027231348
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,7 +228,6 @@ GameObject:
   - component: {fileID: 6243039079955189399}
   - component: {fileID: 6413024616931600379}
   - component: {fileID: 2248522786562197000}
-  - component: {fileID: 3755162898188245767}
   m_Layer: 0
   m_Name: Cube (3)
   m_TagString: Untagged
@@ -351,18 +324,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3755162898188245767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6054650710027231348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5aa75992b4d79344282a8df5ca4b9bb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6759536104141506276
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,7 +336,6 @@ GameObject:
   - component: {fileID: 4422053031391975396}
   - component: {fileID: 8956825665266214007}
   - component: {fileID: 8256296801921993331}
-  - component: {fileID: 2592648463620727703}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -472,18 +432,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2592648463620727703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6759536104141506276}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5aa75992b4d79344282a8df5ca4b9bb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7272606200011542831
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,6 +476,7 @@ GameObject:
   - component: {fileID: 1617071685406602515}
   - component: {fileID: 6472781403204141393}
   - component: {fileID: 5164709931371733402}
+  - component: {fileID: 3882698852434216439}
   m_Layer: 0
   m_Name: rotatorPlatform
   m_TagString: Untagged
@@ -577,6 +526,33 @@ MonoBehaviour:
   rotateAxis: {x: 0, y: 1, z: 0}
   rotateAngle: 90
   rotateDuration: 0.25
+--- !u!54 &3882698852434216439
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7979760384803533397}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 1
 --- !u!1 &8141231146759857409
 GameObject:
   m_ObjectHideFlags: 0
