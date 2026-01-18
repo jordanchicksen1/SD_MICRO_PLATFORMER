@@ -88,8 +88,16 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] float interactRange = 2f;
     [SerializeField] LayerMask interactLayer;
 
+    [Header("UI Prompts (per player)")]
+    [SerializeField] GameObject pickupPromptP1;
+    [SerializeField] GameObject pickupPromptP2;
+
+    GameObject pickupPrompt; // the one this player will use
+
+
     float carryMoveMul = 1f;
     float carryJumpMul = 1f;
+
 
     public void SetCarryModifiers(float moveMultiplier, float jumpMultiplier)
     {
@@ -124,7 +132,14 @@ public class PlayerController3D : MonoBehaviour
         playerNumber = playerIndex + 1;
 
         Debug.Log($"Player {playerNumber} joined");
-        
+
+        pickupPrompt = (playerIndex == 0) ? pickupPromptP1 : pickupPromptP2;
+
+        // safety
+        if (pickupPromptP1) pickupPromptP1.SetActive(false);
+        if (pickupPromptP2) pickupPromptP2.SetActive(false);
+
+
         indicatorManager = FindFirstObjectByType<OffScreenIndicatorManager>();
         indicatorManager.RegisterPlayer(this);
 
@@ -162,6 +177,36 @@ public class PlayerController3D : MonoBehaviour
 
 
     }
+
+    void Update()
+    {
+        UpdatePickupPrompt();
+    }
+
+    void UpdatePickupPrompt()
+    {
+        if (pickupPrompt == null)
+            return;
+
+        // don’t show pickup prompt if already holding a ball
+        if (carriedBall != null)
+        {
+            pickupPrompt.SetActive(false);
+            return;
+        }
+
+        Ray ray = new Ray(transform.position + Vector3.down * 0.5f, -transform.forward);
+
+        bool lookingAtBall = false;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactLayer))
+        {
+            lookingAtBall = hit.collider.GetComponentInParent<CarryBall>() != null;
+        }
+
+        pickupPrompt.SetActive(lookingAtBall);
+    }
+
 
     void FixedUpdate()
     {
