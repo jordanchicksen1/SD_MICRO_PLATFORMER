@@ -482,7 +482,12 @@ public class PlayerController3D : MonoBehaviour
         if(other.tag == "Heart")
         {
             GetComponent<PlayerHealth>().Heal(1);
+            Destroy(other.gameObject);
+        }
 
+        if(other.tag == "Coin")
+        {
+            Destroy(other.gameObject);
         }
     }
 
