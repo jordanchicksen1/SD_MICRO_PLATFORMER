@@ -31,6 +31,8 @@ public class PlayerController3D : MonoBehaviour
 
     bool isGroundPounding;
     bool groundPoundQueued;
+    bool endGroundPoundQueued;
+
 
     [Header("Dive")]
     [SerializeField] float diveForwardForce = 12f;
@@ -301,7 +303,7 @@ public class PlayerController3D : MonoBehaviour
             // Slam down
             rb.AddForce(Vector3.down * groundPoundForce, ForceMode.Impulse);
 
-            // ?? TELL ANIMATOR
+            // TELL ANIMATOR
             if (playerAnimator != null)
             {
                 playerAnimator.SetGroundPound(true);
@@ -309,10 +311,9 @@ public class PlayerController3D : MonoBehaviour
             }
         }
 
-        if (isGroundPounding && IsGrounded())
-        {
-            OnGroundPoundImpact();
-        }
+        // IMPORTANT:
+        // We no longer end ground pound here.
+        // We end it in OnCollisionEnter when we actually hit something solid.
     }
 
     public void OnPause(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -331,18 +332,7 @@ public class PlayerController3D : MonoBehaviour
 
 
 
-    void OnGroundPoundImpact()
-    {
-        isGroundPounding = false;
-
-        if (playerAnimator != null)
-        {
-            playerAnimator.SetGroundPound(false);
-            Debug.Log("GROUND POUND END");
-        }
-
-        StartCoroutine(GroundPoundRecovery());
-    }
+   
 
 
     public void OnDive(InputAction.CallbackContext context)
@@ -410,6 +400,22 @@ public class PlayerController3D : MonoBehaviour
         }
     }
 
+    void EndGroundPound()
+    {
+        isGroundPounding = false;
+        endGroundPoundQueued = false;
+
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetGroundPound(false);
+            Debug.Log("GROUND POUND END");
+        }
+
+        StartCoroutine(GroundPoundRecovery());
+    }
+
+
+
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
@@ -473,7 +479,8 @@ public class PlayerController3D : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Bullet")
+
+        if (other.tag == "Bullet")
         {
             GetComponent<PlayerHealth>().TakeDamage(1, other.transform.position);
            
@@ -490,6 +497,20 @@ public class PlayerController3D : MonoBehaviour
             Destroy(other.gameObject);
         }
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (!isGroundPounding) return;
+        if (collision.collider.isTrigger) return;
+
+        // only if we're slamming downward
+        if (rb.linearVelocity.y <= 0f && !endGroundPoundQueued)
+        {
+            endGroundPoundQueued = true;
+            StartCoroutine(EndGroundPoundNextFixed());
+        }
+    }
+
 
     void TryInteract()
     {
@@ -531,6 +552,14 @@ public class PlayerController3D : MonoBehaviour
     {
         yield return new WaitForSeconds(groundPoundLockTime);
     }
+
+    IEnumerator EndGroundPoundNextFixed()
+    {
+        // wait one physics step so other scripts can still read IsGroundPounding = true
+        yield return new WaitForFixedUpdate();
+        EndGroundPound();
+    }
+
 
     IEnumerator KnockbackCoroutine(Vector3 sourcePosition)
     {
