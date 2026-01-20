@@ -62,6 +62,14 @@ public class PlayerAnimator : MonoBehaviour
     bool isCarrying;
     float carryBlend;
 
+    [Header("Gem Pose")]
+    [SerializeField] float gemArmUpAngle = -120f;
+    [SerializeField] float gemBodyLean = -10f;
+    [SerializeField] float gemBlendSpeed = 8f;
+
+    float gemBlend;
+    bool isGemPose;
+
 
     Vector3 bodyStartPos;
 
@@ -103,10 +111,27 @@ public class PlayerAnimator : MonoBehaviour
         return isGroundPounding;
     }
 
+    public void PlayGemPose()
+    {
+        isGemPose = true;
+    }
+
+    public void StopGemPose()
+    {
+        isGemPose = false;
+    }
 
 
     void Update()
     {
+        float gemTarget = isGemPose ? 1f : 0f;
+        gemBlend = Mathf.MoveTowards(
+            gemBlend,
+            gemTarget,
+            Time.deltaTime * gemBlendSpeed
+        );
+
+
         bool grounded = IsGrounded();
 
         float horizontalSpeed =
@@ -154,10 +179,16 @@ public class PlayerAnimator : MonoBehaviour
         AnimateCarryPose(carryBlend);
 
         AnimateIdle(idleBlend);
+
+        AnimateGemPose(gemBlend);
+
     }
 
     void AnimateWalk()
     {
+        if (isGemPose) return;
+
+
         float speed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude;
 
         if (speed < 0.1f)
@@ -202,6 +233,9 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateJumpPose(float blend)
     {
+        if (isGemPose) return;
+
+
         if (isGroundPounding)
             return;
 
@@ -235,6 +269,9 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateDivePose(float blend)
     {
+        if (isGemPose) return;
+
+
         if (isGroundPounding)
             return;
 
@@ -276,6 +313,9 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateGroundPound(float blend)
     {
+        if (isGemPose) return;
+
+
         if (blend <= 0f) return;
 
         // Body lean forward
@@ -315,6 +355,9 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateIdle(float blend)
     {
+        if (isGemPose) return;
+
+
         if (isGroundPounding)
             return;
 
@@ -375,5 +418,42 @@ public class PlayerAnimator : MonoBehaviour
         rightArm.localRotation = Quaternion.Lerp(rightArm.localRotation, rightCarry, blend);
     }
 
+    void AnimateGemPose(float blend)
+    {
+        if (blend <= 0f) return;
+
+        // Body slight lean back (celebratory)
+        body.localRotation = Quaternion.Lerp(
+            body.localRotation,
+            Quaternion.Euler(gemBodyLean, 0, 0),
+            blend
+        );
+
+        // Arms straight up
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            leftArmStartRot * Quaternion.Euler(gemArmUpAngle, 0, 0),
+            blend
+        );
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            rightArmStartRot * Quaternion.Euler(gemArmUpAngle, 0, 0),
+            blend
+        );
+
+        // Legs stay neutral
+        leftLeg.localRotation = Quaternion.Lerp(
+            leftLeg.localRotation,
+            leftLegStartRot,
+            blend
+        );
+
+        rightLeg.localRotation = Quaternion.Lerp(
+            rightLeg.localRotation,
+            rightLegStartRot,
+            blend
+        );
+    }
 
 }

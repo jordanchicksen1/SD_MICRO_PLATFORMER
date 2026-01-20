@@ -96,6 +96,10 @@ public class PlayerController3D : MonoBehaviour
 
     GameObject pickupPrompt; // the one this player will use
 
+    [Header("PickUps")]
+    public ParticleSystem coinParticle;
+    public ParticleSystem heartParticle;
+    public GameObject fakeGem;
 
     float carryMoveMul = 1f;
     float carryJumpMul = 1f;
@@ -490,11 +494,18 @@ public class PlayerController3D : MonoBehaviour
         {
             GetComponent<PlayerHealth>().Heal(1);
             Destroy(other.gameObject);
+            heartParticle.Play();
         }
 
         if(other.tag == "Coin")
         {
-            Destroy(other.gameObject);
+            
+            coinParticle.Play();
+        }
+
+        if( other.tag == "Gem")
+        {
+            StartCoroutine(GemPoseCoroutine());
         }
     }
 
@@ -666,6 +677,24 @@ public class PlayerController3D : MonoBehaviour
     }
 
 
+    IEnumerator GemPoseCoroutine()
+    {
+        rb.linearVelocity = Vector3.zero;
+        fakeGem.SetActive(true);
+        // Lock movement briefly
+        isKnockedBack = true;
+
+        if (playerAnimator != null)
+            playerAnimator.PlayGemPose();
+
+        yield return new WaitForSeconds(1.2f); // tweak timing here
+
+        fakeGem.SetActive(false);
+        if (playerAnimator != null)
+            playerAnimator.StopGemPose();
+
+        isKnockedBack = false;
+    }
 
 
 }
