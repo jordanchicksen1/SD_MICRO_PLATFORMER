@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 4922138154805858076}
   - component: {fileID: 8341249742882439801}
   - component: {fileID: 7412384552997109164}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,6 +402,14 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 69231a96b6c654941aea0f9fa1a502d8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: 69231a96b6c654941aea0f9fa1a502d8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: -4683669308469848369, guid: 69231a96b6c654941aea0f9fa1a502d8, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -409,6 +417,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 69231a96b6c654941aea0f9fa1a502d8, type: 3}
       propertyPath: m_Name
       value: oneButtonGate
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 69231a96b6c654941aea0f9fa1a502d8, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7202271454713460447, guid: 69231a96b6c654941aea0f9fa1a502d8, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

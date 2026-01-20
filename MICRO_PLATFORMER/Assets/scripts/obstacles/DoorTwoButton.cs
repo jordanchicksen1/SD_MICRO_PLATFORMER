@@ -3,11 +3,9 @@ using UnityEngine;
 public class CoopDoor : MonoBehaviour
 {
     [Header("Setup")]
-    [SerializeField] int requiredButtons = 2;
     [SerializeField] float openHeight = 4f;
     [SerializeField] float openSpeed = 2f;
 
-    int pressedButtons;
     Vector3 closedPos;
     Vector3 openPos;
     bool isOpen;
@@ -28,16 +26,9 @@ public class CoopDoor : MonoBehaviour
         );
     }
 
-    public void ButtonPressed()
+    // Called by a "manager" script (below)
+    public void SetOpen(bool open)
     {
-        pressedButtons++;
-        CheckDoor();
-    }
-
-    
-
-    void CheckDoor()
-    {
-        isOpen = pressedButtons >= requiredButtons;
+        isOpen = open;
     }
 }
