@@ -62,7 +62,7 @@ GameObject:
   - component: {fileID: 3656984549076343503}
   - component: {fileID: 7389285773590914494}
   - component: {fileID: 2874669109512087470}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192,6 +192,14 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 40d69c279fbddac45ab8594d264f937d, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: 40d69c279fbddac45ab8594d264f937d, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: -4683669308469848369, guid: 40d69c279fbddac45ab8594d264f937d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -199,6 +207,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 40d69c279fbddac45ab8594d264f937d, type: 3}
       propertyPath: m_Name
       value: twoButtonGate
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 40d69c279fbddac45ab8594d264f937d, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7071182760956848314, guid: 40d69c279fbddac45ab8594d264f937d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -208,6 +220,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 53516c333c8bfc8469bd3fdde9e9979f, type: 2}
+    - target: {fileID: 8513859187771203891, guid: 40d69c279fbddac45ab8594d264f937d, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -282,9 +298,17 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: deafd45bab93d5145be15e49bb578258, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: deafd45bab93d5145be15e49bb578258, type: 3}
       propertyPath: m_Name
       value: pushableButton1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: deafd45bab93d5145be15e49bb578258, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7071182760956848314, guid: deafd45bab93d5145be15e49bb578258, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -294,6 +318,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
+    - target: {fileID: 8513859187771203891, guid: deafd45bab93d5145be15e49bb578258, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -481,9 +509,17 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: deafd45bab93d5145be15e49bb578258, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: deafd45bab93d5145be15e49bb578258, type: 3}
       propertyPath: m_Name
       value: pushableButton2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: deafd45bab93d5145be15e49bb578258, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7071182760956848314, guid: deafd45bab93d5145be15e49bb578258, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -493,6 +529,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
+    - target: {fileID: 8513859187771203891, guid: deafd45bab93d5145be15e49bb578258, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
