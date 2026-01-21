@@ -4,6 +4,8 @@ public class QuestionPanelManager : MonoBehaviour
 {
     [SerializeField] int requiredCount = 3;
     [SerializeField] DoorOpenSimple door;
+    public GameObject xBadge;
+    public GameObject oBadge;
 
     int currentCount;
     bool doorOpened;
@@ -31,6 +33,8 @@ public class QuestionPanelManager : MonoBehaviour
         {
             doorOpened = true;
             if (door != null) door.Open();
+            xBadge.SetActive(false);
+            oBadge.SetActive(true);
         }
     }
 }
