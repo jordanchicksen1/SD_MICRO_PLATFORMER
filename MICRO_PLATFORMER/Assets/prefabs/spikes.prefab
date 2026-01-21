@@ -91,7 +91,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -211,6 +211,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (27)
@@ -289,6 +293,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (16)
@@ -367,6 +375,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (24)
@@ -445,6 +457,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (7)
@@ -523,6 +539,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (5)
@@ -601,6 +621,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (11)
@@ -679,6 +703,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (15)
@@ -757,6 +785,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite
@@ -835,6 +867,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (25)
@@ -913,6 +949,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (3)
@@ -991,6 +1031,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (13)
@@ -1069,6 +1113,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (19)
@@ -1147,6 +1195,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (10)
@@ -1225,6 +1277,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (21)
@@ -1303,6 +1359,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (22)
@@ -1381,6 +1441,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (9)
@@ -1459,6 +1523,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (8)
@@ -1537,6 +1605,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (2)
@@ -1615,6 +1687,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (6)
@@ -1693,6 +1769,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (1)
@@ -1771,6 +1851,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (28)
@@ -1849,6 +1933,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (12)
@@ -1927,6 +2015,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (18)
@@ -2005,6 +2097,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (4)
@@ -2083,6 +2179,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74219481ac8e70b4590c17b2032c7317, type: 2}
     - target: {fileID: 919132149155446097, guid: 6abf521c6e850434d8bf1bbf12d9f596, type: 3}
       propertyPath: m_Name
       value: stalagmite (14)
