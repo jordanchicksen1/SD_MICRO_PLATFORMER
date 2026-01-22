@@ -29,4 +29,14 @@ public class PlayerHealthUIManager : MonoBehaviour
             p2UI.Bind(p2Health);
         }
     }
+
+    public void SetPlayerHasKey(PlayerHealth health, bool hasKey)
+    {
+        if (health == null) return;
+
+        int index = health.GetComponent<PlayerInput>().playerIndex;
+
+        if (index == 0 && p1UI != null) p1UI.SetHasKey(hasKey);
+        if (index == 1 && p2UI != null) p2UI.SetHasKey(hasKey);
+    }
 }

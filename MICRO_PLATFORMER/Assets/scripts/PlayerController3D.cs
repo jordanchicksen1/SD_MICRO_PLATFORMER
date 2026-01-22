@@ -100,6 +100,7 @@ public class PlayerController3D : MonoBehaviour
     public ParticleSystem coinParticle;
     public ParticleSystem heartParticle;
     public GameObject fakeGem;
+    public GameObject fakeKey;
 
     float carryMoveMul = 1f;
     float carryJumpMul = 1f;
@@ -507,6 +508,11 @@ public class PlayerController3D : MonoBehaviour
         {
             StartCoroutine(GemPoseCoroutine());
         }
+
+        if (other.tag == "Key")
+        {
+            StartCoroutine(KeyPoseCoroutine());
+        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -696,5 +702,22 @@ public class PlayerController3D : MonoBehaviour
         isKnockedBack = false;
     }
 
+    IEnumerator KeyPoseCoroutine()
+    {
+        rb.linearVelocity = Vector3.zero;
+        fakeKey.SetActive(true);
+        // Lock movement briefly
+        isKnockedBack = true;
 
+        if (playerAnimator != null)
+            playerAnimator.PlayGemPose();
+
+        yield return new WaitForSeconds(1.2f); // tweak timing here
+
+        fakeKey.SetActive(false);
+        if (playerAnimator != null)
+            playerAnimator.StopGemPose();
+
+        isKnockedBack = false;
+    }
 }
