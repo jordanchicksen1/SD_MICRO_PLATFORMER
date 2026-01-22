@@ -15,6 +15,7 @@ public class KeyDoor : MonoBehaviour, IInteractable
 
         if (!inv.HasKey)
         {
+            player.ShowNeedKeyPrompt();
             Debug.Log("Need a key!");
             return;
         }

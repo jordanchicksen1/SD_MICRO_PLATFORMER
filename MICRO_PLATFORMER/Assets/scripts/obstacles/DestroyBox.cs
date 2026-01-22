@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class DoorKillBox : MonoBehaviour
 {
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        // OPTION A: tag-based
+        
         if (other.CompareTag("Door"))
         {
-            Destroy(other.transform.root.gameObject);
+            Destroy(other.gameObject);
+            Debug.Log("door entered");
         }
     }
 }

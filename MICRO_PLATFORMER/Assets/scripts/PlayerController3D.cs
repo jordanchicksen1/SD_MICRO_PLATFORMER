@@ -90,11 +90,24 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] float interactRange = 2f;
     [SerializeField] LayerMask interactLayer;
 
-    [Header("UI Prompts (per player)")]
+    [Header("UI Prompts")]
     [SerializeField] GameObject pickupPromptP1;
     [SerializeField] GameObject pickupPromptP2;
 
-    GameObject pickupPrompt; // the one this player will use
+
+    GameObject pickupPrompt;
+
+    [SerializeField] GameObject unlockPromptP1;   // "Press Interact to Unlock"
+    [SerializeField] GameObject unlockPromptP2;
+
+    [SerializeField] GameObject needKeyPromptP1;  // "You need a key!"
+    [SerializeField] GameObject needKeyPromptP2;
+
+    GameObject unlockPrompt;
+    GameObject needKeyPrompt;
+
+    Coroutine needKeyRoutine;
+
 
     [Header("PickUps")]
     public ParticleSystem coinParticle;
@@ -145,7 +158,14 @@ public class PlayerController3D : MonoBehaviour
         // safety
         if (pickupPromptP1) pickupPromptP1.SetActive(false);
         if (pickupPromptP2) pickupPromptP2.SetActive(false);
+        unlockPrompt = (playerIndex == 0) ? unlockPromptP1 : unlockPromptP2;
+        needKeyPrompt = (playerIndex == 0) ? needKeyPromptP1 : needKeyPromptP2;
 
+        // safety: start hidden
+        if (unlockPromptP1) unlockPromptP1.SetActive(false);
+        if (unlockPromptP2) unlockPromptP2.SetActive(false);
+        if (needKeyPromptP1) needKeyPromptP1.SetActive(false);
+        if (needKeyPromptP2) needKeyPromptP2.SetActive(false);
 
         indicatorManager = FindFirstObjectByType<OffScreenIndicatorManager>();
         indicatorManager.RegisterPlayer(this);
@@ -188,6 +208,7 @@ public class PlayerController3D : MonoBehaviour
     void Update()
     {
         UpdatePickupPrompt();
+        UpdateUnlockPrompt();
     }
 
     void UpdatePickupPrompt()
@@ -212,6 +233,29 @@ public class PlayerController3D : MonoBehaviour
         }
 
         pickupPrompt.SetActive(lookingAtBall);
+    }
+
+    void UpdateUnlockPrompt()
+    {
+        if (unlockPrompt == null) return;
+
+        // If the "need key" popup is currently showing, don't show unlock prompt
+        if (needKeyPrompt != null && needKeyPrompt.activeSelf)
+        {
+            unlockPrompt.SetActive(false);
+            return;
+        }
+
+        Ray ray = new Ray(transform.position + Vector3.down * 0.5f, -transform.forward);
+
+        bool lookingAtLock = false;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactLayer))
+        {
+            lookingAtLock = hit.collider.GetComponentInParent<KeyDoor>() != null;
+        }
+
+        unlockPrompt.SetActive(lookingAtLock);
     }
 
 
@@ -551,7 +595,27 @@ public class PlayerController3D : MonoBehaviour
         }
     }
 
+    public void ShowNeedKeyPrompt(float duration = 1.25f)
+    {
+        if (needKeyPrompt == null) return;
 
+        if (needKeyRoutine != null)
+            StopCoroutine(needKeyRoutine);
+
+        needKeyRoutine = StartCoroutine(NeedKeyRoutine(duration));
+    }
+
+    IEnumerator NeedKeyRoutine(float duration)
+    {
+        if (unlockPrompt != null)
+            unlockPrompt.SetActive(false);
+
+        needKeyPrompt.SetActive(true);
+        yield return new WaitForSeconds(duration);
+        needKeyPrompt.SetActive(false);
+
+        needKeyRoutine = null;
+    }
 
     public IEnumerator TurnOffP1Tag()
     {
