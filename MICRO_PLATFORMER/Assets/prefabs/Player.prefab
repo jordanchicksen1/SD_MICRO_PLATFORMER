@@ -942,8 +942,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba2d50b96f42c994b9409865cb7baf4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 6
-  jumpForce: 8
+  moveSpeed: 7
+  jumpForce: 10
   rotationSpeed: 12
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
@@ -952,7 +952,7 @@ MonoBehaviour:
   groundPoundLockTime: 0.15
   diveForwardForce: 16
   diveDownForce: 2
-  diveDuration: 0.45
+  diveDuration: 0.6
   diveControlLockTime: 0.2
   longJumpForwardForce: 14
   longJumpUpForce: 5
