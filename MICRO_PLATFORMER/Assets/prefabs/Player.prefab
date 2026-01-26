@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1225761398563021384}
   - component: {fileID: 5283158379863317425}
   - component: {fileID: 2080555883878961468}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: buttonEast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,7 +81,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7464993858723858299}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: rightHip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 7815265424302140955}
   - component: {fileID: 8464426690071516188}
   - component: {fileID: 3318451283976333616}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: buttonEast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 3308003492828839659}
   - component: {fileID: 8014250216192457148}
   - component: {fileID: 6026969614518391639}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: eye (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,7 +271,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1758257361112299101}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HoldPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -304,7 +304,7 @@ GameObject:
   - component: {fileID: 4609013887716869812}
   - component: {fileID: 4252382112277094447}
   - component: {fileID: 5255879815755586580}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: nose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -390,7 +390,7 @@ GameObject:
   - component: {fileID: 8440250982491091408}
   - component: {fileID: 2077797392599629291}
   - component: {fileID: 3901492116800052749}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leftLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -476,7 +476,7 @@ GameObject:
   - component: {fileID: 4390776725570144059}
   - component: {fileID: 1694970553054188623}
   - component: {fileID: 1351419506294798621}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: buttonEast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -548,7 +548,7 @@ GameObject:
   - component: {fileID: 7976357908496169407}
   - component: {fileID: 7779847735144047329}
   - component: {fileID: 5803944077783211148}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +640,7 @@ GameObject:
   - component: {fileID: 7924320095436716568}
   - component: {fileID: 472012963499164859}
   - component: {fileID: 6448472338483798396}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1031,7 +1031,7 @@ GameObject:
   - component: {fileID: 3796410684208137992}
   - component: {fileID: 4179926565069401568}
   - component: {fileID: 6535387667886293292}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: unlockIconP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1168,7 +1168,7 @@ GameObject:
   - component: {fileID: 2635328351494329668}
   - component: {fileID: 2666965849698086169}
   - component: {fileID: 6012810932889176944}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leftArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1255,7 +1255,7 @@ GameObject:
   - component: {fileID: 4875928963081140198}
   - component: {fileID: 8014128142050739974}
   - component: {fileID: 3919946227548811582}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: CanvasP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1359,7 +1359,7 @@ GameObject:
   - component: {fileID: 248722303036465431}
   - component: {fileID: 5801790672645415067}
   - component: {fileID: 3910621238220055181}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: coinParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6308,7 +6308,7 @@ GameObject:
   - component: {fileID: 240537881090512649}
   - component: {fileID: 7495854135692071328}
   - component: {fileID: 1229301729188647647}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: p1Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6378,7 +6378,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4282180500909100410}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leftHip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6412,7 +6412,7 @@ GameObject:
   - component: {fileID: 4046916986075850689}
   - component: {fileID: 6557875433117754669}
   - component: {fileID: 7831542448662330790}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: keyIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6484,7 +6484,7 @@ GameObject:
   - component: {fileID: 7815144830106705293}
   - component: {fileID: 8061026991260450124}
   - component: {fileID: 2995988525660521210}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: lockedIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6621,7 +6621,7 @@ GameObject:
   - component: {fileID: 3579084232426139986}
   - component: {fileID: 2207784087739975639}
   - component: {fileID: 6408628851512693521}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: pickUpIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6758,7 +6758,7 @@ GameObject:
   - component: {fileID: 4254587992642729171}
   - component: {fileID: 2919974715577680452}
   - component: {fileID: 1901181677568450330}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6845,7 +6845,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1090257401320929137}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: p2Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6879,7 +6879,7 @@ GameObject:
   - component: {fileID: 5924399938813361665}
   - component: {fileID: 482385778761549705}
   - component: {fileID: 3747702707950048182}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7000,7 +7000,7 @@ GameObject:
   - component: {fileID: 8956232972938410002}
   - component: {fileID: 7386934256585057319}
   - component: {fileID: 4465346532878877766}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: rightLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7087,7 +7087,7 @@ GameObject:
   - component: {fileID: 1757352729841052498}
   - component: {fileID: 4658296905440623041}
   - component: {fileID: 5872924786018555683}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: CanvasP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7191,7 +7191,7 @@ GameObject:
   - component: {fileID: 6855276963146823739}
   - component: {fileID: 3750107410036869562}
   - component: {fileID: 4977907497799693767}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: lockedIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7328,7 +7328,7 @@ GameObject:
   - component: {fileID: 5974815712758450438}
   - component: {fileID: 7664764903530743091}
   - component: {fileID: 8485739486258117469}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7414,7 +7414,7 @@ GameObject:
   - component: {fileID: 846177924297850350}
   - component: {fileID: 2246890656823559191}
   - component: {fileID: 2524894209803863018}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: rightArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7500,7 +7500,7 @@ GameObject:
   - component: {fileID: 7658966454962744666}
   - component: {fileID: 1407043423878583317}
   - component: {fileID: 4417715482088054557}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: unlockIconP1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7635,7 +7635,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6075214194841220137}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: p1Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7669,7 +7669,7 @@ GameObject:
   - component: {fileID: 5890775149742823321}
   - component: {fileID: 3787080977595502212}
   - component: {fileID: 4994015479688637425}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: keyIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7739,7 +7739,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 850524608211631530}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PlayerVisuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7773,7 +7773,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8656675331107104454}
   - component: {fileID: 8546901014492568972}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7856,7 +7856,7 @@ GameObject:
   - component: {fileID: 9084525201629086740}
   - component: {fileID: 2457028705392842896}
   - component: {fileID: 1739963519143161774}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: heartParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12805,7 +12805,7 @@ GameObject:
   - component: {fileID: 2629543242064005493}
   - component: {fileID: 3783129198894461250}
   - component: {fileID: 3689702896005695630}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: buttonEast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12875,7 +12875,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5252544534200328079}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: rightShoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12909,7 +12909,7 @@ GameObject:
   - component: {fileID: 4017979152537753427}
   - component: {fileID: 1970308981118438347}
   - component: {fileID: 7486439550138119227}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: pickUpIcon (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13044,7 +13044,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5488945757590057945}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leftShoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13078,7 +13078,7 @@ GameObject:
   - component: {fileID: 563164849165417636}
   - component: {fileID: 1591526033930780636}
   - component: {fileID: 6805075491881841644}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: p2Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13204,8 +13204,16 @@ PrefabInstance:
       value: gem
       objectReference: {fileID: 0}
     - target: {fileID: 1983509500747029403, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1983509500747029403, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045059960851216866, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7943878955506108500, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
@@ -13295,6 +13303,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 83802c7f48fcdcb44ae6e9fa4bcfd84c, type: 3}
       propertyPath: m_Name
       value: fakeKey
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 83802c7f48fcdcb44ae6e9fa4bcfd84c, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 83802c7f48fcdcb44ae6e9fa4bcfd84c, type: 3}
       propertyPath: m_IsActive
