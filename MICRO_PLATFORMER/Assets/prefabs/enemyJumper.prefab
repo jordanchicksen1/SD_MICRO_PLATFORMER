@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5235305570009585894}
   - component: {fileID: 4194628382992579662}
   - component: {fileID: 4110983405897406159}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 4905620587933560361}
   - component: {fileID: 7792426174247631310}
   - component: {fileID: 2310718060581260760}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: eye (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 1523689815463616700}
   - component: {fileID: 9025381354502656395}
   - component: {fileID: 4708458787022128580}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 1791486225414722996}
   - component: {fileID: 1265727061538844268}
   - component: {fileID: 1164063500871063059}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: mouth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 4107070735944749677}
   - component: {fileID: 7226146092184173006}
   - component: {fileID: 499980395860153292}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -440,7 +440,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7533421590669571011}
   - component: {fileID: 2529567841890268081}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -490,7 +490,7 @@ GameObject:
   - component: {fileID: 2313555599948403003}
   - component: {fileID: 2127067056430243858}
   - component: {fileID: 3180046549791523915}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: enemyStompDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -563,7 +563,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 437633781260045573}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: leftFrontLegPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -595,7 +595,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3861778816856621505}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: face
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -630,7 +630,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3662723933288186023}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: leftBackLegPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -664,7 +664,7 @@ GameObject:
   - component: {fileID: 276998365097556865}
   - component: {fileID: 2782661842206130744}
   - component: {fileID: 676744616616946170}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -750,7 +750,7 @@ GameObject:
   - component: {fileID: 7390269659024182505}
   - component: {fileID: 7337198210739519128}
   - component: {fileID: 2256130183288453622}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -840,7 +840,7 @@ GameObject:
   - component: {fileID: 372100679546201915}
   - component: {fileID: 6554646488713597204}
   - component: {fileID: 3375077635814929508}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: enemyJumper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -985,7 +985,7 @@ GameObject:
   - component: {fileID: 9171528499520242138}
   - component: {fileID: 8037682313374929484}
   - component: {fileID: 4838424916737693756}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: eye (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1069,7 +1069,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4520293360449604586}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: rightFrontLegPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1101,7 +1101,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4800608075071540620}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: rightBackLegPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1195,6 +1195,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ce01a075371bd354ca3f03d415d5dc78, type: 3}
       propertyPath: m_Name
       value: enemyJumperBody
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ce01a075371bd354ca3f03d415d5dc78, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
