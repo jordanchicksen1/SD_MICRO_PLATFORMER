@@ -151,6 +151,12 @@ public class PlayerController3D : MonoBehaviour
         playerIndex = GetComponent<PlayerInput>().playerIndex;
         playerNumber = playerIndex + 1;
 
+        if (playerIndex == 0)
+            SetLayerRecursively(gameObject, LayerMask.NameToLayer("Player"));
+        else
+            SetLayerRecursively(gameObject, LayerMask.NameToLayer("Player2"));
+
+
         Debug.Log($"Player {playerNumber} joined");
 
         pickupPrompt = (playerIndex == 0) ? pickupPromptP1 : pickupPromptP2;
@@ -204,6 +210,17 @@ public class PlayerController3D : MonoBehaviour
 
 
     }
+
+    void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        obj.layer = newLayer;
+
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
+    }
+
 
     void Update()
     {
