@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 47d1018a5f5835f47af7a1f43ebfd626, type: 3}
+      propertyPath: m_TagString
+      value: Door
+      objectReference: {fileID: 0}
     - target: {fileID: -5568371526223589888, guid: 47d1018a5f5835f47af7a1f43ebfd626, type: 3}
       propertyPath: m_Name
       value: lockGold
