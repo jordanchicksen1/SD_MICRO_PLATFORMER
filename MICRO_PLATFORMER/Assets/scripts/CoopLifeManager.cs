@@ -11,7 +11,7 @@ public class CoopLifeManager : MonoBehaviour
 
     [Header("Game Over")]
     [SerializeField] GameObject gameOverScreen;
-    [SerializeField] float restartDelay = 2f;
+    [SerializeField] float restartDelay = 5f;
 
     readonly Dictionary<int, PlayerBubbleState> bubbleByIndex = new();
     readonly Dictionary<int, PlayerHealth> healthByIndex = new();
@@ -103,20 +103,23 @@ public class CoopLifeManager : MonoBehaviour
         if (gameOver) return;
         if (!bubbleByIndex.ContainsKey(reviveIndex)) return;
 
-        // swap camera back BEFORE destroying bubble (so we still have transform)
-        if (cam != null && bubbleObjByIndex.TryGetValue(reviveIndex, out var b) && b != null)
-            cam.ReplaceTarget(b.transform, bubbleByIndex[reviveIndex].transform);
+        // cache bubble position BEFORE destroying it
+        Vector3 bubblePos = bubbleObjByIndex.TryGetValue(reviveIndex, out var bub) && bub != null
+            ? bub.transform.position
+            : bubbleByIndex[reviveIndex].transform.position;
 
-        // destroy bubble object
-        if (bubbleObjByIndex.TryGetValue(reviveIndex, out var bubble) && bubble != null)
-        {
-            Destroy(bubble.gameObject);
-            bubbleObjByIndex[reviveIndex] = null;
-        }
+        // camera swap back (option B)
+        if (cam != null && bub != null)
+            cam.ReplaceTarget(bub.transform, bubbleByIndex[reviveIndex].transform);
 
-        // revive player
-        Vector3 respawn = bubbleByIndex[reviveIndex].LastSafePosition;
-        bubbleByIndex[reviveIndex].ExitBubble(respawnPos: respawn, reviveHp: 1);
+        // destroy bubble
+        if (bub != null) Destroy(bub.gameObject);
+        bubbleObjByIndex[reviveIndex] = null;
+
+        // respawn at bubble position (slightly down so you don't pop into the air)
+        Vector3 respawn = bubblePos + Vector3.down * 1.2f;
+
+        bubbleByIndex[reviveIndex].ExitBubble(respawnPos: respawn, reviveHp: 3);
     }
 
     void TriggerGameOver()

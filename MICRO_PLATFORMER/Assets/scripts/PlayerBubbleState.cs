@@ -40,7 +40,8 @@ public class PlayerBubbleState : MonoBehaviour
     {
         IsBubbled = true;
 
-        if (playerInput) playerInput.enabled = false;
+        if (playerInput) playerInput.DeactivateInput();   // keeps device paired, no new join
+
 
         if (rb)
         {
@@ -66,7 +67,7 @@ public class PlayerBubbleState : MonoBehaviour
             if (c) c.enabled = true;
 
         if (visualsRoot) visualsRoot.SetActive(true);
-        if (playerInput) playerInput.enabled = true;
+        if (playerInput) playerInput.ActivateInput();
 
         if (health) health.ReviveTo(reviveHp);
     }

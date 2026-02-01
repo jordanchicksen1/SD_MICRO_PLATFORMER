@@ -10,48 +10,45 @@ public class FallSaver : MonoBehaviour
     public int damage = 1;
 
     [Header("Safety")]
-    [SerializeField] float reentryCooldown = 0.25f; // prevents rapid re-trigger after teleport
+    [SerializeField] float reentryCooldown = 0.25f;
 
-    // per player cooldown by instance id
     readonly Dictionary<int, float> nextAllowedTime = new();
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (!other.CompareTag("Player")) return;
+    void OnTriggerEnter(Collider other) => Handle(other);
+    void OnTriggerStay(Collider other) => Handle(other); // NEW
 
-        // Always operate on the PLAYER ROOT, not the child collider
+    void Handle(Collider other)
+    {
+        if (!other.transform.root.CompareTag("Player")) return;
+
         Transform playerRoot = other.transform.root;
 
         var bubble = playerRoot.GetComponent<PlayerBubbleState>();
         var health = playerRoot.GetComponent<PlayerHealth>();
-
         if (health == null) return;
 
-        // If bubbled/dead, ignore completely
+        // Ignore bubbled players entirely
         if (bubble != null && bubble.IsBubbled)
             return;
 
-        // Cooldown guard (prevents flicker if they immediately re-enter trigger)
         int id = playerRoot.gameObject.GetInstanceID();
         if (nextAllowedTime.TryGetValue(id, out float t) && Time.time < t)
             return;
 
         nextAllowedTime[id] = Time.time + reentryCooldown;
 
-        // Lethal hit: deal damage but DO NOT teleport.
-        // Bubble system will handle the rest.
+        // Lethal: deal damage, do NOT teleport
         if (health.CurrentHealth - damage <= 0)
         {
             health.TakeDamage(damage, transform.position);
             return;
         }
 
-        // Non-lethal: damage + teleport to respawn
+        // Non-lethal: damage + teleport
         health.TakeDamage(damage, transform.position);
 
         if (respawnPoint != null)
         {
-            // Reset motion so they don't instantly fall back in
             var rb = playerRoot.GetComponent<Rigidbody>();
             if (rb != null)
             {
