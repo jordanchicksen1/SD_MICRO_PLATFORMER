@@ -76,7 +76,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df7088cdd9c2efe429cd21c39a408738, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnPoint: {fileID: 5226178747649351276}
+  respawnPoint: {fileID: 5051352345789990580}
+  damage: 1
 --- !u!1 &5226178747649351276
 GameObject:
   m_ObjectHideFlags: 0

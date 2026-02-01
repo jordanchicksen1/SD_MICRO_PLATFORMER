@@ -208,6 +208,15 @@ public class PlayerController3D : MonoBehaviour
         else
             r.material = player2Mat;
 
+        var life = FindFirstObjectByType<CoopLifeManager>();
+        if (life != null)
+        {
+            life.RegisterPlayer(GetComponent<PlayerBubbleState>(), GetComponent<PlayerHealth>(), GetComponent<PlayerInput>());
+        }
+        else
+        {
+            Debug.LogError("No CoopLifeManager found in scene!");
+        }
 
     }
 
@@ -278,6 +287,13 @@ public class PlayerController3D : MonoBehaviour
 
     void FixedUpdate()
     {
+        var bubble = GetComponent<PlayerBubbleState>();
+        if (bubble != null && bubble.IsBubbled)
+        {
+            rb.linearVelocity = Vector3.zero;
+            return;
+        }
+
         if (IsGrounded())
         {
             lastGroundedTime = Time.time;

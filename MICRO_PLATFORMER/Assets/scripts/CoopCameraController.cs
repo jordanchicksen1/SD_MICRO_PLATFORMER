@@ -44,6 +44,19 @@ public class CoopCameraController : MonoBehaviour
             players.Add(player);
     }
 
+    public void UnregisterPlayer(Transform player)
+    {
+        if (player == null) return;
+        players.Remove(player);
+    }
+
+    public void ReplaceTarget(Transform removeThis, Transform addThis)
+    {
+        UnregisterPlayer(removeThis);
+        RegisterPlayer(addThis);
+    }
+
+
     Vector3 GetCenterPoint()
     {
         if (players.Count == 1)
@@ -51,11 +64,12 @@ public class CoopCameraController : MonoBehaviour
 
         Bounds bounds = new Bounds(players[0].position, Vector3.zero);
 
-        foreach (Transform t in players)
-            bounds.Encapsulate(t.position);
+        for (int i = 1; i < players.Count; i++)
+            bounds.Encapsulate(players[i].position);
 
         return bounds.center;
     }
+
 
     void LateUpdate()
     {
