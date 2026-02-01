@@ -33,6 +33,14 @@ public class PlayerController3D : MonoBehaviour
     bool groundPoundQueued;
     bool endGroundPoundQueued;
 
+    [Header("Ground Pound Safety")]
+    [SerializeField] float groundPoundAutoEndMinTime = 0.05f; // wait a tick before auto-ending
+    [SerializeField] float groundPoundAutoEndVelY = 0.2f;     // consider "landed" when |vy| is small
+    [SerializeField] float groundPoundMaxDuration = 1.25f;    // hard failsafe if something goes weird
+
+    float groundPoundStartTime;
+
+
 
     [Header("Dive")]
     [SerializeField] float diveForwardForce = 12f;
@@ -327,6 +335,8 @@ public class PlayerController3D : MonoBehaviour
         }
 
         HandleGroundPound();
+        CheckGroundPoundAutoEnd(); 
+
 
         if (!isGroundPounding && !isKnockedBack && !isDiving && !isLongJumping)
             Move();
@@ -405,6 +415,7 @@ public class PlayerController3D : MonoBehaviour
         {
             isGroundPounding = true;
             groundPoundQueued = false;
+            groundPoundStartTime = Time.time;
 
             // Stop motion
             rb.linearVelocity = Vector3.zero;
@@ -424,6 +435,31 @@ public class PlayerController3D : MonoBehaviour
         // We no longer end ground pound here.
         // We end it in OnCollisionEnter when we actually hit something solid.
     }
+
+    void CheckGroundPoundAutoEnd()
+    {
+        if (!isGroundPounding) return;
+
+        float elapsed = Time.time - groundPoundStartTime;
+
+        // Hard failsafe: never allow ground pound to last forever
+        if (elapsed >= groundPoundMaxDuration)
+        {
+            EndGroundPound();
+            return;
+        }
+
+        // Don’t end immediately on the same frame we started
+        if (elapsed < groundPoundAutoEndMinTime)
+            return;
+
+        // If we’re grounded and basically not moving vertically, we’ve landed
+        if (IsGrounded() && Mathf.Abs(rb.linearVelocity.y) <= groundPoundAutoEndVelY)
+        {
+            EndGroundPound();
+        }
+    }
+
 
     public void OnPause(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
