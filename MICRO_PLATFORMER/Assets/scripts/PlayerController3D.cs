@@ -108,6 +108,13 @@ public class PlayerController3D : MonoBehaviour
 
     Coroutine needKeyRoutine;
 
+    [Header("Prompt Raycast Performance")]
+    [SerializeField] float promptCheckInterval = 0.1f; // 10x/sec instead of every frame
+    float nextPromptCheckTime;
+    Vector2 lastMoveInput;
+    bool forcePromptRefresh;
+
+
 
     [Header("PickUps")]
     public ParticleSystem coinParticle;
@@ -233,9 +240,29 @@ public class PlayerController3D : MonoBehaviour
 
     void Update()
     {
-        UpdatePickupPrompt();
-        UpdateUnlockPrompt();
+        // If movement input changed, refresh prompts immediately (feels snappy)
+        if ((moveInput - lastMoveInput).sqrMagnitude > 0.0001f)
+        {
+            lastMoveInput = moveInput;
+            forcePromptRefresh = true;
+        }
+
+        if (forcePromptRefresh || Time.time >= nextPromptCheckTime)
+        {
+            forcePromptRefresh = false;
+            nextPromptCheckTime = Time.time + promptCheckInterval;
+
+            UpdatePickupPrompt();
+            UpdateUnlockPrompt();
+        }
     }
+
+    void RequestPromptRefresh()
+    {
+        forcePromptRefresh = true;
+        nextPromptCheckTime = 0f;
+    }
+
 
     void UpdatePickupPrompt()
     {
@@ -512,6 +539,7 @@ public class PlayerController3D : MonoBehaviour
 
         // Otherwise try pick up
         TryInteract();
+        RequestPromptRefresh(); 
     }
 
 
@@ -636,6 +664,7 @@ public class PlayerController3D : MonoBehaviour
             StopCoroutine(needKeyRoutine);
 
         needKeyRoutine = StartCoroutine(NeedKeyRoutine(duration));
+        RequestPromptRefresh(); 
     }
 
     IEnumerator NeedKeyRoutine(float duration)
@@ -648,6 +677,8 @@ public class PlayerController3D : MonoBehaviour
         needKeyPrompt.SetActive(false);
 
         needKeyRoutine = null;
+
+        RequestPromptRefresh(); 
     }
 
     public IEnumerator TurnOffP1Tag()
