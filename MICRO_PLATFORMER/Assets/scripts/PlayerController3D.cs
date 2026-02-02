@@ -17,6 +17,7 @@ public class PlayerController3D : MonoBehaviour
 
     [Header("Jump Assist")]
     [SerializeField] float coyoteTime = 0.15f;
+    public AudioSource jumpSFX;
 
     float lastGroundedTime;
 
@@ -83,6 +84,7 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] Renderer[] renderers;
     [SerializeField] float flashInterval = 0.1f;
     Material[][] cachedMaterials;
+    
 
 
     bool isKnockedBack;
@@ -126,8 +128,11 @@ public class PlayerController3D : MonoBehaviour
 
     [Header("PickUps")]
     public ParticleSystem coinParticle;
+    public AudioSource coinSFX;
     public ParticleSystem heartParticle;
+    public AudioSource heartSFX;
     public GameObject fakeGem;
+    public AudioSource gemSFX;
     public GameObject fakeKey;
 
     float carryMoveMul = 1f;
@@ -533,6 +538,7 @@ public class PlayerController3D : MonoBehaviour
             );
 
             rb.AddForce(Vector3.up * (jumpForce * carryJumpMul), ForceMode.Impulse);
+            jumpSFX.Play();
         }
     }
 
@@ -629,7 +635,7 @@ public class PlayerController3D : MonoBehaviour
         if (other.tag == "Bullet")
         {
             GetComponent<PlayerHealth>().TakeDamage(1, other.transform.position);
-           
+            
         }
 
         if(other.tag == "Heart")
@@ -637,23 +643,27 @@ public class PlayerController3D : MonoBehaviour
             GetComponent<PlayerHealth>().Heal(1);
             Destroy(other.gameObject);
             heartParticle.Play();
+            heartSFX.Play();   
         }
 
         if(other.tag == "Coin")
         {
-            
+            coinSFX.Play();
             coinParticle.Play();
         }
 
         if( other.tag == "Gem")
         {
             StartCoroutine(GemPoseCoroutine());
+            gemSFX.Play();
         }
 
         if (other.tag == "Key")
         {
             StartCoroutine(KeyPoseCoroutine());
         }
+        
+       
     }
 
     void OnCollisionEnter(Collision collision)
@@ -667,6 +677,8 @@ public class PlayerController3D : MonoBehaviour
             endGroundPoundQueued = true;
             StartCoroutine(EndGroundPoundNextFixed());
         }
+
+        
     }
 
 

@@ -17,9 +17,11 @@ public class PlayerHealth : MonoBehaviour
     public event Action<int> OnHealthChanged;
     public event Action<Vector3> OnDamaged;
 
-    // NEW:
+    
     public event Action OnDied;
     public bool hasDied;
+
+    public AudioSource hurtSFX;
 
     void Awake()
     {
@@ -41,7 +43,7 @@ public class PlayerHealth : MonoBehaviour
 
         OnHealthChanged?.Invoke(currentHealth);
         OnDamaged?.Invoke(sourcePosition);
-
+        hurtSFX.Play();
         if (currentHealth <= 0)
         {
             Debug.Log($"[{name}] DIED -> OnDied invoked");

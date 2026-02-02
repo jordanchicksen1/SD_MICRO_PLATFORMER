@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5491017131577763934}
   m_Layer: 0
   m_Name: fallSaver
-  m_TagString: Untagged
+  m_TagString: FallSaver
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -78,6 +78,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnPoint: {fileID: 5051352345789990580}
   damage: 1
+  reentryCooldown: 0.25
 --- !u!1 &5226178747649351276
 GameObject:
   m_ObjectHideFlags: 0
