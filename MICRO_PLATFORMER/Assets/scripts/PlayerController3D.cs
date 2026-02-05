@@ -166,7 +166,17 @@ public class PlayerController3D : MonoBehaviour
     private void Start()
     {
         coopCamera = FindFirstObjectByType<CoopCameraController>();
-        coopCamera.RegisterPlayer(transform);
+        if (coopCamera != null)
+            coopCamera.RegisterPlayer(transform);
+
+        indicatorManager = FindFirstObjectByType<OffScreenIndicatorManager>();
+        if (indicatorManager != null)
+            indicatorManager.RegisterPlayer(this);
+
+        PlayerHealthUIManager healthUIManager = FindFirstObjectByType<PlayerHealthUIManager>();
+        if (healthUIManager != null)
+            healthUIManager.RegisterPlayer(GetComponent<PlayerHealth>());
+
 
         playerIndex = GetComponent<PlayerInput>().playerIndex;
         playerNumber = playerIndex + 1;
@@ -193,11 +203,9 @@ public class PlayerController3D : MonoBehaviour
         if (needKeyPromptP1) needKeyPromptP1.SetActive(false);
         if (needKeyPromptP2) needKeyPromptP2.SetActive(false);
 
-        indicatorManager = FindFirstObjectByType<OffScreenIndicatorManager>();
-        indicatorManager.RegisterPlayer(this);
+       
 
-        PlayerHealthUIManager healthUIManager =
-        FindFirstObjectByType<PlayerHealthUIManager>();
+        
 
         healthUIManager.RegisterPlayer(GetComponent<PlayerHealth>());
 
