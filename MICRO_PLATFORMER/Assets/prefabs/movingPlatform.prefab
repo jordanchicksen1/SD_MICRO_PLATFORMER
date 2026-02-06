@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: 7756869988270073613}
   - component: {fileID: 5421970412964389560}
   - component: {fileID: 7640216528908325466}
+  - component: {fileID: 722788267727020113}
   m_Layer: 6
   m_Name: platform
   m_TagString: Untagged
@@ -175,6 +176,34 @@ MonoBehaviour:
   pointA: {fileID: 4495411594786904147}
   pointB: {fileID: 1235055341483978429}
   speed: 2
+  arriveDistance: 0.05
+--- !u!54 &722788267727020113
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7669271293415214631}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 2
 --- !u!1001 &3226893317212826299
 PrefabInstance:
   m_ObjectHideFlags: 0

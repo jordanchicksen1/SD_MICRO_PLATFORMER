@@ -124,7 +124,9 @@ public class PlayerController3D : MonoBehaviour
     Vector2 lastMoveInput;
     bool forcePromptRefresh;
 
-
+    [Header("Moving Platforms")]
+    [SerializeField] LayerMask groundMask = ~0;  // set in inspector if you want
+    Vector3 platformVelocity;
 
     [Header("PickUps")]
     public ParticleSystem coinParticle;
@@ -342,10 +344,18 @@ public class PlayerController3D : MonoBehaviour
             return;
         }
 
-        if (IsGrounded())
+        platformVelocity = Vector3.zero;
+
+        if (IsGrounded(out RaycastHit hit))
         {
             lastGroundedTime = Time.time;
+
+            // If we're standing on a moving platform, grab its velocity
+            MovingPlatform mp = hit.collider.GetComponentInParent<MovingPlatform>();
+            if (mp != null)
+                platformVelocity = mp.Velocity;
         }
+
 
         HandleGroundPound();
         CheckGroundPoundAutoEnd(); 
@@ -384,8 +394,21 @@ public class PlayerController3D : MonoBehaviour
     {
         Vector3 move = GetCameraRelativeMovement();
 
-        rb.linearVelocity = new Vector3(move.x * (moveSpeed * carryMoveMul), rb.linearVelocity.y, move.z * (moveSpeed * carryMoveMul));
+        Vector3 desiredXZ = new Vector3(
+            move.x * (moveSpeed * carryMoveMul),
+            0f,
+            move.z * (moveSpeed * carryMoveMul)
+        );
+
+        Vector3 finalXZ = desiredXZ + new Vector3(platformVelocity.x, 0f, platformVelocity.z);
+
+        rb.linearVelocity = new Vector3(finalXZ.x, rb.linearVelocity.y, finalXZ.z);
+
+        if (playerAnimator != null)
+            playerAnimator.SetMoveBlend(Mathf.Clamp01(moveInput.magnitude));
+
     }
+
 
 
     void RotateTowardsMovement()
@@ -467,7 +490,7 @@ public class PlayerController3D : MonoBehaviour
             return;
 
         // If we’re grounded and basically not moving vertically, we’ve landed
-        if (IsGrounded() && Mathf.Abs(rb.linearVelocity.y) <= groundPoundAutoEndVelY)
+        if (IsGrounded(out RaycastHit hit) && Mathf.Abs(rb.linearVelocity.y) <= groundPoundAutoEndVelY)
         {
             EndGroundPound();
         }
@@ -498,7 +521,7 @@ public class PlayerController3D : MonoBehaviour
         if (!context.performed)
             return;
 
-        if (IsGrounded())
+        if (IsGrounded(out RaycastHit hit))
         {
             // Ground ? Long Jump
             if (!isLongJumping && !isGroundPounding && !isKnockedBack)
@@ -553,7 +576,7 @@ public class PlayerController3D : MonoBehaviour
 
     public void OnGroundPound(InputAction.CallbackContext context)
     {
-        if (context.performed && !IsGrounded())
+        if (context.performed && !IsGrounded(out RaycastHit hit))
         {
             groundPoundQueued = true;
         }
@@ -593,12 +616,11 @@ public class PlayerController3D : MonoBehaviour
     }
 
 
-    bool IsGrounded()
+    bool IsGrounded(out RaycastHit hit)
     {
-        return Physics.Raycast(transform.position, Vector3.down, 1.1f);
-        
-
+        return Physics.Raycast(transform.position, Vector3.down, out hit, 1.1f, groundMask);
     }
+
 
     void ApplyKnockback(Vector3 sourcePosition)
     {
@@ -822,7 +844,7 @@ public class PlayerController3D : MonoBehaviour
 
         float timer = 0f;
 
-        while (timer < diveDuration && !IsGrounded())
+        while (timer < diveDuration && !IsGrounded(out RaycastHit hit))
         {
             timer += Time.deltaTime;
             yield return null;

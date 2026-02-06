@@ -1,38 +1,38 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class MovingPlatform : MonoBehaviour
 {
     [SerializeField] Transform pointA;
     [SerializeField] Transform pointB;
     [SerializeField] float speed = 2f;
+    [SerializeField] float arriveDistance = 0.05f;
 
+    public Vector3 Velocity { get; private set; }  // <-- key
+
+    Rigidbody rb;
     Vector3 target;
+    Vector3 lastPos;
 
-    void Start()
+    void Awake()
     {
+        rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
+        rb.useGravity = false;
+
         target = pointB.position;
+        lastPos = rb.position;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        transform.position =
-            Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
+        Vector3 next = Vector3.MoveTowards(rb.position, target, speed * Time.fixedDeltaTime);
+        rb.MovePosition(next);
 
-        if (Vector3.Distance(transform.position, target) < 0.05f)
-        {
-            target = target == pointA.position ? pointB.position : pointA.position;
-        }
-    }
+        Velocity = (next - lastPos) / Time.fixedDeltaTime;
+        lastPos = next;
 
-    void OnCollisionEnter(Collision col)
-    {
-        if (col.transform.CompareTag("Player"))
-            col.transform.SetParent(transform);
-    }
-
-    void OnCollisionExit(Collision col)
-    {
-        if (col.transform.CompareTag("Player"))
-            col.transform.SetParent(null);
+        if (Vector3.Distance(next, target) < arriveDistance)
+            target = (target == pointA.position) ? pointB.position : pointA.position;
     }
 }

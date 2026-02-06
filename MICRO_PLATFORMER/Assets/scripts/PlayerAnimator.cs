@@ -28,6 +28,10 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] float bodyBobAmount = 0.1f;
     [SerializeField] float bodyBobSpeed = 6f;
 
+    float externalMoveBlend; // 0..1
+    public void SetMoveBlend(float v) => externalMoveBlend = Mathf.Clamp01(v);
+
+
     [Header("Jump Pose")]
     [SerializeField] float jumpArmBackAngle = 35f;
     [SerializeField] float jumpArmSideAngle = 10f;
@@ -134,10 +138,11 @@ public class PlayerAnimator : MonoBehaviour
 
         bool grounded = IsGrounded();
 
-        float horizontalSpeed =
-            new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude;
+        float horizontalSpeed = externalMoveBlend;
+
 
         bool shouldIdle = grounded && horizontalSpeed < 0.1f && !isDiving;
+
 
         float idleTarget = shouldIdle ? 1f : 0f;
 
