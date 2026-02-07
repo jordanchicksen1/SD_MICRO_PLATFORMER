@@ -5555,7 +5555,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5802361201025209937}
-  - component: {fileID: 160465843474251806}
+  - component: {fileID: 966549572820542633}
   m_Layer: 8
   m_Name: model
   m_TagString: Untagged
@@ -5584,7 +5584,7 @@ Transform:
   - {fileID: 8590845305832231632}
   m_Father: {fileID: 377498473771456334}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &160465843474251806
+--- !u!114 &966549572820542633
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5593,7 +5593,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2154793148307912113}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ecbb9d45c0706d49b7fb7b80a0ffb9b, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ca68f14ad3d7f64297a49c9b100db71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   leftArm: {fileID: 1040182198230195641}
@@ -5606,7 +5606,7 @@ MonoBehaviour:
   idleBlendSpeed: 6
   armSwingAmount: 30
   legSwingAmount: 50
-  walkSpeed: 9
+  walkSpeed: 8
   bodyBobAmount: 0.05
   bodyBobSpeed: 1
   jumpArmBackAngle: 35
@@ -5618,16 +5618,21 @@ MonoBehaviour:
   diveBodyPitch: 40
   diveLegBackAngle: 20
   diveBlendSpeed: 10
-  poundArmDownAngle: 90
-  poundLegStraightAngle: 90
+  poundArmDownAngle: -80
+  poundLegStraightAngle: 0
   poundBodyLean: 25
   poundBlendSpeed: 12
-  carryArmForwardAngle: 80
-  carryArmOutAngle: -35
+  carryArmForwardAngle: 55
+  carryArmOutAngle: 10
   carryBlendSpeed: 12
-  gemArmUpAngle: -180
-  gemBodyLean: 10
+  gemArmUpAngle: -120
+  gemBodyLean: -10
   gemBlendSpeed: 8
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  groundRadius: 0.25
+  groundDistance: 0.9
 --- !u!1 &2219324368758424990
 GameObject:
   m_ObjectHideFlags: 0
@@ -6208,7 +6213,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 1
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &3637248229597286372
@@ -6227,6 +6232,12 @@ MonoBehaviour:
   followDistance: 1.6
   moveSpeed: 6
   rotateSpeed: 12
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  snapFromAbove: 10
+  snapDownDistance: 30
+  groundOffset: 0.02
 --- !u!1 &2792080310210314420
 GameObject:
   m_ObjectHideFlags: 0

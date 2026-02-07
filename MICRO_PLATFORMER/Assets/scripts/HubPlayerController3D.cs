@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerController3D : MonoBehaviour
+public class HubPlayerController3D : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] float moveSpeed = 6f;
@@ -58,9 +58,9 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] float longJumpLockTime = 0.2f;
 
     bool isLongJumping;
-    
 
-    [Header("Carrying")] 
+
+    [Header("Carrying")]
     [SerializeField] Transform holdPoint;
     public Transform HoldPoint => holdPoint;
     CarryBall carriedBall;   // null = not holding anything
@@ -84,7 +84,7 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] Renderer[] renderers;
     [SerializeField] float flashInterval = 0.1f;
     Material[][] cachedMaterials;
-    
+
 
 
     bool isKnockedBack;
@@ -94,7 +94,7 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] Material player1Mat;
     [SerializeField] Material player2Mat;
 
-    PlayerAnimator playerAnimator;
+    HubPlayerAnimator playerAnimator;
 
     [Header("Interactables")]
     [SerializeField] float interactRange = 2f;
@@ -125,7 +125,7 @@ public class PlayerController3D : MonoBehaviour
     bool forcePromptRefresh;
 
     [Header("Moving Platforms")]
-    [SerializeField] LayerMask groundMask = ~0;  // set in inspector if you want
+    
     Vector3 platformVelocity;
 
     [Header("PickUps")]
@@ -141,9 +141,41 @@ public class PlayerController3D : MonoBehaviour
     float carryJumpMul = 1f;
 
     [Header("Ground Check")]
-    [SerializeField] float groundCheckRadius = 0.25f;
-    [SerializeField] float groundCheckDistance = 0.75f;
-    
+    [SerializeField] Collider groundCollider;      // assign in inspector (your capsule)
+    [SerializeField] LayerMask groundMask;
+    [SerializeField] float groundCheckExtra = 0.08f;
+    [SerializeField] float groundCheckRadiusScale = 0.9f;
+
+
+    bool IsGrounded()
+    {
+        if (groundMask == 0)
+            groundMask = LayerMask.GetMask("GroundLayer");
+
+        if (groundCollider == null)
+            groundCollider = GetComponent<Collider>();
+
+        if (groundCollider == null) return false;
+
+        Bounds b = groundCollider.bounds;
+
+        // cast from near the bottom of the collider
+        float radius = Mathf.Max(0.05f, Mathf.Min(b.extents.x, b.extents.z) * groundCheckRadiusScale);
+        Vector3 origin = new Vector3(b.center.x, b.min.y + radius + 0.02f, b.center.z);
+
+        // small spherecast downward to check ground
+        return Physics.SphereCast(
+            origin,
+            radius,
+            Vector3.down,
+            out _,
+            groundCheckExtra,
+            groundMask,
+            QueryTriggerInteraction.Ignore
+        );
+    }
+
+
 
 
     public void SetCarryModifiers(float moveMultiplier, float jumpMultiplier)
@@ -162,7 +194,7 @@ public class PlayerController3D : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         renderers = GetComponentsInChildren<Renderer>();
-        
+
         cachedMaterials = new Material[renderers.Length][];
         for (int i = 0; i < renderers.Length; i++)
         {
@@ -176,9 +208,7 @@ public class PlayerController3D : MonoBehaviour
         if (coopCamera != null)
             coopCamera.RegisterPlayer(transform);
 
-        indicatorManager = FindFirstObjectByType<OffScreenIndicatorManager>();
-        if (indicatorManager != null)
-            indicatorManager.RegisterPlayer(this);
+       
 
         PlayerHealthUIManager healthUIManager = FindFirstObjectByType<PlayerHealthUIManager>();
         if (healthUIManager != null)
@@ -210,48 +240,39 @@ public class PlayerController3D : MonoBehaviour
         if (needKeyPromptP1) needKeyPromptP1.SetActive(false);
         if (needKeyPromptP2) needKeyPromptP2.SetActive(false);
 
-       
+
+
+
 
         
 
-        healthUIManager.RegisterPlayer(GetComponent<PlayerHealth>());
-
-        PlayerHealth health = GetComponent<PlayerHealth>();
-        health.OnDamaged += ApplyKnockback;
         
+
 
         for (int i = 0; i < playerVisuals.Length; i++)
         {
             playerVisuals[i].SetActive(i == playerIndex);
         }
 
-        StartCoroutine(TurnOffP1Tag());
-        StartCoroutine(TurnOffP2Tag());
+        //StartCoroutine(TurnOffP1Tag());
+        //StartCoroutine(TurnOffP2Tag());
 
-        playerAnimator = GetComponentInChildren<PlayerAnimator>();
+        playerAnimator = GetComponentInChildren<HubPlayerAnimator>();
 
 
-        GameObject indicator = Instantiate(groundIndicatorPrefab, transform.position, Quaternion.identity);
+        //GameObject indicator = Instantiate(groundIndicatorPrefab, transform.position, Quaternion.identity);
 
-        GroundIndicator gi = indicator.GetComponent<GroundIndicator>();
-        gi.SetTarget(transform);
+        //GroundIndicator gi = indicator.GetComponent<GroundIndicator>();
+        //gi.SetTarget(transform);
 
-        Renderer r = indicator.GetComponentInChildren<Renderer>();
+        //Renderer r = indicator.GetComponentInChildren<Renderer>();
 
-        if (playerIndex == 0)
-            r.material = player1Mat;
-        else
-            r.material = player2Mat;
+        //if (playerIndex == 0)
+            //r.material = player1Mat;
+       // else
+           // r.material = player2Mat;
 
-        var life = FindFirstObjectByType<CoopLifeManager>();
-        if (life != null)
-        {
-            life.RegisterPlayer(GetComponent<PlayerBubbleState>(), GetComponent<PlayerHealth>(), GetComponent<PlayerInput>());
-        }
-        else
-        {
-            Debug.LogError("No CoopLifeManager found in scene!");
-        }
+        
 
     }
 
@@ -351,19 +372,17 @@ public class PlayerController3D : MonoBehaviour
 
         platformVelocity = Vector3.zero;
 
-        if (IsGrounded(out RaycastHit hit))
+        if (IsGrounded())
         {
             lastGroundedTime = Time.time;
 
             // If we're standing on a moving platform, grab its velocity
-            MovingPlatform mp = hit.collider.GetComponentInParent<MovingPlatform>();
-            if (mp != null)
-                platformVelocity = mp.Velocity;
+           
         }
 
 
         HandleGroundPound();
-        CheckGroundPoundAutoEnd(); 
+        CheckGroundPoundAutoEnd();
 
 
         if (!isGroundPounding && !isKnockedBack && !isDiving && !isLongJumping)
@@ -495,7 +514,7 @@ public class PlayerController3D : MonoBehaviour
             return;
 
         // If we’re grounded and basically not moving vertically, we’ve landed
-        if (IsGrounded(out RaycastHit hit) && Mathf.Abs(rb.linearVelocity.y) <= groundPoundAutoEndVelY)
+        if (IsGrounded() && Mathf.Abs(rb.linearVelocity.y) <= groundPoundAutoEndVelY)
         {
             EndGroundPound();
         }
@@ -518,7 +537,7 @@ public class PlayerController3D : MonoBehaviour
 
 
 
-   
+
 
 
     public void OnDive(InputAction.CallbackContext context)
@@ -526,7 +545,7 @@ public class PlayerController3D : MonoBehaviour
         if (!context.performed)
             return;
 
-        if (IsGrounded(out RaycastHit hit))
+        if (IsGrounded())
         {
             // Ground ? Long Jump
             if (!isLongJumping && !isGroundPounding && !isKnockedBack)
@@ -581,7 +600,7 @@ public class PlayerController3D : MonoBehaviour
 
     public void OnGroundPound(InputAction.CallbackContext context)
     {
-        if (context.performed && !IsGrounded(out RaycastHit hit))
+        if (context.performed && !IsGrounded())
         {
             groundPoundQueued = true;
         }
@@ -617,14 +636,11 @@ public class PlayerController3D : MonoBehaviour
 
         // Otherwise try pick up
         TryInteract();
-        RequestPromptRefresh(); 
+        RequestPromptRefresh();
     }
 
 
-    bool IsGrounded(out RaycastHit hit)
-    {
-        return Physics.Raycast(transform.position, Vector3.down, out hit, 1.1f, groundMask);
-    }
+    
 
 
     void ApplyKnockback(Vector3 sourcePosition)
@@ -670,24 +686,24 @@ public class PlayerController3D : MonoBehaviour
         if (other.tag == "Bullet")
         {
             GetComponent<PlayerHealth>().TakeDamage(1, other.transform.position);
-            
+
         }
 
-        if(other.tag == "Heart")
+        if (other.tag == "Heart")
         {
             GetComponent<PlayerHealth>().Heal(1);
             Destroy(other.gameObject);
             heartParticle.Play();
-            heartSFX.Play();   
+            heartSFX.Play();
         }
 
-        if(other.tag == "Coin")
+        if (other.tag == "Coin")
         {
             coinSFX.Play();
             coinParticle.Play();
         }
 
-        if( other.tag == "Gem")
+        if (other.tag == "Gem")
         {
             StartCoroutine(GemPoseCoroutine());
             gemSFX.Play();
@@ -697,8 +713,8 @@ public class PlayerController3D : MonoBehaviour
         {
             StartCoroutine(KeyPoseCoroutine());
         }
-        
-       
+
+
     }
 
     void OnCollisionEnter(Collision collision)
@@ -713,7 +729,7 @@ public class PlayerController3D : MonoBehaviour
             StartCoroutine(EndGroundPoundNextFixed());
         }
 
-        
+
     }
 
 
@@ -726,15 +742,15 @@ public class PlayerController3D : MonoBehaviour
             CarryBall ball = hit.collider.GetComponentInParent<CarryBall>();
             if (ball != null)
             {
-                ball.PickUp(this);
+                //ball.PickUp(this);
                 carriedBall = ball;
             }
             else
             {
                 // other interactables (buttons/doors etc)
                 IInteractable interactable = hit.collider.GetComponentInParent<IInteractable>();
-                if (interactable != null)
-                    interactable.Interact(this);
+                //if (interactable != null)
+                    //interactable.Interact(this);
             }
         }
     }
@@ -747,7 +763,7 @@ public class PlayerController3D : MonoBehaviour
             StopCoroutine(needKeyRoutine);
 
         needKeyRoutine = StartCoroutine(NeedKeyRoutine(duration));
-        RequestPromptRefresh(); 
+        RequestPromptRefresh();
     }
 
     IEnumerator NeedKeyRoutine(float duration)
@@ -761,7 +777,7 @@ public class PlayerController3D : MonoBehaviour
 
         needKeyRoutine = null;
 
-        RequestPromptRefresh(); 
+        RequestPromptRefresh();
     }
 
     public IEnumerator TurnOffP1Tag()
@@ -849,7 +865,7 @@ public class PlayerController3D : MonoBehaviour
 
         float timer = 0f;
 
-        while (timer < diveDuration && !IsGrounded(out RaycastHit hit))
+        while (timer < diveDuration && !IsGrounded())
         {
             timer += Time.deltaTime;
             yield return null;

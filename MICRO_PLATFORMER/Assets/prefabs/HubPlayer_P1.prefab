@@ -2150,7 +2150,7 @@ GameObject:
   - component: {fileID: 1415674830616732927}
   - component: {fileID: 8810652736106149816}
   - component: {fileID: 3897031823457299242}
-  - component: {fileID: 2039384897702981124}
+  - component: {fileID: 1425846908010393434}
   m_Layer: 3
   m_Name: HubPlayer_P1
   m_TagString: Player
@@ -2315,8 +2315,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2039384897702981124}
-        m_TargetAssemblyTypeName: PlayerController3D, Assembly-CSharp
+      - m_Target: {fileID: 1425846908010393434}
+        m_TargetAssemblyTypeName: HubPlayerController3D, Assembly-CSharp
         m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:
@@ -2331,8 +2331,8 @@ MonoBehaviour:
     m_ActionName: 'Gameplay/Move[/DualShock4GamepadHID/leftStick]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2039384897702981124}
-        m_TargetAssemblyTypeName: PlayerController3D, Assembly-CSharp
+      - m_Target: {fileID: 1425846908010393434}
+        m_TargetAssemblyTypeName: HubPlayerController3D, Assembly-CSharp
         m_MethodName: OnJump
         m_Mode: 0
         m_Arguments:
@@ -2347,8 +2347,8 @@ MonoBehaviour:
     m_ActionName: 'Gameplay/Jump[/DualShock4GamepadHID/buttonEast,/DualShock4GamepadHID/buttonSouth]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2039384897702981124}
-        m_TargetAssemblyTypeName: PlayerController3D, Assembly-CSharp
+      - m_Target: {fileID: 1425846908010393434}
+        m_TargetAssemblyTypeName: HubPlayerController3D, Assembly-CSharp
         m_MethodName: OnInteract
         m_Mode: 0
         m_Arguments:
@@ -2363,8 +2363,8 @@ MonoBehaviour:
     m_ActionName: 'Gameplay/Interact[/DualShock4GamepadHID/buttonWest]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2039384897702981124}
-        m_TargetAssemblyTypeName: PlayerController3D, Assembly-CSharp
+      - m_Target: {fileID: 1425846908010393434}
+        m_TargetAssemblyTypeName: HubPlayerController3D, Assembly-CSharp
         m_MethodName: OnGroundPound
         m_Mode: 0
         m_Arguments:
@@ -2379,8 +2379,8 @@ MonoBehaviour:
     m_ActionName: 'Gameplay/GroundPound[/DualShock4GamepadHID/rightTrigger]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2039384897702981124}
-        m_TargetAssemblyTypeName: PlayerController3D, Assembly-CSharp
+      - m_Target: {fileID: 1425846908010393434}
+        m_TargetAssemblyTypeName: HubPlayerController3D, Assembly-CSharp
         m_MethodName: OnPause
         m_Mode: 0
         m_Arguments:
@@ -2395,7 +2395,7 @@ MonoBehaviour:
     m_ActionName: 'Gameplay/Pause[/DualShock4GamepadHID/start,/XInputControllerWindows/start]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2039384897702981124}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerController3D, Assembly-CSharp
         m_MethodName: OnCameraRotate
         m_Mode: 0
@@ -2411,8 +2411,8 @@ MonoBehaviour:
     m_ActionName: 'Gameplay/Camera[/DualShock4GamepadHID/rightStick,/XInputControllerWindows/rightStick]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2039384897702981124}
-        m_TargetAssemblyTypeName: PlayerController3D, Assembly-CSharp
+      - m_Target: {fileID: 1425846908010393434}
+        m_TargetAssemblyTypeName: HubPlayerController3D, Assembly-CSharp
         m_MethodName: OnDive
         m_Mode: 0
         m_Arguments:
@@ -2446,7 +2446,7 @@ MonoBehaviour:
   m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &2039384897702981124
+--- !u!114 &1425846908010393434
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2455,69 +2455,65 @@ MonoBehaviour:
   m_GameObject: {fileID: 4203862726524772062}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba2d50b96f42c994b9409865cb7baf4d, type: 3}
+  m_Script: {fileID: 11500000, guid: 4b313bea207a4e24c82be58f8a155a08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 7
-  jumpForce: 10
+  moveSpeed: 8
+  jumpForce: 5
   rotationSpeed: 12
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
   coyoteTime: 0.15
   jumpSFX: {fileID: 4287686296637402481}
-  groundPoundForce: 10
+  groundPoundForce: 20
   groundPoundLockTime: 0.15
   groundPoundAutoEndMinTime: 0.05
   groundPoundAutoEndVelY: 0.2
   groundPoundMaxDuration: 1.25
-  diveForwardForce: 16
-  diveDownForce: 2
-  diveDuration: 0.6
+  diveForwardForce: 12
+  diveDownForce: 4
+  diveDuration: 0.35
   diveControlLockTime: 0.2
   longJumpForwardForce: 14
-  longJumpUpForce: 5
+  longJumpUpForce: 3
   longJumpDuration: 0.25
   longJumpLockTime: 0.2
   holdPoint: {fileID: 4572415412623109288}
-  playerVisuals:
-  - {fileID: 621975151472250982}
-  - {fileID: 6738429396199719115}
-  p1Tag: {fileID: 754872918459829435}
-  p2Tag: {fileID: 4695476334414579471}
+  playerVisuals: []
+  p1Tag: {fileID: 0}
+  p2Tag: {fileID: 0}
   knockbackForce: 8
   knockbackUpwardForce: 3
   knockbackLockTime: 0.2
-  renderers:
-  - {fileID: 6378288508576017432}
-  - {fileID: 4073032073831659524}
-  - {fileID: 5699184283111162570}
-  - {fileID: 7318548781973313094}
-  - {fileID: 6845100922396099223}
-  - {fileID: 3678221826419818270}
-  - {fileID: 6945442011426369396}
-  - {fileID: 8807643914672942721}
+  renderers: []
   flashInterval: 0.1
-  groundIndicatorPrefab: {fileID: 5632946183400775603, guid: 67d415a42dea31f428aaaee93f60fb17, type: 3}
-  player1Mat: {fileID: 2100000, guid: fa4ce82ec46d54948994ea68ca013516, type: 2}
-  player2Mat: {fileID: 2100000, guid: 0d378cef7be53b647841cf7caefcad9a, type: 2}
+  groundIndicatorPrefab: {fileID: 0}
+  player1Mat: {fileID: 0}
+  player2Mat: {fileID: 0}
   interactRange: 2
   interactLayer:
     serializedVersion: 2
-    m_Bits: 128
-  pickupPromptP1: {fileID: 2971265928364292959}
-  pickupPromptP2: {fileID: 4427942002452646952}
-  unlockPromptP1: {fileID: 9185515892717275635}
-  unlockPromptP2: {fileID: 444784894462531294}
-  needKeyPromptP1: {fileID: 1924681859006191540}
-  needKeyPromptP2: {fileID: 111178608321506586}
+    m_Bits: 0
+  pickupPromptP1: {fileID: 0}
+  pickupPromptP2: {fileID: 0}
+  unlockPromptP1: {fileID: 0}
+  unlockPromptP2: {fileID: 0}
+  needKeyPromptP1: {fileID: 0}
+  needKeyPromptP2: {fileID: 0}
   promptCheckInterval: 0.1
-  coinParticle: {fileID: 8477600078391274892}
-  coinSFX: {fileID: 4417213822304042949}
-  heartParticle: {fileID: 1576495664748050938}
-  heartSFX: {fileID: 4271316432079475549}
-  fakeGem: {fileID: 9153127095811905898}
-  gemSFX: {fileID: 2000000106414152445}
-  fakeKey: {fileID: 7181011875409118975}
+  coinParticle: {fileID: 0}
+  coinSFX: {fileID: 0}
+  heartParticle: {fileID: 0}
+  heartSFX: {fileID: 0}
+  fakeGem: {fileID: 0}
+  gemSFX: {fileID: 0}
+  fakeKey: {fileID: 0}
+  groundCollider: {fileID: 1415674830616732927}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  groundCheckExtra: 0.08
+  groundCheckRadiusScale: 0.9
 --- !u!1 &4373788222937336102
 GameObject:
   m_ObjectHideFlags: 0
@@ -13767,7 +13763,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5032237568791105048}
-  - component: {fileID: 8327947528472378559}
+  - component: {fileID: 2961183430643718046}
   m_Layer: 3
   m_Name: model
   m_TagString: Untagged
@@ -13796,7 +13792,7 @@ Transform:
   - {fileID: 8439026518391377882}
   m_Father: {fileID: 9208667584024437348}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8327947528472378559
+--- !u!114 &2961183430643718046
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13805,7 +13801,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 9017588414276683159}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ecbb9d45c0706d49b7fb7b80a0ffb9b, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ca68f14ad3d7f64297a49c9b100db71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   leftArm: {fileID: 2499738037529721270}
@@ -13818,7 +13814,7 @@ MonoBehaviour:
   idleBlendSpeed: 6
   armSwingAmount: 30
   legSwingAmount: 50
-  walkSpeed: 9
+  walkSpeed: 8
   bodyBobAmount: 0.05
   bodyBobSpeed: 1
   jumpArmBackAngle: 35
@@ -13830,16 +13826,22 @@ MonoBehaviour:
   diveBodyPitch: 40
   diveLegBackAngle: 20
   diveBlendSpeed: 10
-  poundArmDownAngle: 90
-  poundLegStraightAngle: 90
+  poundArmDownAngle: -80
+  poundLegStraightAngle: 0
   poundBodyLean: 25
   poundBlendSpeed: 12
-  carryArmForwardAngle: 80
-  carryArmOutAngle: -35
+  carryArmForwardAngle: 55
+  carryArmOutAngle: 10
   carryBlendSpeed: 12
-  gemArmUpAngle: -180
-  gemBodyLean: 10
+  gemArmUpAngle: -120
+  gemBodyLean: -10
   gemBlendSpeed: 8
+  groundCollider: {fileID: 0}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckExtra: 0.08
+  groundCheckRadiusScale: 0.9
 --- !u!1 &9153127095811905898
 GameObject:
   m_ObjectHideFlags: 0
