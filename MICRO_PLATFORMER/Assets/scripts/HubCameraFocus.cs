@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class HubCameraFocus : MonoBehaviour
 {
-    [Header("Move")]
-    [SerializeField] float moveDuration = 0.6f;
+    [Header("Timing")]
+    [SerializeField] float moveDuration = 0.55f;
     [SerializeField] AnimationCurve ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     [Header("Zoom (FOV)")]
@@ -18,9 +18,16 @@ public class HubCameraFocus : MonoBehaviour
     Camera cam;
     Coroutine routine;
 
+    
+
     void Awake()
     {
         cam = GetComponent<Camera>();
+    }
+
+    // IMPORTANT: capture defaults AFTER everything is initialized
+    void Start()
+    {
         SaveDefault();
     }
 
@@ -34,18 +41,22 @@ public class HubCameraFocus : MonoBehaviour
     public void FocusOn(Transform focusPoint)
     {
         if (!focusPoint) return;
-
-        if (routine != null) StopCoroutine(routine);
-        routine = StartCoroutine(MoveTo(focusPoint.position, focusPoint.rotation, useFovZoom ? focusedFov : (cam ? cam.fieldOfView : 60f)));
+        float fov = (cam && useFovZoom) ? focusedFov : (cam ? cam.fieldOfView : 60f);
+        StartMove(focusPoint.position, focusPoint.rotation, fov);
     }
 
     public void ReturnToDefault()
     {
-        if (routine != null) StopCoroutine(routine);
-        routine = StartCoroutine(MoveTo(defaultPos, defaultRot, defaultFov));
+        StartMove(defaultPos, defaultRot, defaultFov);
     }
 
-    IEnumerator MoveTo(Vector3 targetPos, Quaternion targetRot, float targetFov)
+    void StartMove(Vector3 targetPos, Quaternion targetRot, float targetFov)
+    {
+        if (routine != null) StopCoroutine(routine);
+        routine = StartCoroutine(MoveRoutine(targetPos, targetRot, targetFov));
+    }
+
+    IEnumerator MoveRoutine(Vector3 targetPos, Quaternion targetRot, float targetFov)
     {
         Vector3 startPos = transform.position;
         Quaternion startRot = transform.rotation;
@@ -68,10 +79,18 @@ public class HubCameraFocus : MonoBehaviour
 
         transform.position = targetPos;
         transform.rotation = targetRot;
-
-        if (cam && useFovZoom)
-            cam.fieldOfView = targetFov;
+        if (cam && useFovZoom) cam.fieldOfView = targetFov;
 
         routine = null;
     }
+
+    public bool IsMoving => routine != null;
+
+    public void ReturnTo(Vector3 pos, Quaternion rot)
+    {
+        float fov = cam ? cam.fieldOfView : 60f;
+        StartMove(pos, rot, fov);
+    }
+
+
 }

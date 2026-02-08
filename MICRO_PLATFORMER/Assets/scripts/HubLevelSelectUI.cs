@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -30,6 +31,8 @@ public class HubLevelSelectUI : MonoBehaviour
     bool savedConstraintsValid;
 
 
+    Vector3 returnPos;
+    Quaternion returnRot;
 
 
 
@@ -41,11 +44,10 @@ public class HubLevelSelectUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI descriptionText;
 
     [SerializeField] HubCameraFollow cameraFollowToDisable;
-  
-    
 
-   
-   
+    [SerializeField] ScreenFader fader;
+    [SerializeField] float fadeOutDuration = 0.4f;
+    bool isLoading;
 
 
 
@@ -58,6 +60,8 @@ public class HubLevelSelectUI : MonoBehaviour
 
         playButton.onClick.AddListener(OnPlayPressed);
         cancelButton.onClick.AddListener(OnCancelPressed);
+        if (!fader) fader = FindFirstObjectByType<ScreenFader>();
+
     }
 
     public void Open(
@@ -87,7 +91,11 @@ public class HubLevelSelectUI : MonoBehaviour
 
 
 
-        // if (playerControllerToDisable)playerControllerToDisable.enabled = false;
+        if (Camera.main != null)
+        {
+            returnPos = Camera.main.transform.position;
+            returnRot = Camera.main.transform.rotation;
+        }
 
 
         if (cameraFocus && focusPoint)
@@ -101,6 +109,9 @@ public class HubLevelSelectUI : MonoBehaviour
                 videoPlayer.Play();
         }
 
+        
+
+
         if (titleText) titleText.text = title;
         if (descriptionText) descriptionText.text = description;
         if (cameraFollowToDisable) cameraFollowToDisable.enabled = false;
@@ -109,13 +120,32 @@ public class HubLevelSelectUI : MonoBehaviour
     }
 
 
-    void OnPlayPressed()
+    public void OnPlayPressed()
     {
-        // Optionally: small delay / fade can be added later
-        if (!string.IsNullOrEmpty(pendingSceneName))
-            SceneManager.LoadScene(pendingSceneName);
-        Close();
+        if (isLoading) return;
+        if (string.IsNullOrEmpty(pendingSceneName)) return;
+
+        StartCoroutine(PlayRoutine());
     }
+
+    IEnumerator PlayRoutine()
+    {
+        panelRoot.SetActive(false);
+        isLoading = true;
+
+        // (Optional) stop input spam
+        if (playButton) playButton.interactable = false;
+        if (cancelButton) cancelButton.interactable = false;
+
+        // Fade to black
+        if (fader != null)
+            yield return fader.FadeTo(1f, fadeOutDuration);
+        
+
+        // Load scene
+        SceneManager.LoadScene(pendingSceneName);
+    }
+
 
     void OnCancelPressed()
     {
@@ -128,7 +158,8 @@ public class HubLevelSelectUI : MonoBehaviour
 
         if (panelRoot) panelRoot.SetActive(false);
 
-        if (cameraFocus) cameraFocus.ReturnToDefault();
+        StartCoroutine(ReturnThenEnableFollow());
+
 
         // Re-enable player control
 
@@ -188,5 +219,17 @@ public class HubLevelSelectUI : MonoBehaviour
         savedConstraintsValid = false;
     }
 
+    IEnumerator ReturnThenEnableFollow()
+    {
+        // Return to the pose the follow camera had when we opened the panel
+        if (cameraFocus)
+            cameraFocus.ReturnTo(returnPos, returnRot);
+
+        // wait until the focus move is done so scripts don't fight
+        while (cameraFocus != null && cameraFocus.IsMoving)
+            yield return null;
+
+        if (cameraFollowToDisable) cameraFollowToDisable.enabled = true;
+    }
 
 }
