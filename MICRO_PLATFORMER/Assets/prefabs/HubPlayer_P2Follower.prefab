@@ -5628,11 +5628,12 @@ MonoBehaviour:
   gemArmUpAngle: -120
   gemBodyLean: -10
   gemBlendSpeed: 8
+  groundCollider: {fileID: 0}
   groundMask:
     serializedVersion: 2
     m_Bits: 0
-  groundRadius: 0.25
-  groundDistance: 0.9
+  groundCheckExtra: 0.08
+  groundCheckRadiusScale: 0.9
 --- !u!1 &2219324368758424990
 GameObject:
   m_ObjectHideFlags: 0
@@ -6238,6 +6239,7 @@ MonoBehaviour:
   snapFromAbove: 10
   snapDownDistance: 30
   groundOffset: 0.02
+  followerCollider: {fileID: 0}
 --- !u!1 &2792080310210314420
 GameObject:
   m_ObjectHideFlags: 0
