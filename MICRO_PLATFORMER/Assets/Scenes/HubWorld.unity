@@ -8111,8 +8111,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -21.9}
-  m_SizeDelta: {x: 225, y: 10}
+  m_AnchoredPosition: {x: 0, y: -27.2}
+  m_SizeDelta: {x: 225, y: 225}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &650579385
 MonoBehaviour:
@@ -8134,7 +8134,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 091f4284e25dd5d4f9494fbff716c61a, type: 3}
+  m_Texture: {fileID: 2800000, guid: b46472f3ea7f885408eb7dbf1040c205, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -13955,6 +13955,7 @@ GameObject:
   - component: {fileID: 1102136544}
   - component: {fileID: 1102136543}
   - component: {fileID: 1102136542}
+  - component: {fileID: 1102136545}
   m_Layer: 0
   m_Name: levelTrigger3
   m_TagString: Untagged
@@ -14051,6 +14052,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1102136540}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1102136545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1102136540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae1708fef1c0914bb47d7422cf87adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: LevelThree
+  levelTitle: Barren Canyon
+  levelDescription: Navigate the through arid dunes and peaks of the wasteland!
+  previewClip: {fileID: 32900000, guid: 7821aaf854ec89b49bd2b626bcf3b876, type: 3}
+  cameraFocusPoint: {fileID: 517955685}
+  ui: {fileID: 1561805596}
 --- !u!1001 &1102533981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20741,13 +20760,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1595342501}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 38.9, y: -14.45, z: 112.9}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 7.7, y: -14.45, z: 92.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1001 &1598524074
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26817,6 +26836,7 @@ GameObject:
   - component: {fileID: 2116445376}
   - component: {fileID: 2116445375}
   - component: {fileID: 2116445374}
+  - component: {fileID: 2116445377}
   m_Layer: 0
   m_Name: levelTriggerMinigames
   m_TagString: Untagged
@@ -26913,6 +26933,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2116445372}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2116445377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116445372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae1708fef1c0914bb47d7422cf87adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: MinigameIsland
+  levelTitle: Micro Island
+  levelDescription: Duke it out in competitive challenges!
+  previewClip: {fileID: 32900000, guid: 7821aaf854ec89b49bd2b626bcf3b876, type: 3}
+  cameraFocusPoint: {fileID: 899607171}
+  ui: {fileID: 1561805596}
 --- !u!1001 &2117052814
 PrefabInstance:
   m_ObjectHideFlags: 0
