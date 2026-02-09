@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DoorCameraFocus : MonoBehaviour
 {
@@ -9,6 +11,9 @@ public class DoorCameraFocus : MonoBehaviour
     [SerializeField] float moveDuration = 0.6f;
     [SerializeField] float holdTime = 1.0f;
     [SerializeField] AnimationCurve ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+    [Header("Optional polish: freeze players during focus")]
+    [SerializeField] bool freezePlayers = true;
 
     Coroutine routine;
 
@@ -29,6 +34,32 @@ public class DoorCameraFocus : MonoBehaviour
     {
         if (coopCam) coopCam.cutsceneActive = true;
 
+        // Gather player inputs + rigidbodies so we can freeze properly
+        List<PlayerInput> inputs = new();
+        List<Rigidbody> rbs = new();
+
+        if (freezePlayers && coopCam != null)
+        {
+            foreach (var p in coopCam.players)
+            {
+                if (!p) continue;
+
+                var pi = p.GetComponentInParent<PlayerInput>();
+                if (pi && !inputs.Contains(pi)) inputs.Add(pi);
+
+                var rb = p.GetComponentInParent<Rigidbody>();
+                if (rb && !rbs.Contains(rb)) rbs.Add(rb);
+            }
+
+            // Stop motion immediately (prevents drifting while inputs are off)
+            foreach (var rb in rbs)
+                rb.linearVelocity = Vector3.zero;
+
+            // Disable input
+            foreach (var pi in inputs)
+                if (pi.enabled) pi.DeactivateInput();
+        }
+
         Transform pivot = transform.GetChild(0);
         Camera cam = pivot.GetComponentInChildren<Camera>();
 
@@ -37,14 +68,14 @@ public class DoorCameraFocus : MonoBehaviour
         Quaternion startPivotRot = pivot.rotation;
         Vector3 startCamLocalPos = cam.transform.localPosition;
 
-        // Target state comes from the focusPoint
+        // Target state comes from focusPoint
         Vector3 targetPos = focusPoint.position;
         Quaternion targetPivotRot = focusPoint.rotation;
 
-        // Optional: let the focusPoint decide zoom using its child "CamOffset"
-        // If you don’t want this yet, just set targetCamLocalPos = startCamLocalPos;
+        // (Optional) keep zoom the same during focus
         Vector3 targetCamLocalPos = startCamLocalPos;
 
+        // Move in
         float t = 0f;
         while (t < moveDuration)
         {
@@ -62,8 +93,8 @@ public class DoorCameraFocus : MonoBehaviour
         pivot.rotation = targetPivotRot;
         cam.transform.localPosition = targetCamLocalPos;
 
-        // Hold on the door
-        yield return new WaitForSeconds(holdTime);
+        // Hold (use realtime so it still works if timeScale changes later)
+        yield return new WaitForSecondsRealtime(holdTime);
 
         // Return
         t = 0f;
@@ -84,6 +115,14 @@ public class DoorCameraFocus : MonoBehaviour
         cam.transform.localPosition = startCamLocalPos;
 
         if (coopCam) coopCam.cutsceneActive = false;
+
+        // Re-enable input
+        if (freezePlayers)
+        {
+            foreach (var pi in inputs)
+                if (pi && pi.enabled) pi.ActivateInput();
+        }
+
         routine = null;
     }
 }

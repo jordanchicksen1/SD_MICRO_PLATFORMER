@@ -6,9 +6,14 @@ public class CoopDoorController : MonoBehaviour
     [SerializeField] ToggleButton buttonA;
     [SerializeField] ToggleButton buttonB;
 
+    [Header("Camera Focus (first open only)")]
+    [SerializeField] DoorCameraFocus cameraFocus;
+    [SerializeField] Transform focusPoint; // create & assign an empty transform near the door
+
     void Awake()
     {
         if (door == null) door = GetComponent<CoopDoor>();
+        if (!cameraFocus) cameraFocus = FindFirstObjectByType<DoorCameraFocus>();
     }
 
     public void RecomputeDoor()
@@ -16,6 +21,12 @@ public class CoopDoorController : MonoBehaviour
         bool open = buttonA != null && buttonB != null &&
                     buttonA.IsPressed && buttonB.IsPressed;
 
-        door.SetOpen(open);
+        if (door == null) return;
+
+        bool firstTimeOpened = door.SetOpen(open);
+
+        // Only play focus shot the very first time this door opens
+        if (firstTimeOpened && cameraFocus && focusPoint)
+            cameraFocus.FocusOn(focusPoint);
     }
 }

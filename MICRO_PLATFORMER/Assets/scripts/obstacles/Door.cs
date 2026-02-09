@@ -7,7 +7,12 @@ public class Door : MonoBehaviour
 
     Vector3 closedPos;
     Vector3 openPos;
+
     bool open;
+    bool openedEver;
+
+    public bool IsOpen => open;
+    public bool HasOpenedEver => openedEver;
 
     void Start()
     {
@@ -21,8 +26,28 @@ public class Door : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, target, speed * Time.deltaTime);
     }
 
+    // Returns true ONLY the first time it ever opens
+    public bool Open()
+    {
+        if (open) return false;
+
+        open = true;
+
+        bool firstTime = !openedEver;
+        openedEver = true;
+
+        return firstTime;
+    }
+
+    public void Close()
+    {
+        open = false;
+    }
+
+    // Keep Toggle if you still want it elsewhere
     public void Toggle()
     {
-        open = !open;
+        if (open) Close();
+        else Open();
     }
 }

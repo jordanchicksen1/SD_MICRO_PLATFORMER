@@ -5,7 +5,7 @@ public class OneButtonDoor : MonoBehaviour
     [SerializeField] Door door;
     [SerializeField] ButtonVisual visual;
 
-    [Header("Camera Focus")]
+    [Header("Camera Focus (first open only)")]
     [SerializeField] DoorCameraFocus cameraFocus;
     [SerializeField] Transform focusPoint;
 
@@ -20,10 +20,21 @@ public class OneButtonDoor : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         visual?.Press();
-        door?.Toggle();
 
-        if (cameraFocus && focusPoint)
-            cameraFocus.FocusOn(focusPoint);
+        if (door == null) return;
+
+        // If you want it to toggle open/close each time:
+        // Focus only when it is opening AND it is the first-ever open.
+        if (!door.IsOpen)
+        {
+            bool firstTime = door.Open();
+            if (firstTime && cameraFocus && focusPoint)
+                cameraFocus.FocusOn(focusPoint);
+        }
+        else
+        {
+            door.Close();
+        }
     }
 
     void OnTriggerExit(Collider other)

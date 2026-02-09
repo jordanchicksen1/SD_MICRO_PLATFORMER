@@ -8,7 +8,12 @@ public class CoopDoor : MonoBehaviour
 
     Vector3 closedPos;
     Vector3 openPos;
+
     bool isOpen;
+    bool openedEver;
+
+    public bool IsOpen => isOpen;
+    public bool HasOpenedEver => openedEver;
 
     void Awake()
     {
@@ -26,9 +31,19 @@ public class CoopDoor : MonoBehaviour
         );
     }
 
-    // Called by a "manager" script (below)
-    public void SetOpen(bool open)
+    // Returns true only if this call transitions closed->open AND it's the first time ever opened
+    public bool SetOpen(bool open)
     {
+        bool wasOpen = isOpen;
         isOpen = open;
+
+        if (!wasOpen && isOpen)
+        {
+            bool firstTime = !openedEver;
+            openedEver = true;
+            return firstTime;
+        }
+
+        return false;
     }
 }
