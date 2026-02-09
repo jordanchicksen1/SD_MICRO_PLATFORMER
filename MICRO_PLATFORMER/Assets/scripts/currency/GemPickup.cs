@@ -9,7 +9,7 @@ public class GemPickup : MonoBehaviour
         if (!other.GetComponentInParent<PlayerController3D>())
             return;
 
-        CurrencyManager.Instance.AddGems(amount);
+        
         RunCurrency.Instance?.AddGem(amount);
         Destroy(gameObject);
     }

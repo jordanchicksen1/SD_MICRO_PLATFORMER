@@ -1,31 +1,58 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class HubCurrencyUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI coinsText;
     [SerializeField] TextMeshProUGUI gemsText;
 
+    CurrencyManager cm;
+
     void OnEnable()
     {
-        // Subscribe
-        if (CurrencyManager.Instance != null)
-        {
-            CurrencyManager.Instance.OnCoinsChanged += OnCoinsChanged;
-            CurrencyManager.Instance.OnGemsChanged += OnGemsChanged;
-        }
-
-        // Always refresh when the hub UI becomes active
-        Refresh();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        StartCoroutine(InitWhenReady());
     }
 
     void OnDisable()
     {
-        if (CurrencyManager.Instance != null)
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        if (cm != null)
         {
-            CurrencyManager.Instance.OnCoinsChanged -= OnCoinsChanged;
-            CurrencyManager.Instance.OnGemsChanged -= OnGemsChanged;
+            cm.OnCoinsChanged -= OnCoinsChanged;
+            cm.OnGemsChanged -= OnGemsChanged;
         }
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // When Hub loads again, re-init + refresh
+        StartCoroutine(InitWhenReady());
+    }
+
+    IEnumerator InitWhenReady()
+    {
+        // Unsubscribe from previous instance (just in case)
+        if (cm != null)
+        {
+            cm.OnCoinsChanged -= OnCoinsChanged;
+            cm.OnGemsChanged -= OnGemsChanged;
+            cm = null;
+        }
+
+        // Wait until CurrencyManager exists
+        while (CurrencyManager.Instance == null)
+            yield return null;
+
+        cm = CurrencyManager.Instance;
+
+        cm.OnCoinsChanged += OnCoinsChanged;
+        cm.OnGemsChanged += OnGemsChanged;
+
+        Refresh();
     }
 
     void OnCoinsChanged(int _) => Refresh();
@@ -33,9 +60,7 @@ public class HubCurrencyUI : MonoBehaviour
 
     void Refresh()
     {
-        var cm = CurrencyManager.Instance;
         if (cm == null) return;
-
         if (coinsText) coinsText.text = cm.Coins.ToString();
         if (gemsText) gemsText.text = cm.Gems.ToString();
     }

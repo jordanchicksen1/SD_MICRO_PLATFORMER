@@ -8,9 +8,27 @@ public class CurrencyManager : MonoBehaviour
     public int Coins { get; private set; }
     public int Gems { get; private set; }
 
-    // Optional: UI can subscribe to this
     public event Action<int> OnCoinsChanged;
     public event Action<int> OnGemsChanged;
+
+    // If Domain Reload is disabled, statics can survive between plays.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics()
+    {
+        Instance = null;
+    }
+
+    // Create the bank BEFORE the first scene loads.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void EnsureExists()
+    {
+        if (Instance != null) return;
+
+        var go = new GameObject("CurrencyManager");
+        go.AddComponent<CurrencyManager>();
+        DontDestroyOnLoad(go);
+        Debug.Log("Added currency manager");
+    }
 
     void Awake()
     {
@@ -22,6 +40,8 @@ public class CurrencyManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        Debug.Log($"[CurrencyManager] Awake. Coins={Coins} Gems={Gems} id={GetInstanceID()}");
     }
 
     public void AddCoins(int amount)
@@ -38,30 +58,6 @@ public class CurrencyManager : MonoBehaviour
         OnGemsChanged?.Invoke(Gems);
     }
 
-    public bool SpendCoins(int amount)
-    {
-        if (amount <= 0) return true;
-        if (Coins < amount) return false;
-
-        Coins -= amount;
-        OnCoinsChanged?.Invoke(Coins);
-        return true;
-    }
-
-    public bool SpendGems(int amount)
-    {
-        if (amount <= 0) return true;
-        if (Gems < amount) return false;
-
-        Gems -= amount;
-        OnGemsChanged?.Invoke(Gems);
-        return true;
-    }
-
-    public bool HasCoins(int amount) => Coins >= amount;
-    public bool HasGems(int amount) => Gems >= amount;
-
-    // Optional: for debugging / cheats
     public void SetCoins(int value)
     {
         Coins = Mathf.Max(0, value);

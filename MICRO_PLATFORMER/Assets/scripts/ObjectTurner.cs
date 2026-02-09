@@ -9,6 +9,6 @@ public class ObjectTurner : MonoBehaviour
     {
         
         this.transform.Rotate(rotateX * Time.deltaTime, rotateY * Time.deltaTime, rotateZ * Time.deltaTime);
-        Debug.Log("is it working?");
+        
     }
 }

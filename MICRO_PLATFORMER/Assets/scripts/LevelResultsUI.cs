@@ -6,16 +6,13 @@ using UnityEngine.UI;
 
 public class LevelResultsUI : MonoBehaviour
 {
-    [Header("Root Panel (optional)")]
-    [SerializeField] GameObject root; // If not set, we’ll use this GameObject
+    [SerializeField] GameObject root;
 
-    [Header("Text")]
     [SerializeField] TextMeshProUGUI levelCoinsText;
     [SerializeField] TextMeshProUGUI levelGemsText;
     [SerializeField] TextMeshProUGUI totalCoinsText;
     [SerializeField] TextMeshProUGUI totalGemsText;
 
-    [Header("Buttons")]
     [SerializeField] Button continueButton;
     [SerializeField] string hubSceneName = "HubWorld";
 
@@ -23,10 +20,9 @@ public class LevelResultsUI : MonoBehaviour
 
     void Awake()
     {
-        // If you put this script on the panel itself, root can be left empty.
-        if (!root) root = gameObject;
+        shown = false;
 
-        // Start hidden
+        if (!root) root = gameObject;
         root.SetActive(false);
 
         if (continueButton)
@@ -38,42 +34,39 @@ public class LevelResultsUI : MonoBehaviour
         if (shown) return;
         shown = true;
 
-        // Turn the panel on
         if (!root) root = gameObject;
         root.SetActive(true);
 
         int levelCoins = RunCurrency.Instance ? RunCurrency.Instance.LevelCoins : 0;
         int levelGems = RunCurrency.Instance ? RunCurrency.Instance.LevelGems : 0;
 
-        int totalCoins = CurrencyManager.Instance ? CurrencyManager.Instance.Coins : 0;
-        int totalGems = CurrencyManager.Instance ? CurrencyManager.Instance.Gems : 0;
+        int bankCoins = CurrencyManager.Instance ? CurrencyManager.Instance.Coins : 0;
+        int bankGems = CurrencyManager.Instance ? CurrencyManager.Instance.Gems : 0;
 
         if (levelCoinsText) levelCoinsText.text = levelCoins.ToString();
         if (levelGemsText) levelGemsText.text = levelGems.ToString();
 
-        // Show what totals WILL be after banking
-        if (totalCoinsText) totalCoinsText.text = (totalCoins + levelCoins).ToString();
-        if (totalGemsText) totalGemsText.text = (totalGems + levelGems).ToString();
+        if (totalCoinsText) totalCoinsText.text = (bankCoins + levelCoins).ToString();
+        if (totalGemsText) totalGemsText.text = (bankGems + levelGems).ToString();
 
-        // Pause gameplay
         Time.timeScale = 0f;
 
-        // Select button for controller navigation
         if (EventSystem.current && continueButton)
         {
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
         }
+
+        Debug.Log($"[LevelResultsUI] Show. bank={bankCoins}/{bankGems} run={levelCoins}/{levelGems}");
     }
 
     void ContinueToHub()
     {
-        // Resume gameplay time
         Time.timeScale = 1f;
 
-        // Bank level currency into persistent totals
         RunCurrency.Instance?.CommitToBank();
 
         SceneManager.LoadScene(hubSceneName);
+        Debug.Log("Pressed continue");
     }
 }

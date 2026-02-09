@@ -9,7 +9,7 @@ public class CoinPickup : MonoBehaviour
         if (!other.GetComponentInParent<PlayerController3D>())
             return;
 
-        CurrencyManager.Instance.AddCoins(amount);
+        
         RunCurrency.Instance?.AddCoin(amount);
         Destroy(gameObject);
     }

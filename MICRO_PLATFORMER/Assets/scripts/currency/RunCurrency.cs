@@ -11,6 +11,8 @@ public class RunCurrency : MonoBehaviour
     public event Action<int> OnLevelCoinsChanged;
     public event Action<int> OnLevelGemsChanged;
 
+    bool banked;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -20,15 +22,29 @@ public class RunCurrency : MonoBehaviour
         }
 
         Instance = this;
-        // IMPORTANT: do NOT DontDestroyOnLoad — this is per-level
+
+        Debug.Log("[RunCurrency] Awake -> ResetRun");
+        ResetRun();
+    }
+
+
+    void Start()
+    {
+        Debug.Log("[RunCurrency] ResetRun on level start");
+        ResetRun();
     }
 
     public void ResetRun()
     {
         LevelCoins = 0;
         LevelGems = 0;
+        banked = false;
+
         OnLevelCoinsChanged?.Invoke(LevelCoins);
         OnLevelGemsChanged?.Invoke(LevelGems);
+
+        Debug.Log($"[RunCurrency] ResetRun -> {LevelCoins}/{LevelGems}");
+
     }
 
     public void AddCoin(int amount = 1)
@@ -47,7 +63,14 @@ public class RunCurrency : MonoBehaviour
 
     public void CommitToBank()
     {
-        if (CurrencyManager.Instance == null) return;
+        if (banked) return;
+        banked = true;
+
+        if (CurrencyManager.Instance == null)
+        {
+            Debug.LogError("[RunCurrency] No CurrencyManager found! CommitToBank failed.");
+            return;
+        }
 
         CurrencyManager.Instance.AddCoins(LevelCoins);
         CurrencyManager.Instance.AddGems(LevelGems);
