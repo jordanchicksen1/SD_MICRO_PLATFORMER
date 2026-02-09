@@ -10,6 +10,7 @@ public class GemPickup : MonoBehaviour
             return;
 
         CurrencyManager.Instance.AddGems(amount);
+        RunCurrency.Instance?.AddGem(amount);
         Destroy(gameObject);
     }
 }

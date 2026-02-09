@@ -10,6 +10,7 @@ public class CoinPickup : MonoBehaviour
             return;
 
         CurrencyManager.Instance.AddCoins(amount);
+        RunCurrency.Instance?.AddCoin(amount);
         Destroy(gameObject);
     }
 }
