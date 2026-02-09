@@ -29,6 +29,10 @@ public class CoopCameraController : MonoBehaviour
     Transform pivot;
     Camera cam;
 
+    [Header("Cutscene")]
+    public bool cutsceneActive;
+
+
     float rotationInput;
     void Awake()
     {
@@ -73,6 +77,7 @@ public class CoopCameraController : MonoBehaviour
 
     void LateUpdate()
     {
+        if (cutsceneActive) return;
         if (players.Count == 0) return;
 
         Follow();

@@ -5,6 +5,8 @@ public class BreakableBox : MonoBehaviour
     [Header("References")]
     [SerializeField] GameObject intactModel;
     [SerializeField] GameObject piecesRoot;
+    [SerializeField] GameObject coinPrefab;
+    [SerializeField] AudioSource boxBreakSFX;
 
     [Header("Break Settings")]
     [SerializeField] float explodeForce = 4f;
@@ -27,7 +29,7 @@ public class BreakableBox : MonoBehaviour
         PlayerController3D player = collision.collider.GetComponentInParent<PlayerController3D>();
         if (player == null) player = collision.collider.GetComponentInParent<PlayerController3D>();
         if (player == null) return;
-
+        
         if (player.IsGroundPounding())
             Break();
     }
@@ -40,6 +42,7 @@ public class BreakableBox : MonoBehaviour
         // Hide intact
         if (intactModel != null)
             intactModel.SetActive(false);
+            boxBreakSFX.Play();
 
         if (piecesRoot == null)
         {
@@ -49,7 +52,8 @@ public class BreakableBox : MonoBehaviour
 
         // Turn on pieces
         piecesRoot.SetActive(true);
-
+        Instantiate(coinPrefab, transform.position, Quaternion.identity);
+        
         // IMPORTANT: detach piecesRoot from THIS object BEFORE we disable/destroy anything
         piecesRoot.transform.SetParent(null, true);
 
@@ -78,7 +82,7 @@ public class BreakableBox : MonoBehaviour
         foreach (var r in GetComponentsInChildren<Renderer>())
             r.enabled = false;
 
-        Destroy(gameObject, 0.1f);                 // destroy the old box root
+        Destroy(gameObject, 0.35f);                 // destroy the old box root
         Destroy(piecesRoot, destroyAfter);         // clean up pieces later (optional)
     }
 }

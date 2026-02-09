@@ -3,7 +3,7 @@ using UnityEngine;
 public class LevelEndTrigger : MonoBehaviour
 {
     [SerializeField] LevelResultsUI resultsUI;
-
+    [SerializeField] GameObject levelBGM;
     void Awake()
     {
         if (!resultsUI)
@@ -16,5 +16,6 @@ public class LevelEndTrigger : MonoBehaviour
 
         if (resultsUI)
             resultsUI.Show();
+        levelBGM.SetActive(false);
     }
 }
