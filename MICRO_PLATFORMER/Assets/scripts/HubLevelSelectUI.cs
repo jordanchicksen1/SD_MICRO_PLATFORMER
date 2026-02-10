@@ -7,7 +7,6 @@ using TMPro;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 
-
 public class HubLevelSelectUI : MonoBehaviour
 {
     [Header("UI")]
@@ -20,21 +19,19 @@ public class HubLevelSelectUI : MonoBehaviour
 
     [Header("Dependencies")]
     [SerializeField] HubCameraFocus cameraFocus;
-    //[SerializeField] HubPlayerController3D playerControllerToDisable; // drag HubPlayerController3D component here (P1)
     [SerializeField] string gameplayMapName = "Gameplay";
     [SerializeField] string uiMapName = "UI";
+
     Rigidbody lockedRb;
     HubPlayerController3D lockedController;
     bool isOpen;
     public bool IsOpen => isOpen;
+
     RigidbodyConstraints savedConstraints;
     bool savedConstraintsValid;
 
-
     Vector3 returnPos;
     Quaternion returnRot;
-
-
 
     string pendingSceneName;
     Transform pendingFocusPoint;
@@ -43,13 +40,14 @@ public class HubLevelSelectUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI descriptionText;
 
+    [Header("Gem Progress (finite gems)")]
+    [SerializeField] TextMeshProUGUI levelGemsProgressText; // <-- add to your panel (e.g. "2 / 5")
+
     [SerializeField] HubCameraFollow cameraFollowToDisable;
 
     [SerializeField] ScreenFader fader;
     [SerializeField] float fadeOutDuration = 0.4f;
     bool isLoading;
-
-
 
     void Awake()
     {
@@ -58,45 +56,51 @@ public class HubLevelSelectUI : MonoBehaviour
         if (!cameraFocus)
             cameraFocus = Camera.main ? Camera.main.GetComponent<HubCameraFocus>() : null;
 
-        playButton.onClick.AddListener(OnPlayPressed);
-        cancelButton.onClick.AddListener(OnCancelPressed);
-        if (!fader) fader = FindFirstObjectByType<ScreenFader>();
+        if (playButton) playButton.onClick.AddListener(OnPlayPressed);
+        if (cancelButton) cancelButton.onClick.AddListener(OnCancelPressed);
 
+        if (!fader) fader = FindFirstObjectByType<ScreenFader>();
     }
 
     public void Open(
-    string sceneName,
-    VideoClip previewClip,
-    string title,
-    string description,
-    Transform focusPoint,
-    HubPlayerController3D playerController,
-    Rigidbody playerRb)
+        string sceneName,
+        VideoClip previewClip,
+        string title,
+        string description,
+        Transform focusPoint,
+        HubPlayerController3D playerController,
+        Rigidbody playerRb,
+
+        // NEW: finite-gems progress
+        string levelId,
+        int totalGemsInLevel
+    )
     {
+        if (isOpen) return;
+        isOpen = true;
+
         pendingSceneName = sceneName;
         pendingFocusPoint = focusPoint;
 
         if (panelRoot) panelRoot.SetActive(true);
+
+        // Select button for controller navigation
         if (EventSystem.current != null && playButton != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(playButton.gameObject);
         }
 
-        if (isOpen) return;
-        isOpen = true;
-
         LockPlayer(playerRb, playerController);
 
-
-
-
+        // Save current camera pose to return to
         if (Camera.main != null)
         {
             returnPos = Camera.main.transform.position;
             returnRot = Camera.main.transform.rotation;
         }
 
+        if (cameraFollowToDisable) cameraFollowToDisable.enabled = false;
 
         if (cameraFocus && focusPoint)
             cameraFocus.FocusOn(focusPoint);
@@ -109,16 +113,28 @@ public class HubLevelSelectUI : MonoBehaviour
                 videoPlayer.Play();
         }
 
-        
-
-
         if (titleText) titleText.text = title;
         if (descriptionText) descriptionText.text = description;
-        if (cameraFollowToDisable) cameraFollowToDisable.enabled = false;
-        
 
+        // -------- NEW: show gems collected for this level --------
+        if (levelGemsProgressText)
+        {
+            Debug.Log($"[HubLevelSelectUI] levelId='{levelId}', total={totalGemsInLevel}, progressMgr={(PersistentGemProgress.Instance ? "OK" : "NULL")}");
+
+            int collected = 0;
+
+            if (PersistentGemProgress.Instance != null && !string.IsNullOrEmpty(levelId))
+                collected = PersistentGemProgress.Instance.GetCollectedCount(levelId);
+
+            // clamp just in case you change totals later
+            collected = Mathf.Clamp(collected, 0, Mathf.Max(0, totalGemsInLevel));
+
+            levelGemsProgressText.text = $"{collected} / {totalGemsInLevel}";
+            Debug.Log($"[HubLevelSelectUI] collected={collected}");
+
+        }
+        // --------------------------------------------------------
     }
-
 
     public void OnPlayPressed()
     {
@@ -130,22 +146,17 @@ public class HubLevelSelectUI : MonoBehaviour
 
     IEnumerator PlayRoutine()
     {
-        panelRoot.SetActive(false);
+        if (panelRoot) panelRoot.SetActive(false);
         isLoading = true;
 
-        // (Optional) stop input spam
         if (playButton) playButton.interactable = false;
         if (cancelButton) cancelButton.interactable = false;
 
-        // Fade to black
         if (fader != null)
             yield return fader.FadeTo(1f, fadeOutDuration);
-        
 
-        // Load scene
         SceneManager.LoadScene(pendingSceneName);
     }
-
 
     void OnCancelPressed()
     {
@@ -160,22 +171,17 @@ public class HubLevelSelectUI : MonoBehaviour
 
         StartCoroutine(ReturnThenEnableFollow());
 
-
-        // Re-enable player control
-
-        //if (playerControllerToDisable) playerControllerToDisable.enabled = true;
-
         UnlockPlayer();
         isOpen = false;
-        
 
-
-
-    pendingSceneName = null;
+        pendingSceneName = null;
         pendingFocusPoint = null;
-        if (cameraFollowToDisable) cameraFollowToDisable.enabled = true;
-        
 
+        // Reset buttons for next open
+        if (playButton) playButton.interactable = true;
+        if (cancelButton) cancelButton.interactable = true;
+
+        isLoading = false;
     }
 
     void LockPlayer(Rigidbody rb, HubPlayerController3D controller)
@@ -187,18 +193,15 @@ public class HubLevelSelectUI : MonoBehaviour
 
         if (lockedRb)
         {
-            // SAVE ORIGINAL CONSTRAINTS ONCE
             savedConstraints = lockedRb.constraints;
             savedConstraintsValid = true;
 
             lockedRb.linearVelocity = Vector3.zero;
             lockedRb.angularVelocity = Vector3.zero;
 
-            // lock completely while UI is open
             lockedRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
         }
     }
-
 
     void UnlockPlayer()
     {
@@ -207,7 +210,6 @@ public class HubLevelSelectUI : MonoBehaviour
             lockedRb.linearVelocity = Vector3.zero;
             lockedRb.angularVelocity = Vector3.zero;
 
-            // RESTORE ORIGINAL CONSTRAINTS
             if (savedConstraintsValid)
                 lockedRb.constraints = savedConstraints;
         }
@@ -221,15 +223,12 @@ public class HubLevelSelectUI : MonoBehaviour
 
     IEnumerator ReturnThenEnableFollow()
     {
-        // Return to the pose the follow camera had when we opened the panel
         if (cameraFocus)
             cameraFocus.ReturnTo(returnPos, returnRot);
 
-        // wait until the focus move is done so scripts don't fight
         while (cameraFocus != null && cameraFocus.IsMoving)
             yield return null;
 
         if (cameraFollowToDisable) cameraFollowToDisable.enabled = true;
     }
-
 }

@@ -74,5 +74,9 @@ public class RunCurrency : MonoBehaviour
 
         CurrencyManager.Instance.AddCoins(LevelCoins);
         CurrencyManager.Instance.AddGems(LevelGems);
+
+        Debug.Log($"[RunCurrency] CommitToBank: adding {LevelGems} gems to bank");
+
     }
+
 }

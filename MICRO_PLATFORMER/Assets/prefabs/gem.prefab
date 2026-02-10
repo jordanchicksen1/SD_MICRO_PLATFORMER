@@ -209,6 +209,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9fa1ff438670180488bec3de394aa7ed, type: 3}
       insertIndex: -1
       addedObject: {fileID: 174551926627454496}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9fa1ff438670180488bec3de394aa7ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4208646911282008604}
   m_SourcePrefab: {fileID: 100100000, guid: 9fa1ff438670180488bec3de394aa7ed, type: 3}
 --- !u!4 &1210632453393465633 stripped
 Transform:
@@ -268,4 +271,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7861ed1c59dba1c47a3176beba83c298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  amount: 1
+--- !u!114 &4208646911282008604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1983509500747029403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22849179660184b4b8195ddeb3da7ec4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelId: Level1
+  gemId: GEM_001
   amount: 1

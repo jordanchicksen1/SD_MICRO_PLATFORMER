@@ -64,9 +64,17 @@ public class LevelResultsUI : MonoBehaviour
     {
         Time.timeScale = 1f;
 
+        // Bank coins + gems into player totals
         RunCurrency.Instance?.CommitToBank();
 
+        // Commit permanent gem progress for THIS level only
+        if (RunLevelInfo.Instance != null && PersistentGemProgress.Instance != null)
+        {
+            PersistentGemProgress.Instance.CommitPendingFromRun(
+                RunLevelInfo.Instance.LevelId
+            );
+        }
+
         SceneManager.LoadScene(hubSceneName);
-        Debug.Log("Pressed continue");
     }
 }

@@ -28,6 +28,12 @@ public class CurrencyManager : MonoBehaviour
         go.AddComponent<CurrencyManager>();
         DontDestroyOnLoad(go);
         Debug.Log("Added currency manager");
+
+        if (PersistentGemProgress.Instance == null)
+        {
+            var go1 = new GameObject("PersistentGemProgress");
+            go1.AddComponent<PersistentGemProgress>();
+        }
     }
 
     void Awake()

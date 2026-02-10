@@ -5,9 +5,13 @@ public class LevelSelectTrigger : MonoBehaviour
 {
     [Header("Level Data")]
     [SerializeField] string sceneName;
+    [SerializeField] string levelId;               // NEW (must match gem pickups)
+    [SerializeField] int totalGemsInLevel = 3;     // NEW
     [SerializeField] string levelTitle;
+
     [TextArea(2, 4)]
     [SerializeField] string levelDescription;
+
     [SerializeField] VideoClip previewClip;
     [SerializeField] Transform cameraFocusPoint;
 
@@ -31,6 +35,16 @@ public class LevelSelectTrigger : MonoBehaviour
 
         Rigidbody playerRb = player.GetComponent<Rigidbody>();
 
-        ui.Open(sceneName, previewClip, levelTitle, levelDescription, cameraFocusPoint, player, playerRb);
+        ui.Open(
+            sceneName,
+            previewClip,
+            levelTitle,
+            levelDescription,
+            cameraFocusPoint,
+            player,
+            playerRb,
+            levelId,            
+            totalGemsInLevel    
+        );
     }
 }
