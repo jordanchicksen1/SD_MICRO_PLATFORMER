@@ -15,6 +15,11 @@ public class DoorCameraFocus : MonoBehaviour
     [Header("Optional polish: freeze players during focus")]
     [SerializeField] bool freezePlayers = true;
 
+    [Header("Cutscene Zoom Override")]
+    [SerializeField] bool overrideZoom = true;
+    [SerializeField] float cutsceneZoomDistance = 10f; // tweak in inspector
+
+
     Coroutine routine;
 
     void Awake()
@@ -74,6 +79,17 @@ public class DoorCameraFocus : MonoBehaviour
 
         // (Optional) keep zoom the same during focus
         Vector3 targetCamLocalPos = startCamLocalPos;
+
+        if (overrideZoom)
+        {
+            // cam faces forward; localPosition.z should be negative to "pull back"
+            targetCamLocalPos = new Vector3(
+                startCamLocalPos.x,
+                startCamLocalPos.y,
+                -cutsceneZoomDistance
+            );
+        }
+
 
         // Move in
         float t = 0f;

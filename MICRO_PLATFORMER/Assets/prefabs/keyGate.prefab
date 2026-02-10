@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2854649991435462155
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6402808745801947606}
+  m_Layer: 0
+  m_Name: DoorFocusPoint_Key
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6402808745801947606
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2854649991435462155}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4444960719831691117}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1001 &4189778410485876870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -122,7 +153,10 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 92f59911ac46b4d4d978ba02fbceb3ae, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 47d1018a5f5835f47af7a1f43ebfd626, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6402808745801947606}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 47d1018a5f5835f47af7a1f43ebfd626, type: 3}
       insertIndex: -1
@@ -182,6 +216,8 @@ MonoBehaviour:
   door: {fileID: 8447812623706787242}
   lockGold: {fileID: 620439969300186758}
   lockSilver: {fileID: 4662627272628633753}
+  cameraFocus: {fileID: 0}
+  focusPoint: {fileID: 6402808745801947606}
 --- !u!1 &3955423356166190551 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 47d1018a5f5835f47af7a1f43ebfd626, type: 3}
@@ -222,6 +258,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openHeight: 3
   speed: 3
+--- !u!4 &4444960719831691117 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 47d1018a5f5835f47af7a1f43ebfd626, type: 3}
+  m_PrefabInstance: {fileID: 4189778410485876870}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4662627272628633753 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -391268320553695201, guid: 47d1018a5f5835f47af7a1f43ebfd626, type: 3}

@@ -4,11 +4,23 @@ public class QuestionPanelManager : MonoBehaviour
 {
     [SerializeField] int requiredCount = 3;
     [SerializeField] DoorOpenSimple door;
+
+    [Header("Badges")]
     public GameObject xBadge;
     public GameObject oBadge;
 
+    [Header("Camera Focus (first open only)")]
+    [SerializeField] DoorCameraFocus cameraFocus;
+    [SerializeField] Transform focusPoint;
+
     int currentCount;
     bool doorOpened;
+
+    void Awake()
+    {
+        if (!cameraFocus)
+            cameraFocus = FindFirstObjectByType<DoorCameraFocus>();
+    }
 
     public void AddPanel()
     {
@@ -23,18 +35,26 @@ public class QuestionPanelManager : MonoBehaviour
         if (currentCount < 0) currentCount = 0;
 
         Debug.Log($"Panels: {currentCount}/{requiredCount}");
-        // If your door can’t close, we just don’t reopen/close it.
-        // If you later want a closing door, we can add it here.
     }
 
     void CheckDoor()
     {
-        if (!doorOpened && currentCount >= requiredCount)
+        if (doorOpened) return;
+
+        if (currentCount >= requiredCount)
         {
             doorOpened = true;
+
+            // Open door
             if (door != null) door.Open();
-            xBadge.SetActive(false);
-            oBadge.SetActive(true);
+
+            // Camera focus shot (once)
+            if (cameraFocus && focusPoint)
+                cameraFocus.FocusOn(focusPoint);
+
+            // Badge swap
+            if (xBadge) xBadge.SetActive(false);
+            if (oBadge) oBadge.SetActive(true);
         }
     }
 }
