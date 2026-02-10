@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GemPickupPersistent : MonoBehaviour
@@ -9,56 +10,89 @@ public class GemPickupPersistent : MonoBehaviour
     [Header("Pickup")]
     [SerializeField] int amount = 1;
     [SerializeField] Collider pickupCollider;
-    [SerializeField] GameObject visualsRoot;      // set to the mesh/particles parent (optional)
-    [SerializeField] AudioSource sfxSource;       // optional (AudioSource on this prefab)
+
+    [Header("Visuals")]
+    [SerializeField] GameObject realVisualsRoot;        // ONLY visuals
+    [SerializeField] GameObject collectedVisualsRoot;   // fake gem visuals (starts OFF)
+
+    [Header("Collected Placeholder Delay")]
+    [SerializeField] float showCollectedAfterSeconds = 10f;
+
+    [SerializeField] AudioSource sfxSource; // optional
 
     bool pickedUp;
+    Coroutine showFakeRoutine;
 
     void Awake()
     {
         if (!pickupCollider) pickupCollider = GetComponent<Collider>();
-        if (visualsRoot == null) visualsRoot = gameObject; // safe default: hide whole object
+
+        // IMPORTANT: these should be CHILD objects, not this GameObject
+        // Never default realVisualsRoot to gameObject, because that can disable the script too.
+
+        if (collectedVisualsRoot) collectedVisualsRoot.SetActive(false);
     }
 
     void Start()
     {
-        // If already collected previously, remove the gem immediately
-        if (PersistentGemProgress.Instance != null &&
-            PersistentGemProgress.Instance.IsCollected(levelId, gemId))
+        bool alreadyCollected =
+            PersistentGemProgress.Instance != null &&
+            PersistentGemProgress.Instance.IsCollected(levelId, gemId);
+
+        if (alreadyCollected)
         {
-            Destroy(gameObject);
+            // Disable pickup only (keep THIS gameobject active so coroutines can run)
+            if (pickupCollider) pickupCollider.enabled = false;
+
+            // Hide real visuals immediately
+            if (realVisualsRoot) realVisualsRoot.SetActive(false);
+
+            // Show fake later (only if this component is active)
+            if (collectedVisualsRoot && isActiveAndEnabled)
+                showFakeRoutine = StartCoroutine(ShowCollectedLater());
         }
+        else
+        {
+            if (realVisualsRoot) realVisualsRoot.SetActive(true);
+            if (collectedVisualsRoot) collectedVisualsRoot.SetActive(false);
+        }
+    }
+
+    IEnumerator ShowCollectedLater()
+    {
+        yield return new WaitForSeconds(showCollectedAfterSeconds);
+
+        // Safety if scene changed / object destroyed
+        if (!this || !isActiveAndEnabled) yield break;
+
+        if (collectedVisualsRoot)
+            collectedVisualsRoot.SetActive(true);
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (pickedUp) return;
-
-        // Only players
-        if (!other.GetComponentInParent<PlayerController3D>())
-            return;
+        if (!other.GetComponentInParent<PlayerController3D>()) return;
 
         pickedUp = true;
 
-        // Stop double-trigger instantly
+        // Cancel delayed fake if it was waiting
+        if (showFakeRoutine != null)
+        {
+            StopCoroutine(showFakeRoutine);
+            showFakeRoutine = null;
+        }
+
         if (pickupCollider) pickupCollider.enabled = false;
+        if (realVisualsRoot) realVisualsRoot.SetActive(false);
+        if (collectedVisualsRoot) collectedVisualsRoot.SetActive(false);
 
-        // Hide visuals immediately (feels responsive, prevents re-collect look)
-        if (visualsRoot) visualsRoot.SetActive(false);
-
-        // Mark pending for THIS run (so results screen can commit)
         RunGemProgress.Instance?.MarkPending(levelId, gemId);
-
-        // Count for THIS RUN ONLY (banking happens at results screen)
         RunCurrency.Instance?.AddGem(amount);
 
-        // Optional: play SFX safely even if we destroy this object
         if (sfxSource && sfxSource.clip)
             AudioSource.PlayClipAtPoint(sfxSource.clip, transform.position, sfxSource.volume);
 
-        // Destroy the pickup object
         Destroy(gameObject);
-
-        Debug.Log($"[GemPickupPersistent] Collected {levelId}/{gemId}. RunGems now = {RunCurrency.Instance?.LevelGems}");
     }
 }

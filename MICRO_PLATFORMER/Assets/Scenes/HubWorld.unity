@@ -7138,6 +7138,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: gem
       objectReference: {fileID: 0}
+    - target: {fileID: 7348517023775503418, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
+      propertyPath: pickupCollider
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7943878955506108500, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
     - {fileID: 3382555014166648600, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
@@ -10092,6 +10096,10 @@ PrefabInstance:
     - target: {fileID: 1983509500747029403, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
       propertyPath: m_Name
       value: gem
+      objectReference: {fileID: 0}
+    - target: {fileID: 7348517023775503418, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
+      propertyPath: pickupCollider
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7943878955506108500, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
@@ -24220,6 +24228,10 @@ PrefabInstance:
     - target: {fileID: 1983509500747029403, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
       propertyPath: m_Name
       value: gem
+      objectReference: {fileID: 0}
+    - target: {fileID: 7348517023775503418, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
+      propertyPath: pickupCollider
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7943878955506108500, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
