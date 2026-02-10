@@ -62,6 +62,8 @@ public class LevelResultsUI : MonoBehaviour
 
     void ContinueToHub()
     {
+        Debug.Log("[LevelResultsUI] ContinueToHub pressed!");
+
         Time.timeScale = 1f;
 
         // Bank coins + gems into player totals
