@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 public class PauseManager : MonoBehaviour
 {
@@ -30,22 +29,20 @@ public class PauseManager : MonoBehaviour
 
         Time.timeScale = paused ? 0f : 1f;
 
-        // Switch every player to the correct action map
-        foreach (var pi in FindObjectsByType<PlayerInput>(FindObjectsSortMode.None))
-        {
-            if (!pi) continue;
-            pi.SwitchCurrentActionMap(paused ? uiMapName : gameplayMapName);
-        }
+        // IMPORTANT: don’t deactivate PlayerInputs. Just switch maps safely.
+        if (paused)
+            PlayerInputUtil.EnterUIMode(uiMapName);
+        else
+            PlayerInputUtil.ExitUIMode(gameplayMapName);
 
-        // Ensure a button is selected for controller navigation
-        if (paused && firstSelectedButton)
+        // Ensure UI selection
+        if (paused && firstSelectedButton && EventSystem.current)
         {
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(firstSelectedButton);
         }
     }
 
-    // Hook this to Resume button OnClick
     public void Resume()
     {
         SetPaused(false);

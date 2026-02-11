@@ -16,6 +16,9 @@ public class LevelResultsUI : MonoBehaviour
     [SerializeField] Button continueButton;
     [SerializeField] string hubSceneName = "HubWorld";
 
+    [SerializeField] string gameplayMapName = "Gameplay";
+    [SerializeField] string uiMapName = "UI";
+
     bool shown;
 
     void Awake()
@@ -29,6 +32,16 @@ public class LevelResultsUI : MonoBehaviour
             continueButton.onClick.AddListener(ContinueToHub);
     }
 
+    void OnEnable()
+    {
+        // Safety: rebind on enable (Unity sometimes duplicates listeners in editor)
+        if (continueButton)
+        {
+            continueButton.onClick.RemoveListener(ContinueToHub);
+            continueButton.onClick.AddListener(ContinueToHub);
+        }
+    }
+
     public void Show()
     {
         if (shown) return;
@@ -36,6 +49,17 @@ public class LevelResultsUI : MonoBehaviour
 
         if (!root) root = gameObject;
         root.SetActive(true);
+
+        // Switch ALL players to UI map so ANY controller can drive the menu
+        PlayerInputUtil.EnterUIMode(uiMapName);
+
+        // Select button
+        if (EventSystem.current && continueButton)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+            EventSystem.current.sendNavigationEvents = true;
+        }
 
         int levelCoins = RunCurrency.Instance ? RunCurrency.Instance.LevelCoins : 0;
         int levelGems = RunCurrency.Instance ? RunCurrency.Instance.LevelGems : 0;
@@ -51,12 +75,6 @@ public class LevelResultsUI : MonoBehaviour
 
         Time.timeScale = 0f;
 
-        if (EventSystem.current && continueButton)
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
-        }
-
         Debug.Log($"[LevelResultsUI] Show. bank={bankCoins}/{bankGems} run={levelCoins}/{levelGems}");
     }
 
@@ -66,16 +84,18 @@ public class LevelResultsUI : MonoBehaviour
 
         Time.timeScale = 1f;
 
-        // Bank coins + gems into player totals
         RunCurrency.Instance?.CommitToBank();
 
-        // Commit permanent gem progress for THIS level only
+        // Commit permanent gem progress (if you're using that system)
         if (RunLevelInfo.Instance != null && PersistentGemProgress.Instance != null)
         {
             PersistentGemProgress.Instance.CommitPendingFromRun(
                 RunLevelInfo.Instance.LevelId
             );
         }
+
+        // Restore gameplay maps before loading out (prevents “stuck in UI map”)
+        PlayerInputUtil.ExitUIMode(gameplayMapName);
 
         SceneManager.LoadScene(hubSceneName);
     }
