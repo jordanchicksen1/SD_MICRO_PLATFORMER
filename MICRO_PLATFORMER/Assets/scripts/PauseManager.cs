@@ -12,57 +12,65 @@ public class PauseManager : MonoBehaviour
 
     public bool IsPaused { get; private set; }
 
+    // NEW: if true, pause cannot open and PauseManager won't switch maps
+    public bool PauseLocked { get; private set; }
+
     void Start()
     {
         SetPaused(false);
     }
 
+    // NEW: call this from Results UI (or any modal UI)
+    public void SetPauseLocked(bool locked)
+    {
+        PauseLocked = locked;
+
+        // If we lock while paused, force unpause + hide pause UI
+        if (PauseLocked && IsPaused)
+            SetPaused(false);
+    }
+
     public void TogglePause()
     {
+        if (PauseLocked) return; // NEW: ignore pause input while locked
         SetPaused(!IsPaused);
     }
 
     public void SetPaused(bool paused)
     {
+        if (PauseLocked && paused) return; // NEW: can't open pause while locked
+
         IsPaused = paused;
 
         if (pauseCanvas) pauseCanvas.SetActive(paused);
-
         Time.timeScale = paused ? 0f : 1f;
 
-        // Switch every player to the correct action map
-        foreach (var pi in FindObjectsByType<PlayerInput>(FindObjectsSortMode.None))
+        // IMPORTANT: only switch maps if NOT locked
+        if (!PauseLocked)
         {
-            if (!pi) continue;
-            pi.SwitchCurrentActionMap(paused ? uiMapName : gameplayMapName);
+            foreach (var pi in FindObjectsByType<PlayerInput>(FindObjectsSortMode.None))
+            {
+                if (!pi) continue;
+
+                // Optional: only affect actual players, not UI-only PlayerInputs
+                // if (!pi.CompareTag("Player")) continue;
+
+                if (PauseLocked) continue;
+
+                var targetMap = paused ? uiMapName : gameplayMapName;
+                PlayerInputUtil.SafeSwitchMap(pi, targetMap);
+            }
         }
 
-        // Ensure a button is selected for controller navigation
-        if (paused && firstSelectedButton)
+        if (paused && firstSelectedButton && EventSystem.current)
         {
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(firstSelectedButton);
         }
     }
 
-    // Hook this to Resume button OnClick
     public void Resume()
     {
         SetPaused(false);
-    }
-
-    public void Retry()
-    {
-        Debug.Log("Restart the level that you are currently on");
-    }
-
-    public void QuitLevel()
-    {
-        Debug.Log("quit level and went back to hub world");
-    }
-
-    public void Controls()
-    {
-        Debug.Log("show controls");
     }
 }
