@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         currentHealth = maxHealth;
+        deathEffect.SetActive(false);
     }
 
     public void TakeHit()
@@ -38,7 +39,7 @@ public class Enemy : MonoBehaviour
     IEnumerator DieDelayed()
     {
         yield return new WaitForSeconds(1f);
-
+        deathEffect.SetActive(true);
         if (deathEffect)
             Instantiate(deathEffect, transform.position, Quaternion.identity);
 

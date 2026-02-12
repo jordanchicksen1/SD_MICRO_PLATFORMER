@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -14,11 +15,18 @@ public class DoorKillBox : MonoBehaviour
     {
         if (other.CompareTag("Door"))
         {
-            smokePoof.Stop();      // Ensure it's reset
-            smokePoof.Play();      // Play once
-
             Destroy(other.gameObject, destroyTime);
             Debug.Log("door entered");
+            StartCoroutine(DestroyDoor());
         }
+    }
+
+    public IEnumerator DestroyDoor()
+    {
+        yield return new WaitForSeconds(0f);
+        smokePoof.Stop();      // Ensure it's reset
+        smokePoof.Play();      // Play once
+        yield return new WaitForSeconds(1.3f);
+        Destroy(gameObject);
     }
 }
