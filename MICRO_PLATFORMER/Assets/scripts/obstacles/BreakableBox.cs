@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class BreakableBox : MonoBehaviour
@@ -8,11 +9,15 @@ public class BreakableBox : MonoBehaviour
     [SerializeField] GameObject coinPrefab;
     [SerializeField] AudioSource boxBreakSFX;
 
+    [Header("VFX (Prefab)")]
+    [SerializeField] GameObject breakEndVFXPrefab;
+    [SerializeField] float breakEndVFXLifetime = 2f;
+
     [Header("Break Settings")]
     [SerializeField] float explodeForce = 4f;
     [SerializeField] float explodeRadius = 1.5f;
     [SerializeField] float upForce = 1.5f;
-    [SerializeField] float destroyAfter = 3f;
+    [SerializeField] float piecesDestroyAfter = 3f;
 
     bool broken;
 
@@ -26,10 +31,9 @@ public class BreakableBox : MonoBehaviour
     {
         if (broken) return;
 
-        PlayerController3D player = collision.collider.GetComponentInParent<PlayerController3D>();
-        if (player == null) player = collision.collider.GetComponentInParent<PlayerController3D>();
+        var player = collision.collider.GetComponentInParent<PlayerController3D>();
         if (player == null) return;
-        
+
         if (player.IsGroundPounding())
             Break();
     }
@@ -39,10 +43,8 @@ public class BreakableBox : MonoBehaviour
         if (broken) return;
         broken = true;
 
-        // Hide intact
-        if (intactModel != null)
-            intactModel.SetActive(false);
-            boxBreakSFX.Play();
+        if (intactModel != null) intactModel.SetActive(false);
+        if (boxBreakSFX != null) boxBreakSFX.Play();
 
         if (piecesRoot == null)
         {
@@ -50,39 +52,68 @@ public class BreakableBox : MonoBehaviour
             return;
         }
 
-        // Turn on pieces
+        // Enable + detach pieces so they can live independently
         piecesRoot.SetActive(true);
-        Instantiate(coinPrefab, transform.position, Quaternion.identity);
-        
-        // IMPORTANT: detach piecesRoot from THIS object BEFORE we disable/destroy anything
         piecesRoot.transform.SetParent(null, true);
 
-        // Enable physics on all pieces
+        if (coinPrefab != null)
+            Instantiate(coinPrefab, transform.position, Quaternion.identity);
+
         foreach (Transform piece in piecesRoot.transform)
         {
             Rigidbody rb = piece.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.isKinematic = false;
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.AddExplosionForce(explodeForce, transform.position, explodeRadius, upForce, ForceMode.Impulse);
-            }
-            else
-            {
-                Debug.LogWarning($"Piece '{piece.name}' has no Rigidbody.", piece);
-            }
+            if (rb == null) continue;
+
+            rb.isKinematic = false;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.AddExplosionForce(explodeForce, transform.position, explodeRadius, upForce, ForceMode.Impulse);
         }
 
-        // Turn off collisions/visuals on the original box (don’t destroy immediately)
+        // Make the box "gone" immediately, but DON'T destroy this object yet
         Collider c = GetComponent<Collider>();
         if (c != null) c.enabled = false;
 
-        // Optional: hide the root object so you don’t see anything weird
         foreach (var r in GetComponentsInChildren<Renderer>())
             r.enabled = false;
 
-        Destroy(gameObject, 0.35f);                 // destroy the old box root
-        Destroy(piecesRoot, destroyAfter);         // clean up pieces later (optional)
+        StartCoroutine(PiecesDieThenVFXThenCleanup());
+    }
+
+    IEnumerator PiecesDieThenVFXThenCleanup()
+    {
+        yield return new WaitForSeconds(piecesDestroyAfter);
+
+        Vector3 vfxPos = GetPiecesCenter(piecesRoot);
+
+        if (breakEndVFXPrefab != null)
+        {
+            GameObject vfx = Instantiate(breakEndVFXPrefab, vfxPos, Quaternion.identity);
+            Destroy(vfx, breakEndVFXLifetime);
+        }
+        else
+        {
+            Debug.LogWarning("BreakEndVFXPrefab not assigned on BreakableBox.", this);
+        }
+
+        if (piecesRoot != null)
+            Destroy(piecesRoot);
+
+        // now it's safe to destroy the invisible coroutine-runner object
+        Destroy(gameObject);
+    }
+
+    Vector3 GetPiecesCenter(GameObject root)
+    {
+        if (root == null) return transform.position;
+
+        Renderer[] rs = root.GetComponentsInChildren<Renderer>();
+        if (rs.Length == 0) return root.transform.position;
+
+        Bounds b = rs[0].bounds;
+        for (int i = 1; i < rs.Length; i++)
+            b.Encapsulate(rs[i].bounds);
+
+        return b.center;
     }
 }

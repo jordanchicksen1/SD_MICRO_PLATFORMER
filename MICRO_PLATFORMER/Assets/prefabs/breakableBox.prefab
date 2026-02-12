@@ -82,10 +82,12 @@ MonoBehaviour:
   piecesRoot: {fileID: 2840870103147985478}
   coinPrefab: {fileID: 7798238309623276801, guid: ba1efee5700225e4681b5948ced99a44, type: 3}
   boxBreakSFX: {fileID: 3326686410334275501}
+  breakEndVFXPrefab: {fileID: 1981474773157826826, guid: 79be2659720198d48a73ced9097d0369, type: 3}
+  breakEndVFXLifetime: 2
   explodeForce: 10
   explodeRadius: 2
   upForce: 2
-  destroyAfter: 1.5
+  piecesDestroyAfter: 2
 --- !u!1 &5734298131981281960
 GameObject:
   m_ObjectHideFlags: 0
