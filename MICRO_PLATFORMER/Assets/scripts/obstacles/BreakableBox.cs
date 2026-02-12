@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class BreakableBox : MonoBehaviour
 {
@@ -7,6 +9,10 @@ public class BreakableBox : MonoBehaviour
     [SerializeField] GameObject piecesRoot;
     [SerializeField] GameObject coinPrefab;
     [SerializeField] AudioSource boxBreakSFX;
+
+    [Header("VFX")]
+    [SerializeField] VisualEffect smokePoof;     // prefab with VisualEffect
+    [SerializeField] float vfxLifetime = 2f;     // how long before we destroy the VFX object
 
     [Header("Break Settings")]
     [SerializeField] float explodeForce = 4f;
@@ -20,16 +26,17 @@ public class BreakableBox : MonoBehaviour
     {
         if (piecesRoot != null)
             piecesRoot.SetActive(false);
+        
+
     }
 
     void OnCollisionEnter(Collision collision)
     {
         if (broken) return;
 
-        PlayerController3D player = collision.collider.GetComponentInParent<PlayerController3D>();
-        if (player == null) player = collision.collider.GetComponentInParent<PlayerController3D>();
+        var player = collision.collider.GetComponentInParent<PlayerController3D>();
         if (player == null) return;
-        
+
         if (player.IsGroundPounding())
             Break();
     }
@@ -39,50 +46,78 @@ public class BreakableBox : MonoBehaviour
         if (broken) return;
         broken = true;
 
-        // Hide intact
-        if (intactModel != null)
-            intactModel.SetActive(false);
-            boxBreakSFX.Play();
+        if (intactModel != null) intactModel.SetActive(false);
+        if (boxBreakSFX != null) boxBreakSFX.Play();
 
         if (piecesRoot == null)
         {
-            Debug.LogError("PiecesRoot is NULL on BreakableBox. Assign it in the inspector.", this);
+            Debug.LogError("PiecesRoot is NULL on BreakableBox.", this);
             return;
         }
 
-        // Turn on pieces
         piecesRoot.SetActive(true);
-        Instantiate(coinPrefab, transform.position, Quaternion.identity);
-        
-        // IMPORTANT: detach piecesRoot from THIS object BEFORE we disable/destroy anything
+        if (coinPrefab != null)
+            Instantiate(coinPrefab, transform.position, Quaternion.identity);
+
+        // Detach pieces so destroying the box doesn't kill them
         piecesRoot.transform.SetParent(null, true);
 
-        // Enable physics on all pieces
         foreach (Transform piece in piecesRoot.transform)
         {
-            Rigidbody rb = piece.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.isKinematic = false;
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.AddExplosionForce(explodeForce, transform.position, explodeRadius, upForce, ForceMode.Impulse);
-            }
-            else
-            {
-                Debug.LogWarning($"Piece '{piece.name}' has no Rigidbody.", piece);
-            }
+            var rb = piece.GetComponent<Rigidbody>();
+            if (rb == null) continue;
+
+            rb.isKinematic = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.AddExplosionForce(explodeForce, transform.position, explodeRadius, upForce, ForceMode.Impulse);
         }
 
-        // Turn off collisions/visuals on the original box (don’t destroy immediately)
-        Collider c = GetComponent<Collider>();
+        // Hide/disable original collider & visuals
+        var c = GetComponent<Collider>();
         if (c != null) c.enabled = false;
+        foreach (var r in GetComponentsInChildren<Renderer>()) r.enabled = false;
 
-        // Optional: hide the root object so you don’t see anything weird
-        foreach (var r in GetComponentsInChildren<Renderer>())
-            r.enabled = false;
+        // Destroy the original box root soon
+        Destroy(gameObject, 0.35f);
 
-        Destroy(gameObject, 0.35f);                 // destroy the old box root
-        Destroy(piecesRoot, destroyAfter);         // clean up pieces later (optional)
+        // Handle the "pieces -> vfx -> cleanup" sequence
+        StartCoroutine(PiecesThenVFXThenCleanup());
+    }
+
+    IEnumerator PiecesThenVFXThenCleanup()
+    {
+        // wait until you're ready to remove pieces
+        yield return new WaitForSeconds(destroyAfter);
+
+        // choose where to play the vfx (center of pieces)
+        Vector3 pos = GetCenterOfPieces(piecesRoot);
+
+        // spawn and play vfx
+        if (smokePoof != null)
+        {
+            VisualEffect vfx = Instantiate(smokePoof, pos, Quaternion.identity);
+            vfx.Reinit();
+            vfx.Play();
+            Destroy(vfx.gameObject, vfxLifetime);
+        }
+
+        // destroy pieces after spawning vfx
+        if (piecesRoot != null)
+            Destroy(piecesRoot);
+    }
+
+    Vector3 GetCenterOfPieces(GameObject root)
+    {
+        if (root == null) return transform.position;
+
+        var renderers = root.GetComponentsInChildren<Renderer>();
+        if (renderers.Length == 0) return root.transform.position;
+
+        Bounds b = renderers[0].bounds;
+        for (int i = 1; i < renderers.Length; i++)
+            b.Encapsulate(renderers[i].bounds);
+
+        return b.center;
     }
 }
