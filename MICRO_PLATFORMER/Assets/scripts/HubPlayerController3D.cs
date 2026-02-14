@@ -146,7 +146,14 @@ public class HubPlayerController3D : MonoBehaviour
     [SerializeField] float groundCheckExtra = 0.08f;
     [SerializeField] float groundCheckRadiusScale = 0.9f;
 
+    [Header("Footsteps")]
+    [SerializeField] AudioSource footstepSource;
+    [SerializeField] AudioClip footstepClipA;
+    [SerializeField] AudioClip footstepClipB;
+    [SerializeField] float stepInterval = 0.4f; // time between steps
 
+    float stepTimer;
+    bool useFirstClip = true;
     bool IsGrounded()
     {
         if (groundMask == 0)
@@ -395,6 +402,8 @@ public class HubPlayerController3D : MonoBehaviour
 
 
         ApplyBetterGravity();
+
+        HandleFootsteps();
     }
 
     Vector3 GetCameraRelativeMovement()
@@ -433,7 +442,45 @@ public class HubPlayerController3D : MonoBehaviour
 
     }
 
+    void HandleFootsteps()
+    {
+        if (!IsGrounded())
+        {
+            stepTimer = 0f;
+            return;
+        }
 
+        float horizontalSpeed = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z).magnitude;
+
+        if (horizontalSpeed < 0.1f)
+        {
+            stepTimer = 0f;
+            return;
+        }
+
+        stepTimer += Time.fixedDeltaTime;
+
+        float dynamicInterval = Mathf.Lerp(0.5f, 0.25f, horizontalSpeed / moveSpeed);
+        if (stepTimer >= dynamicInterval)
+        {
+            PlayFootstep();
+            stepTimer = 0f;
+        }
+    }
+
+    void PlayFootstep()
+    {
+        if (!footstepSource) return;
+
+        AudioClip clip = useFirstClip ? footstepClipA : footstepClipB;
+
+        if (clip != null)
+            footstepSource.PlayOneShot(clip);
+
+        useFirstClip = !useFirstClip; // alternate
+
+        footstepSource.pitch = Random.Range(0.95f, 1.05f);
+    }
 
     void RotateTowardsMovement()
     {
