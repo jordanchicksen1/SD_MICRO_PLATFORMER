@@ -10411,7 +10411,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 93bb780370c526540a8278cf494c2af4, type: 2}
+      objectReference: {fileID: 2100000, guid: e0db9dcc3f455a14fb427cc36540415d, type: 2}
     - target: {fileID: 919132149155446097, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
       propertyPath: m_Name
       value: ringLevel1
@@ -10419,8 +10419,21 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1415968128}
   m_SourcePrefab: {fileID: 100100000, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+--- !u!1 &749314071 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+  m_PrefabInstance: {fileID: 749314070}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &749314072 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+  m_PrefabInstance: {fileID: 749314070}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &751060924
 GameObject:
   m_ObjectHideFlags: 0
@@ -14445,7 +14458,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 93bb780370c526540a8278cf494c2af4, type: 2}
+      objectReference: {fileID: 2100000, guid: e0db9dcc3f455a14fb427cc36540415d, type: 2}
     - target: {fileID: 919132149155446097, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
       propertyPath: m_Name
       value: ringLevel2
@@ -14453,8 +14466,21 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1182641538}
   m_SourcePrefab: {fileID: 100100000, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+--- !u!1 &1051481416 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+  m_PrefabInstance: {fileID: 1051481415}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1051481417 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+  m_PrefabInstance: {fileID: 1051481415}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1055661290
 GameObject:
   m_ObjectHideFlags: 0
@@ -16669,6 +16695,23 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
   m_PrefabInstance: {fileID: 1051481415}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1182641538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1051481416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76a0042f3f980084eb6bcb4aceccf80d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelId: Level2
+  totalGemsInLevel: 3
+  torusRenderer: {fileID: 1051481417}
+  incompleteMaterial: {fileID: 2100000, guid: 93bb780370c526540a8278cf494c2af4, type: 2}
+  completeMaterial: {fileID: 2100000, guid: 28fb4611f47154d428e3100381069893, type: 2}
 --- !u!1 &1187211283
 GameObject:
   m_ObjectHideFlags: 0
@@ -20087,6 +20130,23 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
   m_PrefabInstance: {fileID: 749314070}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1415968128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749314071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76a0042f3f980084eb6bcb4aceccf80d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelId: Level1
+  totalGemsInLevel: 3
+  torusRenderer: {fileID: 749314072}
+  incompleteMaterial: {fileID: 2100000, guid: 93bb780370c526540a8278cf494c2af4, type: 2}
+  completeMaterial: {fileID: 2100000, guid: 28fb4611f47154d428e3100381069893, type: 2}
 --- !u!1001 &1417939059
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27602,7 +27662,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 93bb780370c526540a8278cf494c2af4, type: 2}
+      objectReference: {fileID: 2100000, guid: e0db9dcc3f455a14fb427cc36540415d, type: 2}
     - target: {fileID: 919132149155446097, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
       propertyPath: m_Name
       value: ringLevel3
@@ -27610,8 +27670,38 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1854502209}
   m_SourcePrefab: {fileID: 100100000, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+--- !u!1 &1854502207 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+  m_PrefabInstance: {fileID: 1854502206}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1854502208 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 4e453190c9da86f428f090bb31259ee3, type: 3}
+  m_PrefabInstance: {fileID: 1854502206}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1854502209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854502207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76a0042f3f980084eb6bcb4aceccf80d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelId: Level3
+  totalGemsInLevel: 3
+  torusRenderer: {fileID: 1854502208}
+  incompleteMaterial: {fileID: 2100000, guid: 93bb780370c526540a8278cf494c2af4, type: 2}
+  completeMaterial: {fileID: 2100000, guid: 28fb4611f47154d428e3100381069893, type: 2}
 --- !u!1 &1855979409
 GameObject:
   m_ObjectHideFlags: 0
