@@ -1,10 +1,11 @@
-using UnityEngine;
+  using UnityEngine;
 
 public class CoopDoor : MonoBehaviour
 {
     [Header("Setup")]
     [SerializeField] float openHeight = 4f;
     [SerializeField] float openSpeed = 2f;
+    public AudioSource doorSFX;
 
     Vector3 closedPos;
     Vector3 openPos;
@@ -29,6 +30,7 @@ public class CoopDoor : MonoBehaviour
             target,
             openSpeed * Time.deltaTime
         );
+        
     }
 
     // Returns true only if this call transitions closed->open AND it's the first time ever opened
@@ -39,11 +41,13 @@ public class CoopDoor : MonoBehaviour
 
         if (!wasOpen && isOpen)
         {
+            doorSFX.Play();
             bool firstTime = !openedEver;
             openedEver = true;
             return firstTime;
+            
         }
-
+        
         return false;
     }
 }

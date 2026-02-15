@@ -747,6 +747,7 @@ public class PlayerController3D : MonoBehaviour
         if (other.tag == "Key")
         {
             StartCoroutine(KeyPoseCoroutine());
+            gemSFX.Play();
         }
         
        

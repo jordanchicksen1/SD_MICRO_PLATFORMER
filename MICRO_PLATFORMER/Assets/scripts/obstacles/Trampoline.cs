@@ -6,11 +6,14 @@ public class Trampoline : MonoBehaviour
     [SerializeField] float launchVelocity = 12f;   // tweak this for height
     [SerializeField] float upwardExtraForce = 0f;  // optional extra “pop”
     [SerializeField] float cooldown = 0.1f;        // prevents double-triggers
+    public AudioSource boingSFX;
 
     float lastLaunchTime;
 
     void OnTriggerEnter(Collider other)
     {
+        boingSFX.Play();
+
         // Only affect players
         PlayerController3D player = other.GetComponent<PlayerController3D>();
         if (!player) return;

@@ -13,6 +13,7 @@ public class EnemyShooter : MonoBehaviour
     [SerializeField] Transform firePoint;
     [SerializeField] float shootInterval = 2f;
     [SerializeField] float detectionRange = 12f;
+    public AudioSource shootSFX;
 
     Rigidbody rb;
     Transform target;
@@ -146,6 +147,7 @@ public class EnemyShooter : MonoBehaviour
         GameObject proj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
         EnemyProjectile ep = proj.GetComponent<EnemyProjectile>();
         ep.Init(dir);
+        shootSFX.Play();
 
         // Ignore collision with self
         Collider projCol = proj.GetComponent<Collider>();

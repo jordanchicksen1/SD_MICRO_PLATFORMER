@@ -5,6 +5,7 @@ public class BallHole : MonoBehaviour
 {
     [SerializeField] Transform snapPoint;
     [SerializeField] UnityEvent onBallPlaced;
+    public AudioSource buttonSFX;
 
     bool filled;
 
@@ -32,5 +33,7 @@ public class BallHole : MonoBehaviour
         ball.LockIntoHole(snapPoint);
 
         onBallPlaced?.Invoke();
+
+        buttonSFX.Play();
     }
 }

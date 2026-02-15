@@ -6,6 +6,7 @@ public class EnemySquash : MonoBehaviour
     [SerializeField] float squashY = 0.2f;
     [SerializeField] float stretchX = 1.4f;
     [SerializeField] float squashTime = 0.12f;
+    public AudioSource squashSFX;
 
     Vector3 startScale;
 
@@ -18,6 +19,7 @@ public class EnemySquash : MonoBehaviour
     {
         StopAllCoroutines();
         StartCoroutine(SquashRoutine());
+        squashSFX.Play();
     }
 
     IEnumerator SquashRoutine()

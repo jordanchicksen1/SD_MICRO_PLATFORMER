@@ -4,7 +4,7 @@ public class Door : MonoBehaviour
 {
     [SerializeField] float openHeight = 3f;
     [SerializeField] float speed = 3f;
-
+    
     Vector3 closedPos;
     Vector3 openPos;
 
@@ -13,6 +13,8 @@ public class Door : MonoBehaviour
 
     public bool IsOpen => open;
     public bool HasOpenedEver => openedEver;
+
+    public AudioSource doorSFX;
 
     void Start()
     {
@@ -29,6 +31,7 @@ public class Door : MonoBehaviour
     // Returns true ONLY the first time it ever opens
     public bool Open()
     {
+        doorSFX.Play();
         if (open) return false;
 
         open = true;
@@ -41,6 +44,7 @@ public class Door : MonoBehaviour
 
     public void Close()
     {
+        doorSFX.Play();
         open = false;
     }
 

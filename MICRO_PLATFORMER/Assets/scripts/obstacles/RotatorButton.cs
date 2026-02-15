@@ -6,6 +6,7 @@ public class RotatorButton : MonoBehaviour
     [SerializeField] RotatePlatform90 targetPlatform;
     [SerializeField] ButtonVisual visual;
     [SerializeField] float resetTime = 0.5f;
+    public AudioSource buttonSFX;
 
     bool pressed;
 
@@ -16,12 +17,14 @@ public class RotatorButton : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        buttonSFX.Play();
+
         if (pressed) return;
 
         PlayerController3D player = other.GetComponent<PlayerController3D>();
         if (!player) return;
 
-        // Optional: only if falling / landing
+     
         Rigidbody rb = player.GetComponent<Rigidbody>();
         if (rb != null && rb.linearVelocity.y > 0.1f)
             return;
