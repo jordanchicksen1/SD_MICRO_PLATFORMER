@@ -150,9 +150,10 @@ public class HubPlayerController3D : MonoBehaviour
     [SerializeField] AudioSource footstepSource;
     [SerializeField] AudioClip footstepClipA;
     [SerializeField] AudioClip footstepClipB;
-    [SerializeField] float stepInterval = 0.4f; // time between steps
+    [SerializeField] float stepInterval = 0.4f;
+    [SerializeField] float moveThreshold = 0.15f;
 
-    float stepTimer;
+    float nextStepTime;
     bool useFirstClip = true;
     bool IsGrounded()
     {
@@ -444,42 +445,44 @@ public class HubPlayerController3D : MonoBehaviour
 
     void HandleFootsteps()
     {
+        if (!footstepSource) return;
+
         if (!IsGrounded())
         {
-            stepTimer = 0f;
+            nextStepTime = 0f;
             return;
         }
 
         float horizontalSpeed = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z).magnitude;
 
-        if (horizontalSpeed < 0.1f)
+        if (horizontalSpeed < moveThreshold)
         {
-            stepTimer = 0f;
+            nextStepTime = 0f;
             return;
         }
 
-        stepTimer += Time.fixedDeltaTime;
+        if (nextStepTime == 0f)
+            nextStepTime = Time.time + stepInterval; // start cadence
 
-        float dynamicInterval = Mathf.Lerp(0.5f, 0.25f, horizontalSpeed / moveSpeed);
-        if (stepTimer >= dynamicInterval)
+        if (Time.time >= nextStepTime)
         {
             PlayFootstep();
-            stepTimer = 0f;
+            nextStepTime = Time.time + stepInterval;
         }
     }
 
+
     void PlayFootstep()
     {
-        if (!footstepSource) return;
+        Debug.Log($"FOOTSTEP from {gameObject.name} at {Time.time}");
 
         AudioClip clip = useFirstClip ? footstepClipA : footstepClipB;
-
         if (clip != null)
             footstepSource.PlayOneShot(clip);
 
-        useFirstClip = !useFirstClip; // alternate
+        useFirstClip = !useFirstClip;
 
-        footstepSource.pitch = Random.Range(0.95f, 1.05f);
+        footstepSource.pitch = Random.Range(0.80f, 1.05f);
     }
 
     void RotateTowardsMovement()

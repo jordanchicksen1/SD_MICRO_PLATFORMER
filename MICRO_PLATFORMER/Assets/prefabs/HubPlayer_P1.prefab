@@ -2518,7 +2518,8 @@ MonoBehaviour:
   footstepSource: {fileID: 2526737778716278768}
   footstepClipA: {fileID: 8300000, guid: 5e12936351537f141a202d6e8a1404d6, type: 3}
   footstepClipB: {fileID: 8300000, guid: 592bf6ac693caa242b73f42d111b3a03, type: 3}
-  stepInterval: 1.2
+  stepInterval: 0.4
+  moveThreshold: 0.15
 --- !u!1 &4373788222937336102
 GameObject:
   m_ObjectHideFlags: 0
@@ -14098,6 +14099,10 @@ PrefabInstance:
     - target: {fileID: 977384198956849906, guid: 811f4e2029db4dd409da2939e0e4bf9e, type: 3}
       propertyPath: m_Name
       value: footstepSFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 2652297196515907720, guid: 811f4e2029db4dd409da2939e0e4bf9e, type: 3}
+      propertyPath: m_Volume
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 7793091427983567320, guid: 811f4e2029db4dd409da2939e0e4bf9e, type: 3}
       propertyPath: m_LocalPosition.x

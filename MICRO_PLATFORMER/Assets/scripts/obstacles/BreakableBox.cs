@@ -13,6 +13,7 @@ public class BreakableBox : MonoBehaviour
     [SerializeField] GameObject breakEndVFXPrefab;
     [SerializeField] float breakEndVFXLifetime = 2f;
 
+
     [Header("Break Settings")]
     [SerializeField] float explodeForce = 4f;
     [SerializeField] float explodeRadius = 1.5f;
@@ -65,7 +66,7 @@ public class BreakableBox : MonoBehaviour
             if (rb == null) continue;
 
             rb.isKinematic = false;
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.AddExplosionForce(explodeForce, transform.position, explodeRadius, upForce, ForceMode.Impulse);
         }
@@ -84,11 +85,12 @@ public class BreakableBox : MonoBehaviour
     {
         yield return new WaitForSeconds(piecesDestroyAfter);
 
-        Vector3 vfxPos = GetPiecesCenter(piecesRoot);
+        Vector3 vfxPos = transform.position;
 
         if (breakEndVFXPrefab != null)
         {
             GameObject vfx = Instantiate(breakEndVFXPrefab, vfxPos, Quaternion.identity);
+         
             Destroy(vfx, breakEndVFXLifetime);
         }
         else

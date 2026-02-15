@@ -4,6 +4,7 @@ public class PressurePlate : MonoBehaviour
 {
     [SerializeField] Door door;
     [SerializeField] ButtonVisual visual;
+    public AudioSource buttonSFX;
 
     int count;
     bool isOpen;
@@ -31,6 +32,7 @@ public class PressurePlate : MonoBehaviour
 
     void UpdateState()
     {
+        buttonSFX.Play();
         bool shouldBeOpen = count > 0;
 
         if (shouldBeOpen != isOpen)

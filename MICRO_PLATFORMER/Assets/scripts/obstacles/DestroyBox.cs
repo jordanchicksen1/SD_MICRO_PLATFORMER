@@ -5,6 +5,7 @@ using UnityEngine.VFX;
 public class DoorKillBox : MonoBehaviour
 {
     public VisualEffect smokePoof;
+    public AudioSource poofSFX;
     public float destroyTime = 0.125f;
     public void Start()
     {
@@ -26,6 +27,7 @@ public class DoorKillBox : MonoBehaviour
         yield return new WaitForSeconds(0f);
         smokePoof.Stop();      // Ensure it's reset
         smokePoof.Play();      // Play once
+        poofSFX.Play();
         yield return new WaitForSeconds(1.3f);
         Destroy(gameObject);
     }

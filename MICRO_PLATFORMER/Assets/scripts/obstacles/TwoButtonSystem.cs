@@ -8,6 +8,7 @@ public class ToggleButton : MonoBehaviour
     [Header("Visual")]
     [SerializeField] Transform buttonTop;  // assign the moving button mesh
     [SerializeField] float pressDepth = 0.2f;
+    [SerializeField] AudioSource buttonSFX;
 
     [Header("Trigger rules")]
     [SerializeField] float cooldown = 0.15f; // stops multi-triggers in one landing
@@ -39,6 +40,7 @@ public class ToggleButton : MonoBehaviour
         // Must be landing / falling down (prevents toggling when brushing sideways)
         Rigidbody rb = player.GetComponent<Rigidbody>();
         if (rb != null && rb.linearVelocity.y > 0.1f) return;
+        buttonSFX.Play();
 
         Toggle();
         StartCoroutine(Cooldown());

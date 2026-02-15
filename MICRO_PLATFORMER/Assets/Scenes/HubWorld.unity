@@ -6771,7 +6771,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: b15d581bc57300f41b88930da7a73ec9, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -24561,6 +24561,18 @@ PrefabInstance:
     - target: {fileID: 877174914327741511, guid: 980d6a39a6a6fa54bb2be01bde3d30a8, type: 3}
       propertyPath: m_Name
       value: twoButtonDoor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1113387837773309495, guid: 980d6a39a6a6fa54bb2be01bde3d30a8, type: 3}
+      propertyPath: door
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1113387837773309495, guid: 980d6a39a6a6fa54bb2be01bde3d30a8, type: 3}
+      propertyPath: buttonA
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1113387837773309495, guid: 980d6a39a6a6fa54bb2be01bde3d30a8, type: 3}
+      propertyPath: buttonB
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5375745710581540820, guid: 980d6a39a6a6fa54bb2be01bde3d30a8, type: 3}
       propertyPath: m_LocalScale.x

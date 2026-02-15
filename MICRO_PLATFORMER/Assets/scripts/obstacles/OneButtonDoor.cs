@@ -4,6 +4,7 @@ public class OneButtonDoor : MonoBehaviour
 {
     [SerializeField] Door door;
     [SerializeField] ButtonVisual visual;
+    [SerializeField] AudioSource buttonSFX;
 
     [Header("Camera Focus (first open only)")]
     [SerializeField] DoorCameraFocus cameraFocus;
@@ -20,6 +21,7 @@ public class OneButtonDoor : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         visual?.Press();
+        buttonSFX.Play();
 
         if (door == null) return;
 
