@@ -50,16 +50,41 @@ public class PauseManager : MonoBehaviour
 
     public void Retry()
     {
-        Debug.Log("Restart the level that you are currently on");
+        Debug.Log("shows page that asks are you sure you want to restart the level");
     }
 
     public void QuitLevel()
     {
-        Debug.Log("quit level and went back to hub world");
+        Debug.Log("shows page that asks are you sure you want to quit the level");
     }
 
     public void Controls()
     {
         Debug.Log("show controls");
+    }
+
+    public void BackControlsPage()
+    {
+        Debug.Log("exit controls page");
+    }
+
+    public void BackRetryLevel()
+    {
+        Debug.Log("turn off prompt that shows when you press Retry");
+    }
+
+    public void BackQuitLevel()
+    {
+        Debug.Log("turn off prompt that shows when you press Quit");
+    }
+
+    public void ConfirmQuitLevel()
+    {
+        Debug.Log("takes player back to the hub world");
+    }
+
+    public void ConfirmRestartsLevel()
+    {
+        Debug.Log("takes player back to the hub world");
     }
 }
