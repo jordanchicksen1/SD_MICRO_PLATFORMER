@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 
 public class PauseManager : MonoBehaviour
@@ -24,12 +25,19 @@ public class PauseManager : MonoBehaviour
 
     [SerializeField] string hubSceneName = "HubWorld";
 
+    [SerializeField] ScreenFader fader;
+    [SerializeField] float fadeDuration = 0.4f;
+    bool isLoading;
+
+
 
     public bool IsPaused { get; private set; }
 
     void Start()
     {
         SetPaused(false);
+        if (!fader)
+            fader = FindFirstObjectByType<ScreenFader>();
     }
 
     public void TogglePause()
@@ -147,21 +155,47 @@ public class PauseManager : MonoBehaviour
 
     public void ConfirmQuitLevel()
     {
-        Time.timeScale = 1f;
-
-        PlayerInputUtil.ExitUIMode(gameplayMapName);
-
-        SceneManager.LoadScene(hubSceneName);
-        Debug.Log("takes player back to the hub world");
+        if (isLoading) return;
+        StartCoroutine(QuitRoutine());
     }
+
+    IEnumerator QuitRoutine()
+    {
+        isLoading = true;
+
+        // Close pause immediately
+        SetPaused(false);
+
+        yield return null;
+
+        if (fader)
+            yield return fader.FadeTo(1f, fadeDuration);
+
+        SceneManager.LoadScene("HubWorld");
+    }
+
+
 
     public void ConfirmRestartsLevel()
     {
-        Time.timeScale = 1f;
+        if (isLoading) return;
+        StartCoroutine(RestartRoutine());
+    }
 
-        PlayerInputUtil.ExitUIMode(gameplayMapName);
+    IEnumerator RestartRoutine()
+    {
+        isLoading = true;
+
+        // Close pause immediately
+        SetPaused(false);
+
+        // Small frame delay so UI fully hides
+        yield return null;
+
+        if (fader)
+            yield return fader.FadeTo(1f, fadeDuration);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        Debug.Log("takes player back to the hub world");
     }
+
 }

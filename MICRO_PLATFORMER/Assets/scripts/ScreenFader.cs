@@ -6,15 +6,36 @@ public class ScreenFader : MonoBehaviour
     [SerializeField] CanvasGroup group;
     [SerializeField] float defaultFadeDuration = 0.35f;
 
+    [Header("Scene Start Fade")]
+    [SerializeField] bool fadeFromBlackOnStart = true;
+    [SerializeField] float fadeInDuration = 0.4f;
+
     void Awake()
     {
         if (!group) group = GetComponent<CanvasGroup>();
-        if (group)
-        {
+
+        if (!group) return;
+
+        group.blocksRaycasts = false;
+        group.interactable = false;
+
+        if (fadeFromBlackOnStart)
+            group.alpha = 1f;   // start black
+        else
             group.alpha = 0f;
-            group.blocksRaycasts = false;
-            group.interactable = false;
-        }
+    }
+
+    void Start()
+    {
+        if (fadeFromBlackOnStart)
+            StartCoroutine(FadeInRoutine());
+    }
+
+    IEnumerator FadeInRoutine()
+    {
+        yield return null; // wait one frame so scene fully renders
+
+        yield return FadeRoutine(0f, fadeInDuration);
     }
 
     public Coroutine FadeTo(float targetAlpha, float duration = -1f)
@@ -30,13 +51,12 @@ public class ScreenFader : MonoBehaviour
         float start = group.alpha;
         float t = 0f;
 
-        // block clicks while fading in
         bool becomingOpaque = targetAlpha > start;
         group.blocksRaycasts = becomingOpaque;
 
         while (t < duration)
         {
-            t += Time.deltaTime;
+            t += Time.unscaledDeltaTime; // IMPORTANT
             float a = Mathf.Clamp01(t / Mathf.Max(0.0001f, duration));
             group.alpha = Mathf.Lerp(start, targetAlpha, a);
             yield return null;
@@ -44,7 +64,6 @@ public class ScreenFader : MonoBehaviour
 
         group.alpha = targetAlpha;
 
-        // if fully faded out, unblock clicks again
         if (Mathf.Approximately(targetAlpha, 0f))
             group.blocksRaycasts = false;
     }
