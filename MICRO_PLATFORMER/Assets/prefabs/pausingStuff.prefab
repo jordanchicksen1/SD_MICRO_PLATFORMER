@@ -682,7 +682,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7578923671087742886}
         m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: Retry
+        m_MethodName: ConfirmQuitLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1000,9 +1000,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0, g: 0.035300255, b: 1, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.9490196, b: 0, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.0008869171, g: 0, b: 1, a: 1}
+    m_SelectedColor: {r: 1, g: 0.9490196, b: 0, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1823,7 +1823,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7578923671087742886}
         m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: QuitLevel
+        m_MethodName: BackRetryLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1956,7 +1956,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7578923671087742886}
         m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: QuitLevel
+        m_MethodName: BackQuitLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2010,10 +2010,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6475345b765b78543bbe5b51ce5ed4a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainPausePanel: {fileID: 2652604221128334769}
   pauseCanvas: {fileID: 2652604221128334769}
   firstSelectedButton: {fileID: 6908853802442606609}
   gameplayMapName: Gameplay
   uiMapName: UI
+  controlsPanel: {fileID: 2513901600161184332}
+  retryConfirmPanel: {fileID: 6684052995107301887}
+  quitConfirmPanel: {fileID: 7115416949046301088}
+  controlsFirstButton: {fileID: 7959318653951402461}
+  retryFirstButton: {fileID: 4389691560519341355}
+  quitFirstButton: {fileID: 1606295649293367137}
+  hubSceneName: HubWorld
 --- !u!1 &4025990948029162071
 GameObject:
   m_ObjectHideFlags: 0
@@ -2482,7 +2490,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7578923671087742886}
         m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: Retry
+        m_MethodName: ConfirmRestartsLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4623,7 +4631,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7578923671087742886}
         m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: Retry
+        m_MethodName: BackControlsPage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
