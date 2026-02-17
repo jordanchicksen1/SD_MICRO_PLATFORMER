@@ -57,7 +57,8 @@ public class ScreenFader : MonoBehaviour
         while (t < duration)
         {
             t += Time.unscaledDeltaTime; // IMPORTANT
-            float a = Mathf.Clamp01(t / Mathf.Max(0.0001f, duration));
+            float a = Mathf.SmoothStep(0f, 1f, t / duration);
+
             group.alpha = Mathf.Lerp(start, targetAlpha, a);
             yield return null;
         }
