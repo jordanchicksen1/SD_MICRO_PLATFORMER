@@ -6,6 +6,7 @@ public class PressurePlatform : MonoBehaviour
     public Transform pointUp;
     public Transform pointDown;
     public float speed = 4f;
+    public AudioSource blockSFX;
 
     Rigidbody rb;
     int playersOnTop;
@@ -31,16 +32,19 @@ public class PressurePlatform : MonoBehaviour
         );
 
         rb.MovePosition(newPos);
+        
     }
 
     // Called by trigger child
     public void PlayerEnter()
     {
         playersOnTop++;
+        blockSFX.Play();
     }
 
     public void PlayerExit()
     {
         playersOnTop = Mathf.Max(0, playersOnTop - 1);
+        blockSFX.Play();
     }
 }
