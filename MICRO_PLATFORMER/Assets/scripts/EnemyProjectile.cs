@@ -19,14 +19,14 @@ public class EnemyProjectile : MonoBehaviour
         transform.position += direction * speed * Time.deltaTime;
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
         // Ignore enemy + enemy triggers
-        if (other.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("Enemy"))
             return;
 
         // Damage player
-        PlayerHealth health = other.GetComponent<PlayerHealth>();
+        PlayerHealth health = other.gameObject.GetComponent<PlayerHealth>();
         if (health != null)
         {
             health.TakeDamage(damage, transform.position);
@@ -35,7 +35,7 @@ public class EnemyProjectile : MonoBehaviour
         }
 
         // Hit environment (ground, walls, etc.)
-        if (other.CompareTag("Ground"))
+        if (other.gameObject.CompareTag("Ground"))
         {
             Destroy(gameObject);
         }
