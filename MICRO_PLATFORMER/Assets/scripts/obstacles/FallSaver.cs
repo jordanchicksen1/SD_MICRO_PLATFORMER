@@ -5,6 +5,7 @@ public class FallSaver : MonoBehaviour
 {
     [Header("Respawn")]
     public Transform respawnPoint;
+    public Transform ballPoint;
 
     [Header("Damage")]
     public int damage = 1;
@@ -15,48 +16,73 @@ public class FallSaver : MonoBehaviour
     readonly Dictionary<int, float> nextAllowedTime = new();
 
     void OnTriggerEnter(Collider other) => Handle(other);
-    void OnTriggerStay(Collider other) => Handle(other); // NEW
+    void OnTriggerStay(Collider other) => Handle(other);
 
     void Handle(Collider other)
     {
-        if (!other.transform.root.CompareTag("Player")) return;
+        Transform root = other.transform.root;
 
-        Transform playerRoot = other.transform.root;
-
-        var bubble = playerRoot.GetComponent<PlayerBubbleState>();
-        var health = playerRoot.GetComponent<PlayerHealth>();
-        if (health == null) return;
-
-        // Ignore bubbled players entirely
-        if (bubble != null && bubble.IsBubbled)
-            return;
-
-        int id = playerRoot.gameObject.GetInstanceID();
-        if (nextAllowedTime.TryGetValue(id, out float t) && Time.time < t)
-            return;
-
-        nextAllowedTime[id] = Time.time + reentryCooldown;
-
-        // Lethal: deal damage, do NOT teleport
-        if (health.CurrentHealth - damage <= 0)
+        // =========================
+        // PLAYER HANDLING
+        // =========================
+        if (root.CompareTag("Player"))
         {
-            health.TakeDamage(damage, transform.position);
-            return;
-        }
+            var bubble = root.GetComponent<PlayerBubbleState>();
+            var health = root.GetComponent<PlayerHealth>();
+            if (health == null) return;
 
-        // Non-lethal: damage + teleport
-        health.TakeDamage(damage, transform.position);
+            // Ignore bubbled players
+            if (bubble != null && bubble.IsBubbled)
+                return;
 
-        if (respawnPoint != null)
-        {
-            var rb = playerRoot.GetComponent<Rigidbody>();
-            if (rb != null)
+            int id = root.gameObject.GetInstanceID();
+            if (nextAllowedTime.TryGetValue(id, out float t) && Time.time < t)
+                return;
+
+            nextAllowedTime[id] = Time.time + reentryCooldown;
+
+            // Lethal
+            if (health.CurrentHealth - damage <= 0)
             {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
+                health.TakeDamage(damage, transform.position);
+                return;
             }
 
-            playerRoot.position = respawnPoint.position;
+            // Non-lethal
+            health.TakeDamage(damage, transform.position);
+
+            if (respawnPoint != null)
+            {
+                var rb = root.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.linearVelocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                }
+
+                root.position = respawnPoint.position;
+            }
+
+            return; // IMPORTANT: stop here
+        }
+
+        // =========================
+        // BALL HANDLING
+        // =========================
+        if (other.CompareTag("Ball"))
+        {
+            if (ballPoint != null)
+            {
+                Rigidbody rb = other.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.linearVelocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                }
+
+                other.transform.position = ballPoint.position;
+            }
         }
     }
+
 }
