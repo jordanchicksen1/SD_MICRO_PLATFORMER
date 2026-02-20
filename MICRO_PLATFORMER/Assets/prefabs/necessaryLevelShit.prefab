@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8997004379976690340}
   - component: {fileID: 4756156252668008955}
+  - component: {fileID: 5771958870867709086}
   m_Layer: 0
   m_Name: necessaryLevelShit
   m_TagString: Untagged
@@ -64,6 +65,18 @@ MonoBehaviour:
   hubSceneName: HubWorld
   gameplayMapName: Gameplay
   uiMapName: UI
+--- !u!114 &5771958870867709086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2501049536334520427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb8a17df95d2414d9555f5af410398a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3568462677606714117
 GameObject:
   m_ObjectHideFlags: 0
