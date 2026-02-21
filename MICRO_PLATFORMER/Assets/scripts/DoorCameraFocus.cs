@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class DoorCameraFocus : MonoBehaviour
 {
     [SerializeField] CoopCameraController coopCam;
+    [SerializeField] GameObject UI;
 
     [Header("Timing")]
     [SerializeField] float moveDuration = 0.6f;
@@ -33,12 +34,13 @@ public class DoorCameraFocus : MonoBehaviour
 
         if (routine != null) StopCoroutine(routine);
         routine = StartCoroutine(FocusRoutine(focusPoint));
+        UI.SetActive(false);
     }
 
     IEnumerator FocusRoutine(Transform focusPoint)
     {
         if (coopCam) coopCam.cutsceneActive = true;
-
+        
         // Gather player inputs + rigidbodies so we can freeze properly
         List<PlayerInput> inputs = new();
         List<Rigidbody> rbs = new();
@@ -137,6 +139,7 @@ public class DoorCameraFocus : MonoBehaviour
         {
             foreach (var pi in inputs)
                 if (pi && pi.enabled) pi.ActivateInput();
+            UI.SetActive(true);
         }
 
         routine = null;

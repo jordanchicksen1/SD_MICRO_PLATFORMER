@@ -790,6 +790,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8997004379976690340}
     m_Modifications:
+    - target: {fileID: 3263082720320073175, guid: 56f4f073bf1165348b71348854249072, type: 3}
+      propertyPath: UI
+      value: 
+      objectReference: {fileID: 8416136408208441278}
+    - target: {fileID: 3263082720320073175, guid: 56f4f073bf1165348b71348854249072, type: 3}
+      propertyPath: offScreenIndicatorManager
+      value: 
+      objectReference: {fileID: 1927799801664109054}
     - target: {fileID: 4504531894229570898, guid: 56f4f073bf1165348b71348854249072, type: 3}
       propertyPath: m_Name
       value: cameraRig
@@ -1181,6 +1189,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 758fda3c632f0a843a400a61b751dd48, type: 3}
+--- !u!114 &1927799801664109054 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3952113788858075239, guid: 758fda3c632f0a843a400a61b751dd48, type: 3}
+  m_PrefabInstance: {fileID: 3177378846266552729}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8416136408208441278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fc5628117a70c04e8fb125a74db83f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3998990714930826551 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1974571047651343534, guid: 758fda3c632f0a843a400a61b751dd48, type: 3}
@@ -1208,6 +1227,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8416136408208441278 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6400827011093237287, guid: 758fda3c632f0a843a400a61b751dd48, type: 3}
+  m_PrefabInstance: {fileID: 3177378846266552729}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8315440138776131628
 PrefabInstance:
   m_ObjectHideFlags: 0
