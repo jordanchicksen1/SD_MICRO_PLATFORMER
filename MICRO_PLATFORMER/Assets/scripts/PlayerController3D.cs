@@ -455,7 +455,7 @@ public class PlayerController3D : MonoBehaviour
 
     void PlayFootstep()
     {
-        Debug.Log($"FOOTSTEP from {gameObject.name} at {Time.time}");
+        
 
         AudioClip clip = useFirstClip ? footstepClipA : footstepClipB;
         if (clip != null)
@@ -726,9 +726,12 @@ public class PlayerController3D : MonoBehaviour
 
         if(other.tag == "Heart")
         {
-            GetComponent<PlayerHealth>().Heal(1);
             Destroy(other.gameObject);
-            heartParticle.Play();
+            GetComponent<PlayerHealth>().Heal(1);
+            if (!heartParticle.isPlaying)
+            {
+                heartParticle.Play();
+            }
             heartSFX.Play();   
         }
 
