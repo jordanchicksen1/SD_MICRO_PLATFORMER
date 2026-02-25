@@ -459,6 +459,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4038460032144798388, guid: fe5ee478a09bfbe4bbb51ee794a52f87, type: 3}
+      propertyPath: m_AllowJoining
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4038460032144798388, guid: fe5ee478a09bfbe4bbb51ee794a52f87, type: 3}
+      propertyPath: m_JoinBehavior
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6192523112553616672, guid: fe5ee478a09bfbe4bbb51ee794a52f87, type: 3}
       propertyPath: m_Name
       value: playerInputManager
