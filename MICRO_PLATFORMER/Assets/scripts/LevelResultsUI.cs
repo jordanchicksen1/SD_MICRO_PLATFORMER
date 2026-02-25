@@ -80,6 +80,7 @@ public class LevelResultsUI : MonoBehaviour
 
     void ContinueToHub()
     {
+        Debug.Log("Committing levelId: " + RunLevelInfo.Instance?.LevelId);
         Debug.Log("[LevelResultsUI] ContinueToHub pressed!");
 
         Time.timeScale = 1f;

@@ -26,6 +26,8 @@ public class LevelSelectTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        Debug.Log("UI Open called with levelId: " + levelId);
+
         if (ui == null) return;
         if (ui.IsOpen) return;
 

@@ -738,7 +738,10 @@ public class PlayerController3D : MonoBehaviour
         if(other.tag == "Coin")
         {
             coinSFX.Play();
-            coinParticle.Play();
+            if (!coinParticle.isPlaying)
+            {
+                coinParticle.Play();
+            }
         }
 
         if( other.tag == "Gem")

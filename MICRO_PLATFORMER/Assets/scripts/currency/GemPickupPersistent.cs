@@ -71,6 +71,8 @@ public class GemPickupPersistent : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Gem LevelId = " + levelId);
+
         if (pickedUp) return;
         if (!other.GetComponentInParent<PlayerController3D>()) return;
 

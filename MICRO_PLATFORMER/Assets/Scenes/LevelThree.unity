@@ -252,6 +252,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: necessaryLevelShit
       objectReference: {fileID: 0}
+    - target: {fileID: 3556685265856580754, guid: 7b8052df3aa300f4aa89d54a49be2ac7, type: 3}
+      propertyPath: levelId
+      value: Level3
+      objectReference: {fileID: 0}
     - target: {fileID: 8633910390443548040, guid: 7b8052df3aa300f4aa89d54a49be2ac7, type: 3}
       propertyPath: m_BackGroundColor.b
       value: 0.8117647
