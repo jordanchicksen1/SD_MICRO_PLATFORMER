@@ -10,7 +10,7 @@ public class CoopAutoSpawner : MonoBehaviour
         manager = GetComponent<PlayerInputManager>();
     }
 
-    void Start()
+    void Start() 
     {
         var gamepads = Gamepad.all;
 
