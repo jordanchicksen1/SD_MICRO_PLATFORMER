@@ -27,4 +27,6 @@ public class BossHead : MonoBehaviour
             boss.DamageBoss();
         }
     }
+
+
 }

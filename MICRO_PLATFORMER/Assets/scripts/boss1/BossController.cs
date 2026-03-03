@@ -12,8 +12,47 @@ public class BossController : MonoBehaviour
     [SerializeField] int hitsToDefeat = 3;
     [SerializeField] float stunDuration = 4f;
 
+    Coroutine attackRoutine;
+    bool useLeftHand = true;
+
     int currentHits;
     bool vulnerable;
+
+    bool fightStarted;
+
+    public void StartFight()
+    {
+        if (fightStarted) return;
+        fightStarted = true;
+
+        attackRoutine = StartCoroutine(AttackPattern());
+
+        Debug.Log("Boss fight started!");
+    }
+
+    IEnumerator AttackPattern()
+    {
+        while (true)
+        {
+            if (leftHand.IsIncapacitated && rightHand.IsIncapacitated)
+            {
+                yield return null;
+                continue;
+            }
+
+            if (!leftHand.IsIncapacitated && !leftHand.IsDazed)
+            {
+                yield return leftHand.PerformAttack();
+            }
+
+            if (!rightHand.IsIncapacitated && !rightHand.IsDazed)
+            {
+                yield return rightHand.PerformAttack();
+            }
+
+            yield return new WaitForSeconds(1.2f);
+        }
+    }
 
     void Start()
     {
@@ -35,15 +74,36 @@ public class BossController : MonoBehaviour
         vulnerable = true;
         head.SetVulnerable(true);
 
-        // TODO: play fall animation
+        // Stop boss attack pattern
+        if (attackRoutine != null)
+            StopCoroutine(attackRoutine);
 
-        yield return new WaitForSeconds(stunDuration);
+        DestroyAllRocks();
+
+        // TODO: play fall animation here
+
+        yield return new WaitForSeconds(15f);
 
         head.SetVulnerable(false);
         vulnerable = false;
 
         leftHand.ResetHand();
         rightHand.ResetHand();
+
+        // Restart alternating attacks
+        attackRoutine = StartCoroutine(AttackPattern());
+        leftHand.ResetHandState();
+        rightHand.ResetHandState();
+    }
+
+    void DestroyAllRocks()
+    {
+        GameObject[] rocks = GameObject.FindGameObjectsWithTag("Rock");
+
+        foreach (var r in rocks)
+        {
+            Destroy(r);
+        }
     }
 
     public void DamageBoss()
@@ -64,5 +124,18 @@ public class BossController : MonoBehaviour
         // Play death animation
         // Trigger door open
         // Victory cutscene
+    }
+
+    public void OnHandDazed(BossHand hand)
+    {
+        // Do nothing special yet
+    }
+
+    public void OnHandIncapacitated(BossHand hand)
+    {
+        if (leftHand.IsIncapacitated && rightHand.IsIncapacitated)
+        {
+            StartCoroutine(VulnerabilityPhase());
+        }
     }
 }

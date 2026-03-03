@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class BossHand : MonoBehaviour
 {
@@ -9,9 +10,13 @@ public class BossHand : MonoBehaviour
     [SerializeField] float slamSpeed = 15f;
     [SerializeField] float telegraphTime = 0.7f;
 
+    Quaternion startRotation;
+
     [Header("Rock")]
     [SerializeField] GameObject rockPrefab;
     [SerializeField] int rockCount = 3;
+    [SerializeField] Transform[] rockSpawnPoints;
+    [SerializeField] float rockFallHeight = 12f;
 
     BossController boss;
 
@@ -19,7 +24,23 @@ public class BossHand : MonoBehaviour
     bool attacking;
     bool stunned;
 
+    List<int> lastUsedIndexes = new List<int>();
+
+    Coroutine slamRoutine;
+
     public bool IsStunned => stunned;
+
+    enum HandState
+    {
+        Normal,
+        Dazed,
+        Incapacitated
+    }
+
+    HandState currentState = HandState.Normal;
+
+    public bool IsIncapacitated => currentState == HandState.Incapacitated;
+    public bool IsDazed => currentState == HandState.Dazed;
 
     public void SetBoss(BossController b)
     {
@@ -29,61 +50,93 @@ public class BossHand : MonoBehaviour
     void Start()
     {
         startPos = transform.position;
-        StartCoroutine(AttackLoop());
+        startRotation = Quaternion.identity;
     }
 
-    IEnumerator AttackLoop()
+    public IEnumerator PerformAttack()
     {
-        while (true)
-        {
-            if (!stunned)
-                yield return SlamAttack();
+        if (stunned) yield break;
 
-            yield return new WaitForSeconds(1.5f);
-        }
+        slamRoutine = StartCoroutine(SlamAttack());
+        yield return slamRoutine;
     }
+
+
 
     IEnumerator SlamAttack()
     {
         attacking = true;
 
         Transform target = FindClosestPlayer();
-
-        // Follow above player
         Vector3 hoverPos = target.position + Vector3.up * slamHeight;
 
+        // 1?? Move above player (telegraph phase)
         float t = 0f;
+        Vector3 initialPos = transform.position;
+
         while (t < telegraphTime)
         {
-            transform.position = Vector3.Lerp(transform.position, hoverPos, followSpeed * Time.deltaTime);
+            transform.position = Vector3.Lerp(initialPos, hoverPos, t / telegraphTime);
             t += Time.deltaTime;
             yield return null;
         }
 
-        // Slam down
+        transform.position = hoverPos;
+
+        // 2?? Rotate downward (swat pose)
+        Quaternion attackRotation = Quaternion.Euler(-90f, 0f, 0f);
+
+        float rotateTime = 0.15f;
+        float r = 0f;
+
+        while (r < rotateTime)
+        {
+            transform.rotation = Quaternion.Lerp(startRotation, attackRotation, r / rotateTime);
+            r += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.rotation = attackRotation;
+
+        // 3?? Slam down
         while (transform.position.y > target.position.y)
         {
             transform.position += Vector3.down * slamSpeed * Time.deltaTime;
             yield return null;
         }
 
+        // 4?? Check impact
         CheckImpact();
+        if (currentState == HandState.Dazed)
+        {
+            yield break; // stay on ground
+        }
 
-        // Return to start
+        if (stunned)
+        {
+            attacking = false;
+            yield break; // end slam immediately
+        }
+
+        // 5?? Return to start
         while (Vector3.Distance(transform.position, startPos) > 0.1f)
         {
             transform.position = Vector3.Lerp(transform.position, startPos, 4f * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, startRotation, 4f * Time.deltaTime);
             yield return null;
         }
 
+        transform.position = startPos;
+        transform.rotation = startRotation;
+
         attacking = false;
     }
-
     void CheckImpact()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, 2f);
 
         bool hitRock = false;
+        bool hitPlayer = false;
 
         foreach (var h in hits)
         {
@@ -92,37 +145,80 @@ public class BossHand : MonoBehaviour
                 hitRock = true;
                 Destroy(h.gameObject);
             }
+
+            if (h.CompareTag("Player"))
+            {
+                hitPlayer = true;
+
+                PlayerHealth health = h.GetComponent<PlayerHealth>();
+                if (health)
+                    health.TakeDamage(1, transform.position);
+            }
         }
 
         if (hitRock)
         {
-            StartCoroutine(Stun());
+
+
+            currentState = HandState.Dazed;
+            boss.OnHandDazed(this);
+            return;
         }
-        else
+        else if (!hitPlayer)
         {
-            SpawnRocks();
+            SpawnRocks(); // Only spawn rocks if it hit ground but NOT player
         }
     }
 
     void SpawnRocks()
     {
+        if (rockSpawnPoints.Length == 0) return;
+
+        List<int> usedThisRound = new List<int>();
+        List<int> availableIndexes = new List<int>();
+
+        // Build list of usable spawn points (not used last time)
+        for (int i = 0; i < rockSpawnPoints.Length; i++)
+        {
+            if (!lastUsedIndexes.Contains(i))
+                availableIndexes.Add(i);
+        }
+
+        // If somehow we blocked too many (edge case), reset memory
+        if (availableIndexes.Count < rockCount)
+        {
+            availableIndexes.Clear();
+            for (int i = 0; i < rockSpawnPoints.Length; i++)
+                availableIndexes.Add(i);
+        }
+
         for (int i = 0; i < rockCount; i++)
         {
-            Instantiate(rockPrefab, transform.position + Random.insideUnitSphere * 2f, Quaternion.identity);
+            int randomListIndex = Random.Range(0, availableIndexes.Count);
+            int spawnIndex = availableIndexes[randomListIndex];
+
+            usedThisRound.Add(spawnIndex);
+            availableIndexes.RemoveAt(randomListIndex);
+
+            Vector3 spawnPos = rockSpawnPoints[spawnIndex].position + Vector3.up * rockFallHeight;
+
+            Instantiate(rockPrefab, spawnPos, Quaternion.identity);
         }
+
+        // Store memory for next slam
+        lastUsedIndexes = usedThisRound;
     }
 
-    IEnumerator Stun()
+
+    public void ResetHandState()
     {
-        stunned = true;
-
-        // TODO: play stun animation
-        boss.OnHandStunned();
-
-        yield return new WaitForSeconds(4f);
-
-        stunned = false;
+        currentState = HandState.Normal;
+        transform.position = startPos;
+        transform.rotation = startRotation;
     }
+
+
+    
 
     public void ResetHand()
     {
@@ -148,5 +244,22 @@ public class BossHand : MonoBehaviour
         }
 
         return closest;
+    }
+
+
+
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (currentState != HandState.Dazed) return;
+
+        PlayerController3D player = collision.collider.GetComponent<PlayerController3D>();
+        if (!player) return;
+
+        if (player.IsGroundPounding())
+        {
+            currentState = HandState.Incapacitated;
+            boss.OnHandIncapacitated(this);
+        }
     }
 }
