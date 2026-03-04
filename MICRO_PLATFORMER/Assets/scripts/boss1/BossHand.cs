@@ -11,6 +11,7 @@ public class BossHand : MonoBehaviour
     [SerializeField] float telegraphTime = 0.7f;
 
     Quaternion startRotation;
+    Quaternion dazedBaseRotation;
 
     [Header("Rock")]
     [SerializeField] GameObject rockPrefab;
@@ -27,6 +28,15 @@ public class BossHand : MonoBehaviour
     List<int> lastUsedIndexes = new List<int>();
 
     Coroutine slamRoutine;
+
+    [SerializeField] GameObject starPrefab;
+    [SerializeField] Transform starOrbitPoint;
+
+    GameObject starOrbitContainer;
+
+    [SerializeField] float dazedWobbleAngle = 20f;
+    [SerializeField] float dazedWobbleSpeed = 4f;
+    float dazedTimer;
 
     public bool IsStunned => stunned;
 
@@ -51,6 +61,24 @@ public class BossHand : MonoBehaviour
     {
         startPos = transform.position;
         startRotation = Quaternion.identity;
+    }
+
+    void Update()
+    {
+        if (currentState == HandState.Dazed)
+        {
+            dazedTimer += Time.deltaTime;
+
+            float angle = Mathf.Sin(dazedTimer * dazedWobbleSpeed) * dazedWobbleAngle;
+
+            transform.rotation =
+                dazedBaseRotation * Quaternion.AngleAxis(angle, Vector3.forward);
+        }
+        else if (currentState == HandState.Incapacitated)
+        {
+            // stay in the pose where the wobble stopped
+            transform.rotation = dazedBaseRotation;
+        }
     }
 
     public IEnumerator PerformAttack()
@@ -159,7 +187,7 @@ public class BossHand : MonoBehaviour
         if (hitRock)
         {
 
-
+            dazedBaseRotation = transform.rotation;
             currentState = HandState.Dazed;
             boss.OnHandDazed(this);
             return;
@@ -215,6 +243,8 @@ public class BossHand : MonoBehaviour
         currentState = HandState.Normal;
         transform.position = startPos;
         transform.rotation = startRotation;
+        dazedTimer = 0f;
+
     }
 
 
@@ -224,6 +254,7 @@ public class BossHand : MonoBehaviour
     {
         stunned = false;
         transform.position = startPos;
+       
     }
 
     Transform FindClosestPlayer()
@@ -263,7 +294,36 @@ public class BossHand : MonoBehaviour
             Debug.Log("Hand incapacitated!");
 
             currentState = HandState.Incapacitated;
+            SpawnStars();
+            dazedTimer = 0f;
             boss.OnHandIncapacitated(this);
+        }
+    }
+
+    void SpawnStars()
+    {
+        if (starOrbitContainer != null) return;
+
+        starOrbitContainer = new GameObject("StarOrbit");
+        starOrbitContainer.AddComponent<StarOrbit>();
+        starOrbitContainer.transform.SetParent(starOrbitPoint);
+        starOrbitContainer.transform.localPosition = Vector3.zero;
+
+        float radius = 0.8f;
+        int starCount = 3;
+
+        for (int i = 0; i < starCount; i++)
+        {
+            float angle = i * Mathf.PI * 2f / starCount;
+
+            Vector3 pos = new Vector3(
+                Mathf.Cos(angle) * radius,
+                0,
+                Mathf.Sin(angle) * radius
+            );
+
+            GameObject star = Instantiate(starPrefab, starOrbitContainer.transform);
+            star.transform.localPosition = pos;
         }
     }
 
@@ -287,5 +347,13 @@ public class BossHand : MonoBehaviour
         transform.rotation = startRotation;
 
         currentState = HandState.Normal;
+
+        if (starOrbitContainer != null)
+        {
+            Destroy(starOrbitContainer);
+            starOrbitContainer = null;
+        }
+
+        dazedTimer = 0f;
     }
 }

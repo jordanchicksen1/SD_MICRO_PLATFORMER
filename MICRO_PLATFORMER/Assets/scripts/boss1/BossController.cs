@@ -13,6 +13,9 @@ public class BossController : MonoBehaviour
     Coroutine vulnerabilityRoutine;
     [SerializeField] Transform player1ResetPoint;
     [SerializeField] Transform player2ResetPoint;
+    [SerializeField] Renderer[] bossRenderers;
+    [SerializeField] Material[] damageMaterials;
+    
 
     [Header("Fight Settings")]
     [SerializeField] int hitsToDefeat = 3;
@@ -161,6 +164,8 @@ public class BossController : MonoBehaviour
         if (!vulnerable) return;
 
         currentHits++;
+        UpdateBossDamageVisual();
+        StartCoroutine(HitFlash());
 
         Debug.Log("Boss hit! Total hits: " + currentHits);
 
@@ -177,6 +182,36 @@ public class BossController : MonoBehaviour
         
     }
 
+
+    void UpdateBossDamageVisual()
+    {
+        int index = Mathf.Clamp(currentHits, 0, damageMaterials.Length - 1);
+
+        foreach (Renderer r in bossRenderers)
+        {
+            r.material = damageMaterials[index];
+        }
+    }
+
+    IEnumerator HitFlash()
+    {
+        // Store the current material index
+        int index = Mathf.Clamp(currentHits, 0, damageMaterials.Length - 1);
+
+        // Flash white
+        foreach (Renderer r in bossRenderers)
+        {
+            r.material.color = Color.white;
+        }
+
+        yield return new WaitForSeconds(0.08f);
+
+        // Restore correct damage material
+        foreach (Renderer r in bossRenderers)
+        {
+            r.material = damageMaterials[index];
+        }
+    }
     IEnumerator ResetBoss()
     {
         yield return new WaitForSeconds(0.5f);
