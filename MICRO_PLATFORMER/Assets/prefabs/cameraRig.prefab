@@ -70,6 +70,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coopCam: {fileID: 1806785584540068255}
+  UI: {fileID: 0}
   moveDuration: 0.6
   holdTime: 1
   ease:
@@ -96,6 +97,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  freezePlayers: 1
+  overrideZoom: 1
+  cutsceneZoomDistance: 10
 --- !u!1 &5459386502346183264
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,6 +246,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1603352125799170373}
+  - component: {fileID: 5352882906574313483}
   m_Layer: 0
   m_Name: pivot
   m_TagString: Untagged
@@ -265,3 +270,15 @@ Transform:
   - {fileID: 6862924010383251725}
   m_Father: {fileID: 4529466408249747928}
   m_LocalEulerAnglesHint: {x: 35, y: 0, z: 0}
+--- !u!114 &5352882906574313483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8563929664940348162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e89cb964b5ad5f4db316e9492eee026, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

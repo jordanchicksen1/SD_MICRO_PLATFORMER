@@ -96,6 +96,7 @@ public class BossHand : MonoBehaviour
         attacking = true;
 
         Transform target = FindClosestPlayer();
+        boss.SetTarget(target);
         Vector3 hoverPos = target.position + Vector3.up * slamHeight;
 
         // 1?? Move above player (telegraph phase)
@@ -294,6 +295,7 @@ public class BossHand : MonoBehaviour
             Debug.Log("Hand incapacitated!");
 
             currentState = HandState.Incapacitated;
+            CameraShake.Shake(0.25f, 0.15f);
             SpawnStars();
             dazedTimer = 0f;
             boss.OnHandIncapacitated(this);

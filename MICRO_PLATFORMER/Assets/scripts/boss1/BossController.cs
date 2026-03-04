@@ -15,14 +15,23 @@ public class BossController : MonoBehaviour
     [SerializeField] Transform player2ResetPoint;
     [SerializeField] Renderer[] bossRenderers;
     [SerializeField] Material[] damageMaterials;
-    
+    [SerializeField] Renderer[] deathRenderers;
+    [SerializeField] GameObject deathVFX;
+    [SerializeField] GameObject gemPrefab;
+    [SerializeField] Transform gemSpawnPoint;
+    [SerializeField] GameObject x1;
+    [SerializeField] GameObject x2;
+    [SerializeField] GameObject x3;
+    Transform currentTarget;
+    bool bossDead = false;
 
     [Header("Fight Settings")]
     [SerializeField] int hitsToDefeat = 3;
     [SerializeField] float stunDuration = 4f;
 
     Coroutine attackRoutine;
-    bool useLeftHand = true;
+    bool vulnerabilityActive = false;
+    
 
     int currentHits;
     bool vulnerable;
@@ -46,15 +55,14 @@ public class BossController : MonoBehaviour
     {
         while (true)
         {
-            // If both hands are down, trigger boss vulnerability
+            // If both hands are down, start boss vulnerability
             if (leftHand.IsIncapacitated && rightHand.IsIncapacitated)
             {
-                Debug.Log("Both hands incapacitated! Boss falling.");
                 vulnerabilityRoutine = StartCoroutine(VulnerabilityPhase());
                 yield break;
             }
 
-            // LEFT HAND
+            // LEFT HAND ATTACK
             if (!leftHand.IsIncapacitated && !leftHand.IsDazed)
             {
                 yield return leftHand.PerformAttack();
@@ -62,15 +70,14 @@ public class BossController : MonoBehaviour
 
             yield return new WaitForSeconds(1.2f);
 
-            // Check again in case player incapacitated the other hand
+            // Check again before right hand attacks
             if (leftHand.IsIncapacitated && rightHand.IsIncapacitated)
             {
-                Debug.Log("Both hands incapacitated! Boss falling.");
-                StartCoroutine(VulnerabilityPhase());
+                vulnerabilityRoutine = StartCoroutine(VulnerabilityPhase());
                 yield break;
             }
 
-            // RIGHT HAND
+            // RIGHT HAND ATTACK
             if (!rightHand.IsIncapacitated && !rightHand.IsDazed)
             {
                 yield return rightHand.PerformAttack();
@@ -80,6 +87,10 @@ public class BossController : MonoBehaviour
         }
     }
 
+    public void SetTarget(Transform target)
+    {
+        currentTarget = target;
+    }
     void Start()
     {
         leftHand.SetBoss(this);
@@ -92,11 +103,24 @@ public class BossController : MonoBehaviour
         headStartRot = headTransform.localRotation;
     }
 
-    
+    void Update()
+    {
+        if (currentTarget == null) return;
+        if (vulnerable) return; // don't rotate while boss is knocked down
+
+        Vector3 direction = currentTarget.position - headTransform.position;
+        direction.y = 0;
+
+        Quaternion targetRot = Quaternion.LookRotation(-direction);
+
+        headTransform.rotation =
+            Quaternion.Lerp(headTransform.rotation, targetRot, 3f * Time.deltaTime);
+    }
 
     IEnumerator VulnerabilityPhase()
     {
         Debug.Log("Boss entering vulnerability phase");
+        vulnerabilityActive = true;
         vulnerable = true;
         head.SetVulnerable(true);
 
@@ -161,7 +185,7 @@ public class BossController : MonoBehaviour
 
     public void DamageBoss()
     {
-        if (!vulnerable) return;
+        if (!vulnerable || bossDead || !vulnerabilityActive) return;
 
         currentHits++;
         UpdateBossDamageVisual();
@@ -278,17 +302,52 @@ public class BossController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         attackRoutine = StartCoroutine(AttackPattern());
+        vulnerabilityActive = false;
     }
 
-   
+
 
 
     void Die()
     {
+        if (bossDead) return;
+
+        bossDead = true;
+
         Debug.Log("Boss defeated!");
-        // Play death animation
-        // Trigger door open
-        // Victory cutscene
+
+        StartCoroutine(DeathSequence());
+    }
+
+    IEnumerator DeathSequence()
+    {
+        // stop attacks
+        if (attackRoutine != null)
+            StopCoroutine(attackRoutine);
+
+        DestroyAllRocks();
+        x1.SetActive(false);
+        x2.SetActive(false);
+        x3.SetActive(false);
+
+        // spawn the smoke effect
+        GameObject smoke = Instantiate(deathVFX, head.transform.position, Quaternion.identity);
+
+
+        // hide the boss meshes so it looks like it disappeared
+        foreach (Renderer r in deathRenderers)
+        {
+            r.enabled = false;
+        }
+
+        // wait so the smoke can play
+        yield return new WaitForSeconds(0.8f);
+
+        // spawn the gem
+        Instantiate(gemPrefab, gemSpawnPoint.position, gemSpawnPoint.rotation);
+
+        // destroy boss controller
+        Destroy(gameObject);
     }
 
     public void OnHandDazed(BossHand hand)

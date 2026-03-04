@@ -25,6 +25,7 @@ public class BossHead : MonoBehaviour
         if (player.IsGroundPounding())
         {
             boss.DamageBoss();
+            CameraShake.Shake(0.25f, 0.15f);
         }
     }
 
