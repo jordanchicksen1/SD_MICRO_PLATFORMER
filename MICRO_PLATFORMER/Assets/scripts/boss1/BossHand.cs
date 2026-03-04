@@ -249,17 +249,43 @@ public class BossHand : MonoBehaviour
 
 
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
         if (currentState != HandState.Dazed) return;
 
-        PlayerController3D player = collision.collider.GetComponent<PlayerController3D>();
+        PlayerController3D player = other.GetComponent<PlayerController3D>();
         if (!player) return;
+
+        Debug.Log("Player touched dazed hand");
 
         if (player.IsGroundPounding())
         {
+            Debug.Log("Hand incapacitated!");
+
             currentState = HandState.Incapacitated;
             boss.OnHandIncapacitated(this);
         }
+    }
+
+    public IEnumerator ReturnToStart()
+    {
+        float t = 0f;
+        float moveTime = 0.5f;
+
+        Vector3 start = transform.position;
+        Quaternion startRot = transform.rotation;
+
+        while (t < moveTime)
+        {
+            transform.position = Vector3.Lerp(start, startPos, t / moveTime);
+            transform.rotation = Quaternion.Lerp(startRot, startRotation, t / moveTime);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = startPos;
+        transform.rotation = startRotation;
+
+        currentState = HandState.Normal;
     }
 }
