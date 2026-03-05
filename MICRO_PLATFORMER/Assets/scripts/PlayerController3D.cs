@@ -93,6 +93,9 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] GameObject groundIndicatorPrefab;
     [SerializeField] Material player1Mat;
     [SerializeField] Material player2Mat;
+    [SerializeField] Material player1GroundPoundMat;
+    [SerializeField] Material player2GroundPoundMat;
+    Renderer groundIndicatorRenderer;
 
     PlayerAnimator playerAnimator;
 
@@ -245,12 +248,12 @@ public class PlayerController3D : MonoBehaviour
         GroundIndicator gi = indicator.GetComponent<GroundIndicator>();
         gi.SetTarget(transform);
 
-        Renderer r = indicator.GetComponentInChildren<Renderer>();
+        groundIndicatorRenderer = indicator.GetComponentInChildren<Renderer>();
 
         if (playerIndex == 0)
-            r.material = player1Mat;
+            groundIndicatorRenderer.material = player1Mat;
         else
-            r.material = player2Mat;
+            groundIndicatorRenderer.material = player2Mat;
 
         var life = FindFirstObjectByType<CoopLifeManager>();
         if (life != null)
@@ -291,6 +294,26 @@ public class PlayerController3D : MonoBehaviour
 
             UpdatePickupPrompt();
             UpdateUnlockPrompt();
+        }
+
+        UpdateGroundIndicator();
+    }
+
+    void UpdateGroundIndicator()
+    {
+        if (groundIndicatorRenderer == null) return;
+
+        bool airborneGroundPound = isGroundPounding && !IsGrounded(out RaycastHit hit);
+
+        if (playerIndex == 0)
+        {
+            groundIndicatorRenderer.material =
+                airborneGroundPound ? player1GroundPoundMat : player1Mat;
+        }
+        else
+        {
+            groundIndicatorRenderer.material =
+                airborneGroundPound ? player2GroundPoundMat : player2Mat;
         }
     }
 

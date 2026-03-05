@@ -1049,6 +1049,8 @@ MonoBehaviour:
   groundIndicatorPrefab: {fileID: 5632946183400775603, guid: 67d415a42dea31f428aaaee93f60fb17, type: 3}
   player1Mat: {fileID: 2100000, guid: fa4ce82ec46d54948994ea68ca013516, type: 2}
   player2Mat: {fileID: 2100000, guid: 0d378cef7be53b647841cf7caefcad9a, type: 2}
+  player1GroundPoundMat: {fileID: 2100000, guid: 5d12017494d1c3a40b03ea365792ff83, type: 2}
+  player2GroundPoundMat: {fileID: 2100000, guid: 1d37f5be696fe184eb3cf8dff665efd0, type: 2}
   interactRange: 2
   interactLayer:
     serializedVersion: 2
