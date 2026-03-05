@@ -34,7 +34,12 @@ public class DoorCameraFocus : MonoBehaviour
 
         if (routine != null) StopCoroutine(routine);
         routine = StartCoroutine(FocusRoutine(focusPoint));
-        UI.SetActive(false);
+        
+        if(UI != null)
+        {
+            UI.SetActive(false);
+        }
+        
     }
 
     IEnumerator FocusRoutine(Transform focusPoint)
@@ -139,7 +144,13 @@ public class DoorCameraFocus : MonoBehaviour
         {
             foreach (var pi in inputs)
                 if (pi && pi.enabled) pi.ActivateInput();
-            UI.SetActive(true);
+
+            if (UI != null) 
+            {
+                UI.SetActive(true);
+            }
+
+            
         }
 
         routine = null;

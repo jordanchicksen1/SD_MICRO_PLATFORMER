@@ -24,6 +24,7 @@ public class BossController : MonoBehaviour
     [SerializeField] GameObject x3;
     Transform currentTarget;
     bool bossDead = false;
+    [SerializeField] BossGateSequence gateSequence;
 
     [Header("Fight Settings")]
     [SerializeField] int hitsToDefeat = 3;
@@ -344,7 +345,14 @@ public class BossController : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
 
         // spawn the gem
-        Instantiate(gemPrefab, gemSpawnPoint.position, gemSpawnPoint.rotation);
+        // start gate + gem sequence
+        if (gateSequence != null)
+        {
+            gateSequence.StartSequence();
+        }
+
+        // destroy boss
+        Destroy(gameObject);
 
         // destroy boss controller
         Destroy(gameObject);
