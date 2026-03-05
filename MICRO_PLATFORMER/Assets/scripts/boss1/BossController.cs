@@ -42,6 +42,87 @@ public class BossController : MonoBehaviour
     Vector3 startPos;
     Quaternion startRot;
 
+    public IEnumerator IntroAnimation()
+    {
+        float duration = 1.2f;
+        float t = 0f;
+
+        Quaternion leftStart = leftHand.transform.localRotation;
+        Quaternion rightStart = rightHand.transform.localRotation;
+
+        Quaternion leftUp = leftStart * Quaternion.Euler(-40f, 0f, 0f);
+        Quaternion rightUp = rightStart * Quaternion.Euler(-40f, 0f, 0f);
+
+        // Raise hands
+        while (t < duration)
+        {
+            float a = t / duration;
+
+            leftHand.transform.localRotation =
+                Quaternion.Lerp(leftStart, leftUp, a);
+
+            rightHand.transform.localRotation =
+                Quaternion.Lerp(rightStart, rightUp, a);
+
+            t += Time.deltaTime;
+            yield return null;
+            CameraShake.Shake(0.2f, 0.13f);
+        }
+
+        yield return new WaitForSeconds(0.6f);
+
+        // Lower hands again
+        t = 0f;
+
+        while (t < duration)
+        {
+            float a = t / duration;
+
+            leftHand.transform.localRotation =
+                Quaternion.Lerp(leftUp, leftStart, a);
+
+            rightHand.transform.localRotation =
+                Quaternion.Lerp(rightUp, rightStart, a);
+
+            t += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    public IEnumerator MovePlayersToArenaStart()
+    {
+        PlayerController3D[] players =
+            FindObjectsByType<PlayerController3D>(FindObjectsSortMode.None);
+
+        float moveTime = 0.35f;
+        float moveT = 0f;
+
+        Vector3[] startPositions = new Vector3[players.Length];
+        Vector3[] targetPositions = new Vector3[players.Length];
+
+        for (int i = 0; i < players.Length; i++)
+        {
+            startPositions[i] = players[i].transform.position;
+
+            if (i == 0)
+                targetPositions[i] = player1ResetPoint.position;
+            else
+                targetPositions[i] = player2ResetPoint.position;
+        }
+
+        while (moveT < moveTime)
+        {
+            for (int i = 0; i < players.Length; i++)
+            {
+                players[i].transform.position =
+                    Vector3.Lerp(startPositions[i], targetPositions[i], moveT / moveTime);
+            }
+
+            moveT += Time.deltaTime;
+            yield return null;
+        }
+    }
+
     public void StartFight()
     {
         if (fightStarted) return;
