@@ -4,9 +4,22 @@ using System.Collections;
 public class BossRock : MonoBehaviour
 {
     bool falling = true;
+    [SerializeField] GameObject shadowPrefab;
+    [SerializeField] LayerMask groundLayer;
+
+    GameObject shadow;
 
     void Start()
     {
+        shadow = Instantiate(shadowPrefab);
+
+        GroundIndicator indicator = shadow.GetComponent<GroundIndicator>();
+
+        if (indicator != null)
+        {
+            indicator.SetTarget(transform);
+        }
+
         Destroy(gameObject, 10f); // stays on battlefield
         StartCoroutine(StopFallingAfterDelay());
     }
@@ -19,12 +32,33 @@ public class BossRock : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (!falling) return;
-
-        PlayerController3D player = collision.collider.GetComponent<PlayerController3D>();
-        if (player)
+        // If the rock hits the ground
+        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
         {
-            player.GetComponent<PlayerHealth>().TakeDamage(1, transform.position);
+            falling = false;
+
+            if (shadow != null)
+            {
+                Destroy(shadow); // remove shadow once rock lands
+            }
+
+            return; // DO NOT destroy the rock
+        }
+
+        // If it hits a player while falling
+        if (falling)
+        {
+            PlayerController3D player = collision.collider.GetComponent<PlayerController3D>();
+
+            if (player)
+            {
+                player.GetComponent<PlayerHealth>().TakeDamage(1, transform.position);
+
+                if (shadow != null)
+                    Destroy(shadow);
+
+                Destroy(gameObject); // rock breaks on player
+            }
         }
     }
 }

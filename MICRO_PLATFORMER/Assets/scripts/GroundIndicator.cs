@@ -18,7 +18,7 @@ public class GroundIndicator : MonoBehaviour
 
         Vector3 rayOrigin = target.position + Vector3.up;
 
-        if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 10f, groundLayer))
+        if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 30f, groundLayer))
         {
             transform.position = hit.point + Vector3.up * groundOffset;
         }

@@ -738,6 +738,7 @@ MonoBehaviour:
   slamHeight: 8
   slamSpeed: 15
   telegraphTime: 0.7
+  shadowPrefab: {fileID: 4431499007966622716, guid: d2006974d248ec9489f99fe72e89839a, type: 3}
   rockPrefab: {fileID: 6155249236963474222, guid: 03ef2026794ffb2498d28a5c53a7d3e1, type: 3}
   rockCount: 1
   rockSpawnPoints:
@@ -2785,6 +2786,7 @@ MonoBehaviour:
   slamHeight: 8
   slamSpeed: 15
   telegraphTime: 0.7
+  shadowPrefab: {fileID: 4431499007966622716, guid: d2006974d248ec9489f99fe72e89839a, type: 3}
   rockPrefab: {fileID: 6155249236963474222, guid: 03ef2026794ffb2498d28a5c53a7d3e1, type: 3}
   rockCount: 2
   rockSpawnPoints:

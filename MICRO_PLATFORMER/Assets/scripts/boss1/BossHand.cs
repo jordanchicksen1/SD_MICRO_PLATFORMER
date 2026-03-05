@@ -9,6 +9,11 @@ public class BossHand : MonoBehaviour
     [SerializeField] float slamHeight = 8f;
     [SerializeField] float slamSpeed = 15f;
     [SerializeField] float telegraphTime = 0.7f;
+    [SerializeField] GameObject shadowPrefab;
+    
+
+    GameObject activeShadow;
+    
 
     Quaternion startRotation;
     Quaternion dazedBaseRotation;
@@ -79,6 +84,8 @@ public class BossHand : MonoBehaviour
             // stay in the pose where the wobble stopped
             transform.rotation = dazedBaseRotation;
         }
+
+
     }
 
     public IEnumerator PerformAttack()
@@ -99,6 +106,15 @@ public class BossHand : MonoBehaviour
         boss.SetTarget(target);
         Vector3 hoverPos = target.position + Vector3.up * slamHeight;
 
+        activeShadow = Instantiate(shadowPrefab);
+
+        GroundIndicator indicator = activeShadow.GetComponent<GroundIndicator>();
+
+        if (indicator != null)
+        {
+            indicator.SetTarget(transform);
+        }
+
         // 1?? Move above player (telegraph phase)
         float t = 0f;
         Vector3 initialPos = transform.position;
@@ -108,6 +124,8 @@ public class BossHand : MonoBehaviour
             transform.position = Vector3.Lerp(initialPos, hoverPos, t / telegraphTime);
             t += Time.deltaTime;
             yield return null;
+
+            
         }
 
         transform.position = hoverPos;
@@ -136,6 +154,10 @@ public class BossHand : MonoBehaviour
 
         // 4?? Check impact
         CheckImpact();
+        if (activeShadow != null)
+        {
+            Destroy(activeShadow);
+        }
         if (currentState == HandState.Dazed)
         {
             yield break; // stay on ground
@@ -160,6 +182,8 @@ public class BossHand : MonoBehaviour
 
         attacking = false;
     }
+
+    
     void CheckImpact()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, 2f);

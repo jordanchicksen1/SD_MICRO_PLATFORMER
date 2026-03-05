@@ -77,6 +77,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e57b20809389787488f6b49b4c68031b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shadowPrefab: {fileID: 4431499007966622716, guid: d2006974d248ec9489f99fe72e89839a, type: 3}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!54 &5705507129037215605
 Rigidbody:
   m_ObjectHideFlags: 0
