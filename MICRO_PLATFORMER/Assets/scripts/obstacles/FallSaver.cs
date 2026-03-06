@@ -83,6 +83,11 @@ public class FallSaver : MonoBehaviour
                 other.transform.position = ballPoint.position;
             }
         }
+
+        if (other.CompareTag("Enemy"))
+        {
+           Destroy(other.gameObject);
+        }
     }
 
 }
