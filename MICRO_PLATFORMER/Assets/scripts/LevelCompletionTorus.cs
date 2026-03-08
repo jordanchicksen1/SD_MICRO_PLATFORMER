@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class LevelCompletionTorus : MonoBehaviour
@@ -8,26 +9,28 @@ public class LevelCompletionTorus : MonoBehaviour
 
     [Header("Visual")]
     [SerializeField] Renderer torusRenderer;
-    [SerializeField] Material incompleteMaterial; // red
-    [SerializeField] Material completeMaterial;   // green
+    [SerializeField] Material incompleteMaterial;
+    [SerializeField] Material completeMaterial;
 
     void Start()
     {
-        UpdateVisual();
+        StartCoroutine(WaitForSaveSystem());
     }
 
-    void OnEnable()
+    IEnumerator WaitForSaveSystem()
     {
+        // Wait until the save system exists
+        while (PersistentGemProgress.Instance == null)
+            yield return null;
+
         UpdateVisual();
     }
 
     public void UpdateVisual()
     {
         if (!torusRenderer) return;
-        if (PersistentGemProgress.Instance == null) return;
 
         int collected = PersistentGemProgress.Instance.GetCollectedCount(levelId);
-
         bool complete = collected >= totalGemsInLevel;
 
         torusRenderer.material = complete ? completeMaterial : incompleteMaterial;

@@ -28,6 +28,10 @@ public class TitleSceneController : MonoBehaviour
     void Start()
     {
         StartCoroutine(IntroSequence());
+        
+            Debug.Log(Application.persistentDataPath);
+            
+        
     }
 
     IEnumerator IntroSequence()
@@ -87,6 +91,15 @@ public class TitleSceneController : MonoBehaviour
     public void PressPlay()
     {
         StartCoroutine(PlayRoutine());
+    }
+
+    public void ResetSaveData()
+    {
+        Debug.Log("Resetting save data");
+
+        PersistentGemProgress.Instance?.ClearSave();
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     IEnumerator PlayRoutine()

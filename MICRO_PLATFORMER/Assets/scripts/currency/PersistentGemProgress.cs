@@ -155,4 +155,14 @@ public class PersistentGemProgress : MonoBehaviour
             set.Add(gemId);
         }
     }
+
+    public void ClearSave()
+    {
+        collected.Clear();
+
+        PlayerPrefs.DeleteKey(PREF_KEY);
+        PlayerPrefs.Save();
+
+        Debug.Log("Gem save cleared");
+    }
 }
