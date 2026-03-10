@@ -2427,7 +2427,19 @@ MonoBehaviour:
     m_ActionId: eb07e6f1-4e68-43dc-b985-975e41338eb4
     m_ActionName: 'Gameplay/Dive[/XInputControllerWindows/buttonWest,/DualShock4GamepadHID/buttonWest]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 7245b683-4d78-427c-9929-964d22a1412f
     m_ActionName: 'UI/Navigate[/DualShock4GamepadHID/dpad,/DualShock4GamepadHID/leftStick]'
   - m_PersistentCalls:

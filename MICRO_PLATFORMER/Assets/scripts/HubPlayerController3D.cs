@@ -155,6 +155,13 @@ public class HubPlayerController3D : MonoBehaviour
 
     float nextStepTime;
     bool useFirstClip = true;
+
+    float inputLockUntil;
+
+    public void LockInput(float duration)
+    {
+        inputLockUntil = Time.time + duration;
+    }
     bool IsGrounded()
     {
         if (groundMask == 0)
@@ -576,7 +583,7 @@ public class HubPlayerController3D : MonoBehaviour
         if (!context.performed) return;
 
         // Find pause manager and toggle
-        FindFirstObjectByType<PauseManager>()?.TogglePause();
+        FindFirstObjectByType<HubPauseManager>()?.TogglePause();
     }
 
     public void OnCameraRotate(InputAction.CallbackContext context)
@@ -622,6 +629,9 @@ public class HubPlayerController3D : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (Time.time < inputLockUntil)
+            return;
+
         if (context.started)
             jumpHeld = true;
 
@@ -635,7 +645,6 @@ public class HubPlayerController3D : MonoBehaviour
 
         if (canCoyoteJump && !isGroundPounding && !isDiving && !isLongJumping)
         {
-            // Clear downward velocity so jump is consistent
             rb.linearVelocity = new Vector3(
                 rb.linearVelocity.x,
                 0f,
