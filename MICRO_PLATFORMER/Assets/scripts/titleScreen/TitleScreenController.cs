@@ -23,7 +23,13 @@ public class TitleSceneController : MonoBehaviour
     [Header("Fade")]
     [SerializeField] ScreenFader fader;
 
+    [SerializeField] GameObject resetConfirmPanel;
+    [SerializeField] GameObject resetConfirmFirstButton;
+    [SerializeField] GameObject resetDataButton;
+
     bool menuOpened = false;
+
+    
 
     void Start()
     {
@@ -93,13 +99,39 @@ public class TitleSceneController : MonoBehaviour
         StartCoroutine(PlayRoutine());
     }
 
-    public void ResetSaveData()
+    public void OpenResetConfirm()
+    {
+        if (menuGroup) menuGroup.SetActive(false);
+        if (resetConfirmPanel) resetConfirmPanel.SetActive(true);
+
+        if (EventSystem.current && resetConfirmFirstButton)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(resetConfirmFirstButton);
+        }
+    }
+
+    public void CancelReset()
+    {
+        if (resetConfirmPanel) resetConfirmPanel.SetActive(false);
+        if (menuGroup) menuGroup.SetActive(true);
+
+        if (EventSystem.current && resetDataButton)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(resetDataButton);
+        }
+    }
+
+    public void ConfirmReset()
     {
         Debug.Log("Resetting save data");
 
         PersistentGemProgress.Instance?.ClearSave();
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        
     }
 
     IEnumerator PlayRoutine()
