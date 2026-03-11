@@ -172,9 +172,25 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -6733177361254619370, guid: 5bdc0545a70fd4b42bf8de6e6ab5dde7, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: 5bdc0545a70fd4b42bf8de6e6ab5dde7, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5bdc0545a70fd4b42bf8de6e6ab5dde7, type: 3}
       propertyPath: m_Name
       value: rock
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5bdc0545a70fd4b42bf8de6e6ab5dde7, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513859187771203891, guid: 5bdc0545a70fd4b42bf8de6e6ab5dde7, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

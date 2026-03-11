@@ -48,6 +48,8 @@ public class BossHand : MonoBehaviour
     [SerializeField] AudioSource gruntSFX;
     [SerializeField] AudioSource rockFallSFX;
     [SerializeField] AudioSource slamThudSFX;
+
+    
     enum HandState
     {
         Normal,

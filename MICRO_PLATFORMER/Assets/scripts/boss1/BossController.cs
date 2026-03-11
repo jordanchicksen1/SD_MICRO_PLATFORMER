@@ -278,6 +278,13 @@ public class BossController : MonoBehaviour
         UpdateBossDamageVisual();
         StartCoroutine(HitFlash());
 
+        // Phase 3 trigger (boss about to die on next hit)
+        if (currentHits == hitsToDefeat - 1)
+        {
+            CameraShake.Shake(0.2f, 0.13f);
+            if (roarSFX) roarSFX.Play();
+        }
+
         Debug.Log("Boss hit! Total hits: " + currentHits);
 
         if (vulnerabilityRoutine != null)
@@ -285,12 +292,19 @@ public class BossController : MonoBehaviour
 
         if (currentHits >= hitsToDefeat)
         {
-            Die();
+            StartCoroutine(DelayedDeath());
             return;
         }
 
         StartCoroutine(ResetBoss());
         
+    }
+
+    IEnumerator DelayedDeath()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        Die();
     }
 
 

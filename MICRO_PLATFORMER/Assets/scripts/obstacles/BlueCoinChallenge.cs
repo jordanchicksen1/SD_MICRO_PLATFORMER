@@ -36,6 +36,17 @@ public class BlueCoinChallenge : MonoBehaviour
 
     public System.Action OnChallengeReset;
 
+    [SerializeField] DoorCameraFocus cameraFocus;
+    [SerializeField] Transform gemFocusPoint;
+
+    bool rewardAlreadyCollected;
+
+    void Awake()
+    {
+        if (!cameraFocus)
+            cameraFocus = FindFirstObjectByType<DoorCameraFocus>();
+    }
+
     public void StartChallenge()
     {
         if (challengeActive) return;
@@ -142,8 +153,18 @@ public class BlueCoinChallenge : MonoBehaviour
         StopTimer();
         ClearCoins();
 
-        if (gemRewardPrefab && gemSpawnPoint)
-            Instantiate(gemRewardPrefab, gemSpawnPoint.position,gemRewardPrefab.transform.rotation);
+        // Only spawn reward once
+        if (!rewardAlreadyCollected && gemRewardPrefab && gemSpawnPoint)
+        {
+            GameObject gem =
+                Instantiate(gemRewardPrefab, gemSpawnPoint.position, gemRewardPrefab.transform.rotation);
+
+            rewardAlreadyCollected = true;
+
+            // Camera focus on gem
+            if (cameraFocus && gemFocusPoint)
+                cameraFocus.FocusOn(gemFocusPoint);
+        }
 
         challengeActive = false;
 

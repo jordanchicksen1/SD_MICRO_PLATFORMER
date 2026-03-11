@@ -21,7 +21,7 @@ public class BossRock : MonoBehaviour
         }
 
         Destroy(gameObject, 10f); // stays on battlefield
-        StartCoroutine(StopFallingAfterDelay());
+        //StartCoroutine(StopFallingAfterDelay());
     }
 
     IEnumerator StopFallingAfterDelay()
@@ -32,33 +32,22 @@ public class BossRock : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        // If the rock hits the ground
-        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
+        PlayerController3D player = collision.collider.GetComponent<PlayerController3D>();
+
+        // ONLY damage if the rock is still falling
+        if (falling && player)
+        {
+            player.GetComponent<PlayerHealth>().TakeDamage(1, transform.position);
+        }
+
+        // If we hit the ground, stop falling
+        if (falling && ((1 << collision.gameObject.layer) & groundLayer) != 0)
         {
             falling = false;
 
+            // destroy the shadow when the rock lands
             if (shadow != null)
-            {
-                Destroy(shadow); // remove shadow once rock lands
-            }
-
-            return; // DO NOT destroy the rock
-        }
-
-        // If it hits a player while falling
-        if (falling)
-        {
-            PlayerController3D player = collision.collider.GetComponent<PlayerController3D>();
-
-            if (player)
-            {
-                player.GetComponent<PlayerHealth>().TakeDamage(1, transform.position);
-
-                if (shadow != null)
-                    Destroy(shadow);
-
-                Destroy(gameObject); // rock breaks on player
-            }
+                Destroy(shadow);
         }
     }
 }

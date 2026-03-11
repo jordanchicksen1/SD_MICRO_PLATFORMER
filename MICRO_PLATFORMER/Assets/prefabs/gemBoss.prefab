@@ -480,6 +480,7 @@ GameObject:
   - component: {fileID: 7006624163301423038}
   - component: {fileID: 4450366553339778975}
   - component: {fileID: 1845696837565591028}
+  - component: {fileID: 1179489877537053887}
   m_Layer: 0
   m_Name: gemBoss
   m_TagString: Gem
@@ -569,3 +570,17 @@ MonoBehaviour:
   collectedVisualsRoot: {fileID: 5200093439151048347}
   showCollectedAfterSeconds: 10
   sfxSource: {fileID: 0}
+--- !u!114 &1179489877537053887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8665981609263796083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a26bcc4907406b4f938e26599fd6454, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fallHeight: 8
+  fallTime: 1.2
