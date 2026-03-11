@@ -42,8 +42,13 @@ public class BossController : MonoBehaviour
     Vector3 startPos;
     Quaternion startRot;
 
+
+    [SerializeField] AudioSource roarSFX;
+
     public IEnumerator IntroAnimation()
     {
+        if (roarSFX) roarSFX.Play();
+
         float duration = 1.2f;
         float t = 0f;
 

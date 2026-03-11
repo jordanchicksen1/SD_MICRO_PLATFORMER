@@ -45,6 +45,9 @@ public class BossHand : MonoBehaviour
 
     public bool IsStunned => stunned;
 
+    [SerializeField] AudioSource gruntSFX;
+    [SerializeField] AudioSource rockFallSFX;
+    [SerializeField] AudioSource slamThudSFX;
     enum HandState
     {
         Normal,
@@ -186,6 +189,8 @@ public class BossHand : MonoBehaviour
     
     void CheckImpact()
     {
+        if (slamThudSFX) slamThudSFX.Play();
+
         Collider[] hits = Physics.OverlapSphere(transform.position, 2f);
 
         bool hitRock = false;
@@ -226,6 +231,8 @@ public class BossHand : MonoBehaviour
     void SpawnRocks()
     {
         if (rockSpawnPoints.Length == 0) return;
+        if (rockFallSFX) rockFallSFX.Play();
+
 
         List<int> usedThisRound = new List<int>();
         List<int> availableIndexes = new List<int>();
@@ -316,6 +323,7 @@ public class BossHand : MonoBehaviour
 
         if (player.IsGroundPounding())
         {
+            if (gruntSFX) gruntSFX.Play();
             Debug.Log("Hand incapacitated!");
 
             currentState = HandState.Incapacitated;

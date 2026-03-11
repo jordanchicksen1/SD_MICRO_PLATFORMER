@@ -4,6 +4,7 @@ public class BossHead : MonoBehaviour
 {
     BossController boss;
     bool vulnerable;
+    [SerializeField] AudioSource gruntSFX;
 
     public void SetBoss(BossController b)
     {
@@ -24,6 +25,8 @@ public class BossHead : MonoBehaviour
 
         if (player.IsGroundPounding())
         {
+            if (gruntSFX) gruntSFX.Play();
+
             boss.DamageBoss();
             CameraShake.Shake(0.25f, 0.15f);
         }
