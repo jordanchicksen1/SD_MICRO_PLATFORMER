@@ -48,6 +48,7 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] float diveDownForce = 4f;
     [SerializeField] float diveDuration = 0.35f;
     [SerializeField] float diveControlLockTime = 0.2f;
+    bool hasUsedAirDive;
 
     bool isDiving;
 
@@ -387,6 +388,8 @@ public class PlayerController3D : MonoBehaviour
         {
             lastGroundedTime = Time.time;
 
+            hasUsedAirDive = false;
+
             // If we're standing on a moving platform, grab its velocity
             MovingPlatform mp = hit.collider.GetComponentInParent<MovingPlatform>();
             if (mp != null)
@@ -611,10 +614,14 @@ public class PlayerController3D : MonoBehaviour
         else
         {
             // Air ? Dive (existing behavior)
-            if (!isDiving && !isGroundPounding)
-            {
-                StartCoroutine(DiveCoroutine());
-            }
+           
+            
+                if (!isDiving && !isGroundPounding && !hasUsedAirDive)
+                {
+                    hasUsedAirDive = true;
+                    StartCoroutine(DiveCoroutine());
+                }
+            
         }
     }
 
