@@ -7890,7 +7890,7 @@ MonoBehaviour:
   levelId: MicroLevel3
   totalGemsInLevel: 1
   levelTitle: Micro Level 3
-  levelDescription: Destroy boes to find the way forward!
+  levelDescription: Destroy boxes to find the way forward!
   previewClip: {fileID: 32900000, guid: 7821aaf854ec89b49bd2b626bcf3b876, type: 3}
   cameraFocusPoint: {fileID: 1051225811}
   ui: {fileID: 1561805596}
@@ -11355,7 +11355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a0042f3f980084eb6bcb4aceccf80d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelId: Level2
+  levelId: MicroLevel2
   totalGemsInLevel: 3
   torusRenderer: {fileID: 498239883}
   incompleteMaterial: {fileID: 2100000, guid: 93bb780370c526540a8278cf494c2af4, type: 2}
@@ -13949,8 +13949,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a0042f3f980084eb6bcb4aceccf80d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelId: Level3
-  totalGemsInLevel: 3
+  levelId: MicroLevel3
+  totalGemsInLevel: 1
   torusRenderer: {fileID: 628128772}
   incompleteMaterial: {fileID: 2100000, guid: 93bb780370c526540a8278cf494c2af4, type: 2}
   completeMaterial: {fileID: 2100000, guid: 28fb4611f47154d428e3100381069893, type: 2}
@@ -15026,8 +15026,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a0042f3f980084eb6bcb4aceccf80d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelId: Level1
-  totalGemsInLevel: 3
+  levelId: MicroLevel1
+  totalGemsInLevel: 1
   torusRenderer: {fileID: 664096356}
   incompleteMaterial: {fileID: 2100000, guid: 93bb780370c526540a8278cf494c2af4, type: 2}
   completeMaterial: {fileID: 2100000, guid: 28fb4611f47154d428e3100381069893, type: 2}
