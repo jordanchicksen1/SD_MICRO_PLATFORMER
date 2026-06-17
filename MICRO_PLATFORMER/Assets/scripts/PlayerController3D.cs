@@ -77,6 +77,8 @@ public class PlayerController3D : MonoBehaviour
     [Header("Camera Stuff")]
     CoopCameraController coopCamera;
     OffScreenIndicatorManager indicatorManager;
+    [SerializeField] Transform challengeFocusPoint;
+    public Transform ChallengeFocusPoint => challengeFocusPoint;
 
     [Header("Knockback")]
     [SerializeField] float knockbackForce = 8f;
@@ -999,6 +1001,11 @@ public class PlayerController3D : MonoBehaviour
             playerAnimator.StopGemPose();
 
         isKnockedBack = false;
+    }
+
+    public void PlayVictoryPose()
+    {
+        StartCoroutine(GemPoseCoroutine());
     }
 
     IEnumerator KeyPoseCoroutine()
