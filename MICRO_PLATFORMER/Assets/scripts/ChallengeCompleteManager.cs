@@ -9,18 +9,29 @@ public class ChallengeCompletionManager : MonoBehaviour
 
     DoorCameraFocus cameraFocus;
     GameObject challengeCompleteUI;
+    ScreenFader screenFader;
 
     bool challengeFinished;
 
     void Awake()
     {
         cameraFocus = FindFirstObjectByType<DoorCameraFocus>();
+        screenFader = FindFirstObjectByType<ScreenFader>();
 
         ChallengeCompleteUI ui =
-            FindFirstObjectByType<ChallengeCompleteUI>();
+            FindFirstObjectByType<ChallengeCompleteUI>(
+                FindObjectsInactive.Include
+            );
 
         if (ui != null)
+        {
             challengeCompleteUI = ui.gameObject;
+            Debug.Log("Found UI: " + challengeCompleteUI.name);
+        }
+        else
+        {
+            Debug.LogError("Challenge UI NOT FOUND");
+        }
     }
 
     public void CompleteChallenge(PlayerController3D player)
@@ -37,8 +48,7 @@ public class ChallengeCompletionManager : MonoBehaviour
         if (cameraFocus)
             cameraFocus.FocusOn(player.ChallengeFocusPoint);
 
-        yield return new WaitForSeconds(1.3f);
-
+        // Show immediately
         if (challengeCompleteUI)
             challengeCompleteUI.SetActive(true);
 
@@ -46,6 +56,24 @@ public class ChallengeCompletionManager : MonoBehaviour
             victorySFX.Play();
 
         yield return new WaitForSeconds(3f);
+
+    // Save currency
+    RunCurrency.Instance?.CommitToBank();
+
+        // Save gems permanently
+        if (RunLevelInfo.Instance != null &&
+            PersistentGemProgress.Instance != null)
+        {
+            PersistentGemProgress.Instance.CommitPendingFromRun(
+                RunLevelInfo.Instance.LevelId
+            );
+        }
+
+        // Fade out first
+        if (screenFader)
+        {
+            yield return screenFader.FadeTo(1f, 0.5f);
+        }
 
         SceneManager.LoadScene(hubSceneName);
     }

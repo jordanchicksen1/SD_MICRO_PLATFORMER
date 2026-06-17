@@ -364,8 +364,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e81c2c08d8ee1bc48b7a3454e8251688, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelId: Level3
-  gemId: GEM_002
+  levelId: MicroLevel1
+  gemId: GEM_001
   amount: 1
   pickupCollider: {fileID: 509941702498947780}
   realVisualsRoot: {fileID: 1876914725262533825}
@@ -398,9 +398,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4b3e835286c0244598de0117f8af934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hubSceneName: HubWorld
-  challengeCompleteUI: {fileID: 0}
-  victorySFX: {fileID: 0}
 --- !u!1001 &8667167138423842665
 PrefabInstance:
   m_ObjectHideFlags: 0
