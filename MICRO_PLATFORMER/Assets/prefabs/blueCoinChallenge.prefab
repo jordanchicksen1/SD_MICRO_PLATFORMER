@@ -69,6 +69,8 @@ MonoBehaviour:
   timerText: {fileID: 0}
   blinkStartTime: 3
   blinkSpeed: 8
+  normalMaterial: {fileID: 2100000, guid: 4871189fc0fb11a43a98ae92db624276, type: 2}
+  blinkMaterial: {fileID: 2100000, guid: e0db9dcc3f455a14fb427cc36540415d, type: 2}
   timerAudioSource: {fileID: 7982158559322819517}
   slowTimerClip: {fileID: 8300000, guid: 8b4953eb7b8db5d4db05c6a86669029f, type: 3}
   fastTimerClip: {fileID: 8300000, guid: 3907c5c95027d824ca2eafea590bd1e4, type: 3}

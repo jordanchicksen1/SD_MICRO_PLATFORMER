@@ -20,6 +20,10 @@ public class BlueCoinChallenge : MonoBehaviour
     [Header("Blink Settings")]
     [SerializeField] float blinkStartTime = 3f;
     [SerializeField] float blinkSpeed = 8f;
+    
+    [Header("Coin Blink Materials")]
+    [SerializeField] Material normalMaterial;
+    [SerializeField] Material blinkMaterial;
 
     [Header("Timer Audio")]
     [SerializeField] AudioSource timerAudioSource;
@@ -129,12 +133,17 @@ public class BlueCoinChallenge : MonoBehaviour
             // Blink coins near timeout
             if (timer <= blinkStartTime)
             {
+                bool blinkState = Mathf.Sin(Time.time * blinkSpeed) > 0f;
+
                 foreach (var coin in spawnedCoins)
                 {
-                    if (coin != null)
+                    if (coin == null) continue;
+
+                    Renderer r = coin.GetComponentInChildren<Renderer>();
+
+                    if (r != null)
                     {
-                        bool visible = Mathf.Sin(Time.time * blinkSpeed) > 0f;
-                        coin.SetActive(visible);
+                        r.material = blinkState ? blinkMaterial : normalMaterial;
                     }
                 }
             }
@@ -169,6 +178,8 @@ public class BlueCoinChallenge : MonoBehaviour
         challengeActive = false;
 
         if (timerUIRoot) timerUIRoot.SetActive(false);
+
+
     }
 
     void ChallengeFail()

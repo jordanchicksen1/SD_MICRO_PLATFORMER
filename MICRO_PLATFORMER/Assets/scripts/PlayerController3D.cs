@@ -207,6 +207,18 @@ public class PlayerController3D : MonoBehaviour
             SetLayerRecursively(gameObject, LayerMask.NameToLayer("Player"));
         else
             SetLayerRecursively(gameObject, LayerMask.NameToLayer("Player2"));
+        
+        if (SpawnPointManager.Instance != null)
+        {
+            Transform spawn =
+                SpawnPointManager.Instance.GetSpawnPoint(playerIndex);
+
+            if (spawn != null)
+            {
+                transform.position = spawn.position;
+                transform.rotation = spawn.rotation;
+            }
+        }
 
 
         Debug.Log($"Player {playerNumber} joined");
