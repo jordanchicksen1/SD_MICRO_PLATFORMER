@@ -7,6 +7,7 @@ public class BreakableBox : MonoBehaviour
     [SerializeField] GameObject intactModel;
     [SerializeField] GameObject piecesRoot;
     [SerializeField] GameObject coinPrefab;
+    [SerializeField] GameObject heartPrefab;
     [SerializeField] AudioSource boxBreakSFX;
 
     [Header("VFX (Prefab)")]
@@ -57,8 +58,19 @@ public class BreakableBox : MonoBehaviour
         piecesRoot.SetActive(true);
         piecesRoot.transform.SetParent(null, true);
 
-        if (coinPrefab != null)
-            Instantiate(coinPrefab, transform.position, Quaternion.identity);
+        float dropRoll = Random.value;
+
+        if (dropRoll <= 0.8f)
+        {
+            // 70% chance coin
+            if (coinPrefab != null)
+                Instantiate(coinPrefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            // 30% chance heart
+            Instantiate(heartPrefab,transform.position,heartPrefab.transform.rotation);
+        }
 
         foreach (Transform piece in piecesRoot.transform)
         {
