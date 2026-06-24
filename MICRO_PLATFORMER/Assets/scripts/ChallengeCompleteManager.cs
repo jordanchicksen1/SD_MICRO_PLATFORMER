@@ -55,6 +55,7 @@ public class ChallengeCompletionManager : MonoBehaviour
         {
             Debug.Log("UI FOUND");
             challengeCompleteUI.SetActive(true);
+            Debug.Log("Panel active: " + challengeCompleteUI.activeSelf);
         }
         else
         {
