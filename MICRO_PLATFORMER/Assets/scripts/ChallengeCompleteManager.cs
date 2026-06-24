@@ -49,8 +49,17 @@ public class ChallengeCompletionManager : MonoBehaviour
             cameraFocus.FocusOn(player.ChallengeFocusPoint);
 
         // Show immediately
+        Debug.Log("Trying to show UI");
+
         if (challengeCompleteUI)
+        {
+            Debug.Log("UI FOUND");
             challengeCompleteUI.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("UI IS NULL");
+        }
 
         if (victorySFX)
             victorySFX.Play();
