@@ -28,6 +28,11 @@ public class CosmeticManager : MonoBehaviour
         Load();
     }
 
+    public void Start()
+    {
+        //ResetCosmetics();
+    }
+
     void Load()
     {
         purchasedHats.Clear();
@@ -87,5 +92,17 @@ public class CosmeticManager : MonoBehaviour
             Player2Hat = hat;
 
         Save();
+    }
+
+    public void ResetCosmetics()
+    {
+        PlayerPrefs.DeleteKey("PurchasedHats");
+        PlayerPrefs.DeleteKey("Player1Hat");
+        PlayerPrefs.DeleteKey("Player2Hat");
+
+        purchasedHats.Clear();
+
+        Player1Hat = HatType.None;
+        Player2Hat = HatType.None;
     }
 }
