@@ -436,6 +436,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 446695316023762777, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 545255855681753566, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.3967476
@@ -480,9 +484,61 @@ PrefabInstance:
       propertyPath: doorSFX
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1534062839644253887, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1806892698698365486, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1928698523389113622, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058592784932274834, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2723796150541072133, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3716804448035430387, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4259085157933182553, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347286373116737619, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541449777479710493, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5862872350656706383, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6201576120786387487, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
       propertyPath: m_Name
       value: titleScreenDiorama
+      objectReference: {fileID: 0}
+    - target: {fileID: 7718443040895915638, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7846724408529971145, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474756101436936833, guid: 79d0e4be6ede8594195b67b1954f7599, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
