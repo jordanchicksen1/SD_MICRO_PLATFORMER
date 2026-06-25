@@ -75,4 +75,18 @@ public class CurrencyManager : MonoBehaviour
         Gems = Mathf.Max(0, value);
         OnGemsChanged?.Invoke(Gems);
     }
+
+    public bool SpendCoins(int amount)
+    {
+        if (amount <= 0)
+            return true;
+
+        if (Coins < amount)
+            return false;
+
+        Coins -= amount;
+        OnCoinsChanged?.Invoke(Coins);
+
+        return true;
+    }
 }
