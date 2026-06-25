@@ -129,6 +129,15 @@ public class HatShopUI : MonoBehaviour
         savedConstraintsValid = false;
     }
 
+    public void SelectExitButton()
+    {
+        if (EventSystem.current && exitButton)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(exitButton.gameObject);
+        }
+    }
+
     System.Collections.IEnumerator ReturnThenEnableFollow()
     {
         if (cameraFocus)

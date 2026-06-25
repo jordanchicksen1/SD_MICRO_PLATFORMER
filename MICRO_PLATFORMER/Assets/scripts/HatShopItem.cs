@@ -11,6 +11,12 @@ public class HatShopItem : MonoBehaviour
     [Header("UI")]
     [SerializeField] Button buyButton;
     [SerializeField] TextMeshProUGUI buttonText;
+    [SerializeField] TextMeshProUGUI priceText;
+    [SerializeField] HatShopUI shopUI;
+
+    [Header("Audio")]
+    [SerializeField] AudioSource purchaseSFX;
+    [SerializeField] AudioSource errorSFX;
 
     void Start()
     {
@@ -23,15 +29,29 @@ public class HatShopItem : MonoBehaviour
             return;
 
         if (!CurrencyManager.Instance.SpendCoins(cost))
+        {
+            if (errorSFX)
+                errorSFX.Play();
+
             return;
+        }
 
         CosmeticManager.Instance.PurchaseHat(hatType);
 
+        if (purchaseSFX)
+            purchaseSFX.Play();
+
         Refresh();
+
+        if (shopUI)
+            shopUI.SelectExitButton();
     }
 
     void Refresh()
     {
+        if (priceText)
+            priceText.text = cost + " Coins";
+
         bool purchased =
             CosmeticManager.Instance.HasPurchased(hatType);
 
