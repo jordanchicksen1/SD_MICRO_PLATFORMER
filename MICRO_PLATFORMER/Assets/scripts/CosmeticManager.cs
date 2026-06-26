@@ -30,7 +30,7 @@ public class CosmeticManager : MonoBehaviour
 
     public void Start()
     {
-        //ResetCosmetics();
+        ResetCosmetics();
     }
 
     void Load()

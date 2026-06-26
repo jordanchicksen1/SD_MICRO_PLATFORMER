@@ -2,12 +2,56 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+
+public enum ShopSpeechType
+{
+    Greeting,
+    Purchase,
+    NoMoney
+}
+
 public class HatShopUI : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] GameObject panelRoot;
     [SerializeField] Button firstButton;
     [SerializeField] Button exitButton;
+
+    [Header("Speech Bubble")]
+    [SerializeField] GameObject speechBubble;
+    [SerializeField] TMPro.TextMeshProUGUI speechText;
+    [SerializeField] float speechDuration = 2f;
+    [SerializeField] ShopkeeperAnimation shopkeeper;
+    ShopSpeechType currentSpeechType;
+
+    [Header("Dialogue")]
+
+    [SerializeField]
+    string[] greetingLines =
+{
+    "What are you getting today?",
+    "Take your time!",
+    "Looking for a new hat?",
+    "Welcome back!"
+};
+
+    [SerializeField]
+    string[] purchaseLines =
+    {
+    "Great choice!",
+    "Looking stylish!",
+    "Excellent!",
+    "Wear it proudly!"
+};
+
+    [SerializeField]
+    string[] noMoneyLines =
+    {
+    "You'll need more coins!",
+    "Come back after another adventure!",
+    "You're a little short.",
+    "Keep exploring!"
+};
 
     [Header("Dependencies")]
     [SerializeField] HubCameraFocus cameraFocus;
@@ -24,11 +68,15 @@ public class HatShopUI : MonoBehaviour
 
     bool isOpen;
     public bool IsOpen => isOpen;
+    Coroutine speechRoutine;
 
     void Awake()
     {
         if (panelRoot)
             panelRoot.SetActive(false);
+
+        if (speechBubble)
+            speechBubble.SetActive(false);
 
         if (!cameraFocus)
             cameraFocus = Camera.main ?
@@ -70,6 +118,7 @@ public class HatShopUI : MonoBehaviour
         {
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
+            StartCoroutine(ShowGreetingAfterCamera());
         }
     }
 
@@ -136,6 +185,118 @@ public class HatShopUI : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(exitButton.gameObject);
         }
+    }
+
+    public void ShowSpeech(ShopSpeechType type)
+    {
+        string[] lines = null;
+
+        switch (type)
+        {
+            case ShopSpeechType.Greeting:
+                lines = greetingLines;
+                break;
+
+            case ShopSpeechType.Purchase:
+                lines = purchaseLines;
+                break;
+
+            case ShopSpeechType.NoMoney:
+                lines = noMoneyLines;
+                break;
+        }
+
+        if (lines == null || lines.Length == 0)
+            return;
+
+        string chosenLine = lines[Random.Range(0, lines.Length)];
+
+        if (speechRoutine != null)
+            StopCoroutine(speechRoutine);
+
+        currentSpeechType = type;
+        speechRoutine = StartCoroutine(SpeechRoutine(chosenLine));
+    }
+
+    System.Collections.IEnumerator ShowGreetingAfterCamera()
+    {
+        while (cameraFocus != null && cameraFocus.IsMoving)
+            yield return null;
+
+        ShowSpeech(ShopSpeechType.Greeting);
+    }
+
+    System.Collections.IEnumerator SpeechRoutine(string message)
+    {
+        if (!speechBubble || !speechText)
+            yield break;
+
+        switch (currentSpeechType)
+        {
+            case ShopSpeechType.Greeting:
+                if (shopkeeper)
+                    shopkeeper.StartTalking();
+                break;
+
+            case ShopSpeechType.Purchase:
+                if (shopkeeper)
+                    shopkeeper.StartCelebrate();
+                break;
+
+            case ShopSpeechType.NoMoney:
+                if (shopkeeper)
+                    shopkeeper.StartHeadShake();
+                break;
+        }
+
+        speechBubble.SetActive(true);
+        speechText.text = message;
+
+        // Start tiny
+        speechBubble.transform.localScale = Vector3.zero;
+
+        // Pop in
+        float timer = 0f;
+
+        while (timer < 0.15f)
+        {
+            timer += Time.unscaledDeltaTime;
+
+            speechBubble.transform.localScale =
+                Vector3.Lerp(
+                    Vector3.zero,
+                    Vector3.one,
+                    timer / 0.15f);
+
+            yield return null;
+        }
+
+        // Hold
+        yield return new WaitForSecondsRealtime(speechDuration);
+
+        // Pop out
+        timer = 0f;
+
+        while (timer < 0.15f)
+        {
+            timer += Time.unscaledDeltaTime;
+
+            speechBubble.transform.localScale =
+                Vector3.Lerp(
+                    Vector3.one,
+                    Vector3.zero,
+                    timer / 0.15f);
+
+            yield return null;
+        }
+
+        speechBubble.SetActive(false);
+        if (shopkeeper)
+            shopkeeper.StopAnimation();
+
+        speechRoutine = null;
+
+        speechRoutine = null;
     }
 
     System.Collections.IEnumerator ReturnThenEnableFollow()

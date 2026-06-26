@@ -33,6 +33,9 @@ public class HatShopItem : MonoBehaviour
             if (errorSFX)
                 errorSFX.Play();
 
+            if (shopUI)
+                shopUI.ShowSpeech(ShopSpeechType.NoMoney);
+
             return;
         }
 
@@ -42,6 +45,8 @@ public class HatShopItem : MonoBehaviour
             purchaseSFX.Play();
 
         Refresh();
+        if (shopUI)
+            shopUI.ShowSpeech(ShopSpeechType.Purchase);
 
         if (shopUI)
             shopUI.SelectExitButton();
