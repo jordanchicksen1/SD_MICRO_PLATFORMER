@@ -26,10 +26,20 @@ public class HubHatVisual : MonoBehaviour
         hardHat.SetActive(false);
         beanie.SetActive(false);
 
+        bool isPlayerOne = playerOne;
+
+        // If this is a gameplay player, automatically detect which player it is.
+        PlayerController3D gameplayPlayer = GetComponent<PlayerController3D>();
+
+        if (gameplayPlayer != null)
+        {
+            isPlayerOne = gameplayPlayer.PlayerIndex == 0;
+        }
+
         HatType hat =
-            playerOne
-            ? CosmeticManager.Instance.Player1Hat
-            : CosmeticManager.Instance.Player2Hat;
+            isPlayerOne
+                ? CosmeticManager.Instance.Player1Hat
+                : CosmeticManager.Instance.Player2Hat;
 
         if (poofPrefab && poofSpawnPoint)
         {

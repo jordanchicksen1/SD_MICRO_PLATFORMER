@@ -68,6 +68,7 @@ public class PlayerController3D : MonoBehaviour
 
     [Header("Player Differentiation")]
     int playerIndex;
+    public int PlayerIndex => playerIndex;
     int playerNumber;
     [SerializeField] GameObject[] playerVisuals;
     public GameObject p1Tag;
@@ -280,6 +281,12 @@ public class PlayerController3D : MonoBehaviour
             Debug.LogError("No CoopLifeManager found in scene!");
         }
 
+        HubHatVisual hatVisual = GetComponent<HubHatVisual>();
+
+        if (hatVisual != null)
+        {
+            hatVisual.RefreshHat();
+        }
     }
 
     void SetLayerRecursively(GameObject obj, int newLayer)
