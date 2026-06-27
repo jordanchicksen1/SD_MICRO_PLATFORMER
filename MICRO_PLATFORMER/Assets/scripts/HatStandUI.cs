@@ -44,6 +44,9 @@ public class HatStandUI : MonoBehaviour
 
         isOpen = true;
 
+        RefreshPurchasedItems();
+        RefreshAllItems();
+
         panelRoot.SetActive(true);
 
         lockedPlayer = player;
@@ -118,6 +121,14 @@ public class HatStandUI : MonoBehaviour
         foreach (HatStandItem item in hatItems)
         {
             item.Refresh();
+        }
+    }
+
+    public void RefreshPurchasedItems()
+    {
+        foreach (HatStandItem item in hatItems)
+        {
+            item.RefreshPurchasedState();
         }
     }
 

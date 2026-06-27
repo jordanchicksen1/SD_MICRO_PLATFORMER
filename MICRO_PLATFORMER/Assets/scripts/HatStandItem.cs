@@ -69,4 +69,11 @@ public class HatStandItem : MonoBehaviour
             ? "Unequip P2"
             : "Equip P2";
     }
+
+    public void RefreshPurchasedState()
+    {
+        bool purchased = CosmeticManager.Instance.HasPurchased(hatType);
+
+        gameObject.SetActive(purchased);
+    }
 }

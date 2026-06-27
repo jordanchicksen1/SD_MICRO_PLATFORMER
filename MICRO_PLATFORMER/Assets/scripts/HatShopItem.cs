@@ -41,6 +41,14 @@ public class HatShopItem : MonoBehaviour
 
         CosmeticManager.Instance.PurchaseHat(hatType);
 
+        HatStandUI stand =
+    FindFirstObjectByType<HatStandUI>();
+
+        if (stand != null)
+        {
+            stand.RefreshPurchasedItems();
+        }
+
         if (purchaseSFX)
             purchaseSFX.Play();
 
