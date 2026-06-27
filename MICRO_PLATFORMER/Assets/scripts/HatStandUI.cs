@@ -81,7 +81,14 @@ public class HatStandUI : MonoBehaviour
         if (presentation)
             presentation.EndPresentation();
 
-        
+        HubHatVisual[] visuals =
+    FindObjectsByType<HubHatVisual>(
+        FindObjectsSortMode.None);
+
+        foreach (HubHatVisual visual in visuals)
+        {
+            visual.RefreshHat();
+        }
 
         isOpen = false;
     }
