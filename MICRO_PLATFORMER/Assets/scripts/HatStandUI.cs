@@ -14,7 +14,7 @@ public class HatStandUI : MonoBehaviour
     [SerializeField] HubCameraFollow cameraFollow;
 
     [Header("Presentation")]
-    [SerializeField] HatStandController standController;
+    [SerializeField] HatStandPresentation presentation;
 
     Vector3 returnPos;
     Quaternion returnRot;
@@ -61,8 +61,8 @@ public class HatStandUI : MonoBehaviour
         if (cameraFocus)
             cameraFocus.FocusOn(focusPoint);
 
-        if (standController && follower)
-            standController.BeginPresentation(player, follower);
+        if (presentation)
+            presentation.BeginPresentation();
 
         if (EventSystem.current)
         {
@@ -76,11 +76,11 @@ public class HatStandUI : MonoBehaviour
         panelRoot.SetActive(false);
 
         UnlockPlayer();
-
-        if (standController)
-            standController.EndPresentation();
-
         StartCoroutine(ReturnCamera());
+        if (presentation)
+            presentation.EndPresentation();
+
+        
 
         isOpen = false;
     }

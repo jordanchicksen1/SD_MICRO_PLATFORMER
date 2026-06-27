@@ -8,6 +8,8 @@ public class HatStandController : MonoBehaviour
 
     HubPlayerController3D player;
     HubFollower follower;
+    Rigidbody playerRb;
+    Rigidbody followerRb;
 
     Vector3 playerStartPos;
     Quaternion playerStartRot;
@@ -22,73 +24,58 @@ public class HatStandController : MonoBehaviour
         player = p;
         follower = f;
 
+        playerRb = player.GetComponent<Rigidbody>();
+        followerRb = follower.GetComponent<Rigidbody>();
+
         playerStartPos = p.transform.position;
         playerStartRot = p.transform.rotation;
 
         followerStartPos = f.transform.position;
         followerStartRot = f.transform.rotation;
 
-        StartCoroutine(MoveRoutine());
+        PresentCharacters();
     }
 
-    IEnumerator MoveRoutine()
+    void PresentCharacters()
     {
-        while (
-            Vector3.Distance(player.transform.position, player1StandPoint.position) > 0.05f ||
-            Vector3.Distance(follower.transform.position, player2StandPoint.position) > 0.05f)
-        {
-            player.transform.position =
-                Vector3.MoveTowards(
-                    player.transform.position,
-                    player1StandPoint.position,
-                    5f * Time.deltaTime);
+        // Stop physics
+        if (playerRb)
+            playerRb.isKinematic = true;
 
-            follower.transform.position =
-                Vector3.MoveTowards(
-                    follower.transform.position,
-                    player2StandPoint.position,
-                    5f * Time.deltaTime);
+        if (followerRb)
+            followerRb.isKinematic = true;
 
-            player.transform.rotation =
-                Quaternion.RotateTowards(
-                    player.transform.rotation,
-                    player1StandPoint.rotation,
-                    360f * Time.deltaTime);
+        // Stop follower AI
+        follower.enabled = false;
 
-            follower.transform.rotation =
-                Quaternion.RotateTowards(
-                    follower.transform.rotation,
-                    player2StandPoint.rotation,
-                    360f * Time.deltaTime);
+        // Move instantly
+        player.transform.SetPositionAndRotation(
+            player1StandPoint.position,
+            player1StandPoint.rotation);
 
-            yield return null;
-        }
+        follower.transform.SetPositionAndRotation(
+            player2StandPoint.position,
+            player2StandPoint.rotation);
     }
 
     public void EndPresentation()
     {
-        StartCoroutine(ReturnRoutine());
+        player.transform.SetPositionAndRotation(
+            playerStartPos,
+            playerStartRot);
+
+        follower.transform.SetPositionAndRotation(
+            followerStartPos,
+            followerStartRot);
+
+        if (playerRb)
+            playerRb.isKinematic = false;
+
+        if (followerRb)
+            followerRb.isKinematic = false;
+
+        follower.enabled = true;
     }
 
-    IEnumerator ReturnRoutine()
-    {
-        while (
-            Vector3.Distance(player.transform.position, playerStartPos) > 0.05f ||
-            Vector3.Distance(follower.transform.position, followerStartPos) > 0.05f)
-        {
-            player.transform.position =
-                Vector3.MoveTowards(
-                    player.transform.position,
-                    playerStartPos,
-                    5f * Time.deltaTime);
-
-            follower.transform.position =
-                Vector3.MoveTowards(
-                    follower.transform.position,
-                    followerStartPos,
-                    5f * Time.deltaTime);
-
-            yield return null;
-        }
-    }
+   
 }
