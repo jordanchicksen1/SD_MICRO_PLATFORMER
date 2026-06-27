@@ -691,6 +691,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 30363021}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &31978414 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8459240671f496545ad2482f0ab77a27, type: 3}
+  m_PrefabInstance: {fileID: 595245277}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &31978415 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8459240671f496545ad2482f0ab77a27, type: 3}
@@ -6199,6 +6204,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5495902117074765545, guid: da82452f7c027194cb32a9379d2276c0, type: 3}
+--- !u!1 &221003831
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 221003832}
+  m_Layer: 8
+  m_Name: poofPoint (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &221003832
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221003831}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.9140003, y: 0.8630003, z: -0.617}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1803231350}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &221534063 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: da82452f7c027194cb32a9379d2276c0, type: 3}
@@ -6413,8 +6449,11 @@ MonoBehaviour:
   hatType: 3
   player1Button: {fileID: 231336606}
   player2Button: {fileID: 1633638991}
+  hatStandUI: {fileID: 1561805600}
   player1Text: {fileID: 375344936}
   player2Text: {fileID: 633923520}
+  player1Visual: {fileID: 7191886805575675607}
+  player2Visual: {fileID: 1803231351}
 --- !u!1001 &232495291
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11905,6 +11944,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5bdc0545a70fd4b42bf8de6e6ab5dde7, type: 3}
   m_PrefabInstance: {fileID: 1115197474}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &427538369 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: eb7ecdade4b2b03429a40d5b3e99ecc6, type: 3}
+  m_PrefabInstance: {fileID: 1310866069}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &427538370 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: eb7ecdade4b2b03429a40d5b3e99ecc6, type: 3}
@@ -12019,6 +12063,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 427661580}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &430115290 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8459240671f496545ad2482f0ab77a27, type: 3}
+  m_PrefabInstance: {fileID: 183744909}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &430115291 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8459240671f496545ad2482f0ab77a27, type: 3}
@@ -15165,6 +15214,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1210632453393465633, guid: 7f44cfca20ae1bb4380c21ac6e4f923c, type: 3}
   m_PrefabInstance: {fileID: 728145980}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &549087667 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: eb7ecdade4b2b03429a40d5b3e99ecc6, type: 3}
+  m_PrefabInstance: {fileID: 886194926}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &549087668 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: eb7ecdade4b2b03429a40d5b3e99ecc6, type: 3}
@@ -15927,6 +15981,11 @@ MonoBehaviour:
   rotateX: 0
   rotateY: 30
   rotateZ: 0
+--- !u!1 &582014192 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9b115a8f958121e44ae1f943f32830c6, type: 3}
+  m_PrefabInstance: {fileID: 1352707108}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &582014193 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9b115a8f958121e44ae1f943f32830c6, type: 3}
@@ -25891,6 +25950,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5495902117074765545, guid: da82452f7c027194cb32a9379d2276c0, type: 3}
+--- !u!1 &925630741
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 925630742}
+  m_Layer: 8
+  m_Name: poofPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &925630742
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925630741}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.914, y: 0.863, z: -0.613}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4656703163026508171}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &926138694
 GameObject:
   m_ObjectHideFlags: 0
@@ -27903,8 +27993,11 @@ MonoBehaviour:
   hatType: 1
   player1Button: {fileID: 985502750}
   player2Button: {fileID: 1155065479}
+  hatStandUI: {fileID: 1561805600}
   player1Text: {fileID: 961718645}
   player2Text: {fileID: 1380477271}
+  player1Visual: {fileID: 7191886805575675607}
+  player2Visual: {fileID: 1803231351}
 --- !u!4 &986370847 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5bdc0545a70fd4b42bf8de6e6ab5dde7, type: 3}
@@ -45138,6 +45231,11 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5495902117074765545, guid: 8428f825ff5192a46a1cb40a352f840c, type: 3}
+--- !u!1 &1544337455 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9b115a8f958121e44ae1f943f32830c6, type: 3}
+  m_PrefabInstance: {fileID: 1813247818}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1544337456 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9b115a8f958121e44ae1f943f32830c6, type: 3}
@@ -45872,6 +45970,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelRoot: {fileID: 101542542}
   exitButton: {fileID: 1396896306}
+  hatItems:
+  - {fileID: 985502753}
+  - {fileID: 2076418225}
+  - {fileID: 231336609}
   cameraFocus: {fileID: 696046154}
   cameraFollow: {fileID: 696046153}
   presentation: {fileID: 132048004}
@@ -53829,6 +53931,7 @@ GameObject:
   - component: {fileID: 1803231350}
   - component: {fileID: 1803231349}
   - component: {fileID: 1803231348}
+  - component: {fileID: 1803231351}
   m_Layer: 8
   m_Name: HatStandPlayer2
   m_TagString: Player
@@ -53905,8 +54008,28 @@ Transform:
   - {fileID: 2018713318}
   - {fileID: 1615690579}
   - {fileID: 412582126}
+  - {fileID: 221003832}
   m_Father: {fileID: 132048003}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1803231351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1803231347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c93eaa6fe7a89014ea74ff9e78aeea88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerOne: 0
+  grassyHat: {fileID: 430115290}
+  hardHat: {fileID: 1544337455}
+  beanie: {fileID: 427538369}
+  poofPrefab: {fileID: 8810650696689247195, guid: e1d90ec24c3934c4ca61b2c7c8eac1f0, type: 3}
+  poofSpawnPoint: {fileID: 221003832}
+  poofLifetime: 2
 --- !u!4 &1808699616 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 377498473771456334, guid: 7886386f9b751c849acaf2a14b7f9905, type: 3}
@@ -63230,8 +63353,11 @@ MonoBehaviour:
   hatType: 2
   player1Button: {fileID: 2076418222}
   player2Button: {fileID: 1791996149}
+  hatStandUI: {fileID: 1561805600}
   player1Text: {fileID: 1822217708}
   player2Text: {fileID: 1538160660}
+  player1Visual: {fileID: 7191886805575675607}
+  player2Visual: {fileID: 1803231351}
 --- !u!4 &2087850627 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5594b07ae6ded7a4cacfb33b7c357b7d, type: 3}
@@ -66833,6 +66959,7 @@ Transform:
   - {fileID: 1523600698361088148}
   - {fileID: 1997289711065755597}
   - {fileID: 511612042}
+  - {fileID: 925630742}
   m_Father: {fileID: 132048003}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4669297259976725401
@@ -68168,6 +68295,7 @@ GameObject:
   - component: {fileID: 4656703163026508171}
   - component: {fileID: 2308902316583211745}
   - component: {fileID: 5230232790187764494}
+  - component: {fileID: 7191886805575675607}
   m_Layer: 8
   m_Name: HatStandPlayer1
   m_TagString: Player
@@ -68175,6 +68303,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &7191886805575675607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7191886805575675606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c93eaa6fe7a89014ea74ff9e78aeea88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerOne: 1
+  grassyHat: {fileID: 31978414}
+  hardHat: {fileID: 582014192}
+  beanie: {fileID: 549087667}
+  poofPrefab: {fileID: 8810650696689247195, guid: e1d90ec24c3934c4ca61b2c7c8eac1f0, type: 3}
+  poofSpawnPoint: {fileID: 925630742}
+  poofLifetime: 2
 --- !u!1 &7202183492515793184
 GameObject:
   m_ObjectHideFlags: 0

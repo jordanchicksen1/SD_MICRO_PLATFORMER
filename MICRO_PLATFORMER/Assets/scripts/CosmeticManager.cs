@@ -30,7 +30,7 @@ public class CosmeticManager : MonoBehaviour
 
     public void Start()
     {
-        ResetCosmetics();
+        //ResetCosmetics();
     }
 
     void Load()
@@ -105,4 +105,15 @@ public class CosmeticManager : MonoBehaviour
         Player1Hat = HatType.None;
         Player2Hat = HatType.None;
     }
+
+    public void SetPlayer1Hat(HatType hat)
+    {
+        Player1Hat = hat;
+    }
+
+    public void SetPlayer2Hat(HatType hat)
+    {
+        Player2Hat = hat;
+    }
+
 }

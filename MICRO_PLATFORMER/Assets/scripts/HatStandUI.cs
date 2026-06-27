@@ -8,6 +8,7 @@ public class HatStandUI : MonoBehaviour
     [Header("UI")]
     [SerializeField] GameObject panelRoot;
     [SerializeField] Button exitButton;
+    [SerializeField] HatStandItem[] hatItems;
 
     [Header("Camera")]
     [SerializeField] HubCameraFocus cameraFocus;
@@ -103,6 +104,14 @@ public class HatStandUI : MonoBehaviour
             RigidbodyConstraints.FreezeRotation;
 
         lockedPlayer.enabled = true;
+    }
+
+    public void RefreshAllItems()
+    {
+        foreach (HatStandItem item in hatItems)
+        {
+            item.Refresh();
+        }
     }
 
     IEnumerator ReturnCamera()
