@@ -20,6 +20,7 @@ public class HatShopUI : MonoBehaviour
     [Header("Speech Bubble")]
     [SerializeField] GameObject speechBubble;
     [SerializeField] TMPro.TextMeshProUGUI speechText;
+    [SerializeField] TypewriterText typewriter;
     [SerializeField] float speechDuration = 2f;
     [SerializeField] ShopkeeperAnimation shopkeeper;
     ShopSpeechType currentSpeechType;
@@ -250,7 +251,7 @@ public class HatShopUI : MonoBehaviour
         }
 
         speechBubble.SetActive(true);
-        speechText.text = message;
+        typewriter.ShowText(message);
 
         // Start tiny
         speechBubble.transform.localScale = Vector3.zero;
