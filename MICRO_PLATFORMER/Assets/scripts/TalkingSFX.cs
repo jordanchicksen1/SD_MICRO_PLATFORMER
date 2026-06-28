@@ -4,7 +4,6 @@ public class TalkingSFX : MonoBehaviour
 {
     [Header("Audio")]
     [SerializeField] AudioSource audioSource;
-
     [SerializeField] AudioClip[] talkingClips;
 
     [Header("Pitch")]
@@ -15,6 +14,7 @@ public class TalkingSFX : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] float playChance = 0.35f;
     float nextTalkTime;
+    int lastClipIndex = -1;
     public void TryPlaySound(char character)
     {
         if (Time.unscaledTime < nextTalkTime)
@@ -33,9 +33,17 @@ public class TalkingSFX : MonoBehaviour
 
         audioSource.pitch = Random.Range(minPitch, maxPitch);
 
-        AudioClip clip =
-            talkingClips[
-                Random.Range(0, talkingClips.Length)];
+        int clipIndex;
+
+        do
+        {
+            clipIndex = Random.Range(0, talkingClips.Length);
+        }
+        while (talkingClips.Length > 1 && clipIndex == lastClipIndex);
+
+        lastClipIndex = clipIndex;
+
+        AudioClip clip = talkingClips[clipIndex];
 
         nextTalkTime = Time.unscaledTime + Random.Range(0.09f, 0.16f);
         audioSource.PlayOneShot(clip);
