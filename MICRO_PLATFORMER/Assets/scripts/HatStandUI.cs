@@ -23,6 +23,7 @@ public class HatStandUI : MonoBehaviour
     HubPlayerController3D lockedPlayer;
     Rigidbody lockedRb;
     HubFollower follower;
+    [SerializeField] UIPanelSlide panelSlide;
 
     bool isOpen;
 
@@ -48,6 +49,8 @@ public class HatStandUI : MonoBehaviour
         RefreshAllItems();
 
         panelRoot.SetActive(true);
+
+        panelSlide.SlideIn();
 
         lockedPlayer = player;
         lockedRb = rb;
@@ -77,7 +80,7 @@ public class HatStandUI : MonoBehaviour
 
     public void Close()
     {
-        panelRoot.SetActive(false);
+        StartCoroutine(CloseRoutine());
 
         UnlockPlayer();
         StartCoroutine(ReturnCamera());
@@ -94,6 +97,15 @@ public class HatStandUI : MonoBehaviour
         }
 
         isOpen = false;
+    }
+
+    IEnumerator CloseRoutine()
+    {
+        panelSlide.SlideOut();
+
+        yield return new WaitForSecondsRealtime(panelSlide.Duration);
+
+        panelRoot.SetActive(false);
     }
 
     void LockPlayer()

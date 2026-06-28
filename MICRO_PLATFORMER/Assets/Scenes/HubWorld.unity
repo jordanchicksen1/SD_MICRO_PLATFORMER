@@ -1826,6 +1826,7 @@ GameObject:
   - component: {fileID: 101542546}
   - component: {fileID: 101542545}
   - component: {fileID: 101542544}
+  - component: {fileID: 101542547}
   m_Layer: 5
   m_Name: hatStandCanvas
   m_TagString: Untagged
@@ -1917,6 +1918,21 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &101542547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101542542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 027c5a7e3c52d22428d93143b50e4e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 931371049}
+  duration: 0.45
+  slideOffset: {x: 1000, y: 0}
 --- !u!1 &101615660 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: da82452f7c027194cb32a9379d2276c0, type: 3}
@@ -14449,6 +14465,7 @@ GameObject:
   - component: {fileID: 515005015}
   - component: {fileID: 515005014}
   - component: {fileID: 515005013}
+  - component: {fileID: 515005017}
   m_Layer: 5
   m_Name: hatShopCanvas
   m_TagString: Untagged
@@ -14542,6 +14559,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &515005017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515005012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 027c5a7e3c52d22428d93143b50e4e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 670706134}
+  duration: 0.45
+  slideOffset: {x: 1000, y: 0}
 --- !u!1 &517955684
 GameObject:
   m_ObjectHideFlags: 0
@@ -45603,6 +45635,7 @@ MonoBehaviour:
   panelRoot: {fileID: 1770191185}
   playButton: {fileID: 1275765728}
   cancelButton: {fileID: 189554472}
+  panelSlide: {fileID: 1770191190}
   videoPlayer: {fileID: 2036690399}
   cameraFocus: {fileID: 696046154}
   gameplayMapName: Gameplay
@@ -45655,6 +45688,7 @@ MonoBehaviour:
   panelRoot: {fileID: 515005012}
   firstButton: {fileID: 215785520}
   exitButton: {fileID: 215785520}
+  panelSlide: {fileID: 515005017}
   speechBubble: {fileID: 1166775791}
   speechText: {fileID: 2030704434}
   typewriter: {fileID: 1986453066}
@@ -45698,6 +45732,7 @@ MonoBehaviour:
   cameraFocus: {fileID: 696046154}
   cameraFollow: {fileID: 696046153}
   presentation: {fileID: 132048004}
+  panelSlide: {fileID: 101542547}
 --- !u!1 &1562436028
 GameObject:
   m_ObjectHideFlags: 0
@@ -52324,6 +52359,7 @@ GameObject:
   - component: {fileID: 1770191188}
   - component: {fileID: 1770191187}
   - component: {fileID: 1770191186}
+  - component: {fileID: 1770191190}
   m_Layer: 5
   m_Name: levelSelectCanvas
   m_TagString: Untagged
@@ -52415,6 +52451,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1770191190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1770191185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 027c5a7e3c52d22428d93143b50e4e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 1611823037}
+  duration: 0.45
+  slideOffset: {x: 1000, y: 0}
 --- !u!1001 &1770777231
 PrefabInstance:
   m_ObjectHideFlags: 0

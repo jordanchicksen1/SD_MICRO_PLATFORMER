@@ -16,6 +16,7 @@ public class HatShopUI : MonoBehaviour
     [SerializeField] GameObject panelRoot;
     [SerializeField] Button firstButton;
     [SerializeField] Button exitButton;
+    [SerializeField] UIPanelSlide panelSlide;
 
     [Header("Speech Bubble")]
     [SerializeField] GameObject speechBubble;
@@ -101,6 +102,8 @@ public class HatShopUI : MonoBehaviour
         if (panelRoot)
             panelRoot.SetActive(true);
 
+        panelSlide.SlideIn();
+
         LockPlayer(playerRb, playerController);
 
         if (Camera.main != null)
@@ -126,13 +129,22 @@ public class HatShopUI : MonoBehaviour
     public void Close()
     {
         if (panelRoot)
-            panelRoot.SetActive(false);
+            StartCoroutine(CloseRoutine());
 
         StartCoroutine(ReturnThenEnableFollow());
 
         UnlockPlayer();
 
         isOpen = false;
+    }
+
+    System.Collections.IEnumerator CloseRoutine()
+    {
+        panelSlide.SlideOut();
+
+        yield return new WaitForSecondsRealtime(panelSlide.Duration);
+
+        panelRoot.SetActive(false);
     }
 
     void LockPlayer(

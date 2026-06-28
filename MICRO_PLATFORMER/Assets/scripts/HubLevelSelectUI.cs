@@ -13,6 +13,7 @@ public class HubLevelSelectUI : MonoBehaviour
     [SerializeField] GameObject panelRoot;   // the whole panel
     [SerializeField] Button playButton;
     [SerializeField] Button cancelButton;
+    [SerializeField] UIPanelSlide panelSlide;
 
     [Header("Video")]
     [SerializeField] VideoPlayer videoPlayer;
@@ -83,6 +84,8 @@ public class HubLevelSelectUI : MonoBehaviour
         pendingFocusPoint = focusPoint;
 
         if (panelRoot) panelRoot.SetActive(true);
+
+        panelSlide.SlideIn();
 
         // Select button for controller navigation
         if (EventSystem.current != null && playButton != null)
@@ -167,7 +170,7 @@ public class HubLevelSelectUI : MonoBehaviour
     {
         if (videoPlayer) videoPlayer.Stop();
 
-        if (panelRoot) panelRoot.SetActive(false);
+        if (panelRoot) StartCoroutine(CloseRoutine());
 
         StartCoroutine(ReturnThenEnableFollow());
 
@@ -182,6 +185,15 @@ public class HubLevelSelectUI : MonoBehaviour
         if (cancelButton) cancelButton.interactable = true;
 
         isLoading = false;
+    }
+
+    IEnumerator CloseRoutine()
+    {
+        panelSlide.SlideOut();
+
+        yield return new WaitForSecondsRealtime(panelSlide.Duration);
+
+        panelRoot.SetActive(false);
     }
 
     void LockPlayer(Rigidbody rb, HubPlayerController3D controller)
