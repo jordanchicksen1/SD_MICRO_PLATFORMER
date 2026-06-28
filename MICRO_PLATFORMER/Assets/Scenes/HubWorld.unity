@@ -34328,7 +34328,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.75
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -60018,13 +60018,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1214193239}
   talkingClips:
-  - {fileID: 8300000, guid: 593a00af05555b14b958b4cfacd54629, type: 3}
-  - {fileID: 8300000, guid: 7770eb32b7d50c94990f9a39773a20e6, type: 3}
-  - {fileID: 8300000, guid: 777e053c9e046c04a8dd6a4f368f2705, type: 3}
-  - {fileID: 8300000, guid: 7770eb32b7d50c94990f9a39773a20e6, type: 3}
+  - {fileID: 8300000, guid: d227b967080c4d644a3c007c56f1b3fa, type: 3}
+  - {fileID: 8300000, guid: a400728c5dbd5b2438c9ec53c6a90735, type: 3}
+  - {fileID: 8300000, guid: faa601ef1eec2e74bad3e84025e8bc6d, type: 3}
+  - {fileID: 8300000, guid: ca4c109881891ae41860da473c2d0294, type: 3}
   minPitch: 1.55
   maxPitch: 1.65
-  playChance: 0.75
+  playChance: 0.55
 --- !u!4 &1987671898 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 22d4289cef9d57b49a88a53f8f2f49f1, type: 3}
