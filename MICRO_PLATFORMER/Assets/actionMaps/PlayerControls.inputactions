@@ -68,6 +68,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "ba4d04ff-4093-4a1e-84a7-de11ce35adcb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -96,7 +105,7 @@
                 {
                     "name": "",
                     "id": "15697bd0-215b-4060-aece-ab6b1116cd07",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -156,6 +165,17 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Dive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2d827ab2-575f-40eb-99ac-9e8d5defd4c8",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
