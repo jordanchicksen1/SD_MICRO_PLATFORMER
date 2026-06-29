@@ -8894,6 +8894,7 @@ MonoBehaviour:
   leftLeg: {fileID: 4282180500909100410}
   rightLeg: {fileID: 7464993858723858299}
   body: {fileID: 5974815712758450438}
+  head: {fileID: 4254587992642729171}
   idleArmBobAmount: 6
   idleArmBobSpeed: 2
   idleBlendSpeed: 6
@@ -8922,8 +8923,8 @@ MonoBehaviour:
   gemBodyLean: 10
   gemBlendSpeed: 8
   kickLegForwardAngle: -85
-  kickBodyLean: 12
-  kickArmBackAngle: -25
+  kickBodyLean: 30
+  kickArmBackAngle: -60
   kickBlendSpeed: 12
 --- !u!1 &7097405853788024637
 GameObject:

@@ -8,6 +8,9 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] Transform leftLeg;
     [SerializeField] Transform rightLeg;
     [SerializeField] Transform body;
+    [SerializeField] Transform head;
+    Vector3 headStartPos;
+    Vector3 rightLegStartPos;
     Quaternion leftArmStartRot;
     Quaternion rightArmStartRot;
     Quaternion leftLegStartRot;
@@ -89,6 +92,8 @@ public class PlayerAnimator : MonoBehaviour
         rightArmStartRot = rightArm.localRotation;
         leftLegStartRot = leftLeg.localRotation;
         rightLegStartRot = rightLeg.localRotation;
+        headStartPos = head.localPosition;
+        rightLegStartPos = rightLeg.localPosition;
     }
 
     bool IsGrounded()
@@ -479,17 +484,39 @@ public class PlayerAnimator : MonoBehaviour
     void AnimateKick(float blend)
     {
         if (blend <= 0f)
+        {
+            head.localPosition = Vector3.Lerp(
+                head.localPosition,
+                headStartPos,
+                Time.deltaTime * 12f);
+
+            rightLeg.localPosition = Vector3.Lerp(
+                rightLeg.localPosition,
+                rightLegStartPos,
+                Time.deltaTime * 12f);
+
             return;
+        }
 
         body.localRotation = Quaternion.Lerp(
             body.localRotation,
             Quaternion.Euler(kickBodyLean, 0, 0),
             blend);
 
+        head.localPosition = Vector3.Lerp(
+            head.localPosition,
+            headStartPos + new Vector3(0f, 0.05f, 0.08f),
+            blend);
+
         rightLeg.localRotation = Quaternion.Lerp(
             rightLeg.localRotation,
             rightLegStartRot * Quaternion.Euler(-kickLegForwardAngle, 0, 0),
             blend);
+
+        rightLeg.localPosition = Vector3.Lerp(
+          rightLeg.localPosition,
+          rightLegStartPos + new Vector3(0f, 0f, 0.08f),
+          blend);
 
         leftArm.localRotation = Quaternion.Lerp(
             leftArm.localRotation,
