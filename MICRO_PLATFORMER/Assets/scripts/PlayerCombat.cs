@@ -19,6 +19,10 @@ public class PlayerCombat : MonoBehaviour
 
     PlayerAnimator animator;
 
+    [Header("Kick")]
+    [SerializeField] Transform kickPoint;
+    [SerializeField] GameObject kickHitboxPrefab;
+
     void Awake()
     {
         animator = GetComponentInChildren<PlayerAnimator>();
@@ -51,9 +55,25 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator KickRoutine()
     {
+        Debug.Log("Kick started");
+
         animator.SetKick(true);
 
-        yield return new WaitForSeconds(0.18f);
+        yield return new WaitForSeconds(0.10f);
+
+        Debug.Log("Spawning hitbox");
+
+        GameObject hitbox =
+            Instantiate(
+                kickHitboxPrefab,
+                kickPoint.position,
+                kickPoint.rotation);
+
+        Debug.Log("Hitbox spawned: " + hitbox.name);
+
+        yield return new WaitForSeconds(0.5f);
+
+        Destroy(hitbox);
 
         animator.SetKick(false);
     }

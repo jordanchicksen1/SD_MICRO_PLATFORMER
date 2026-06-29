@@ -515,7 +515,7 @@ public class PlayerAnimator : MonoBehaviour
 
         rightLeg.localPosition = Vector3.Lerp(
           rightLeg.localPosition,
-          rightLegStartPos + new Vector3(0f, 0f, 0.08f),
+          rightLegStartPos + new Vector3(0f, 0.1f, -0.35f),
           blend);
 
         leftArm.localRotation = Quaternion.Lerp(
