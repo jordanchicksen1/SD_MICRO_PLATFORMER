@@ -21,7 +21,8 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("Kick")]
     [SerializeField] Transform kickPoint;
-    [SerializeField] GameObject kickHitboxPrefab;
+    [SerializeField] float kickRadius = 1f;
+    [SerializeField] LayerMask enemyLayer;
 
     void Awake()
     {
@@ -58,23 +59,37 @@ public class PlayerCombat : MonoBehaviour
         Debug.Log("Kick started");
 
         animator.SetKick(true);
-
+        Debug.Log("Kick Point: " + kickPoint);
+        // Wind-up
         yield return new WaitForSeconds(0.10f);
 
-        Debug.Log("Spawning hitbox");
+        // Check everything inside the kick area
+        Collider[] hits = Physics.OverlapSphere(
+            kickPoint.position,
+            kickRadius,
+            enemyLayer);
 
-        GameObject hitbox =
-            Instantiate(
-                kickHitboxPrefab,
-                kickPoint.position,
-                kickPoint.rotation);
+        foreach (Collider hit in hits)
+        {
+            Enemy enemy = hit.GetComponentInParent<Enemy>();
 
-        Debug.Log("Hitbox spawned: " + hitbox.name);
-
-        yield return new WaitForSeconds(0.5f);
-
-        Destroy(hitbox);
+            if (enemy != null)
+            {
+                enemy.TakeHit();
+            }
+        }
 
         animator.SetKick(false);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (kickPoint == null)
+            return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(
+            kickPoint.position,
+            kickRadius);
     }
 }

@@ -1174,7 +1174,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentTool: 0
   kickPoint: {fileID: 9181839625594344049}
-  kickHitboxPrefab: {fileID: 5483388436923242675, guid: e496ceb183dbd7449b0a19e243002812, type: 3}
+  kickRadius: 1
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &1853980739637342296
 GameObject:
   m_ObjectHideFlags: 0
