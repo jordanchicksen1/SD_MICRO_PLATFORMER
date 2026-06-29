@@ -8921,6 +8921,10 @@ MonoBehaviour:
   gemArmUpAngle: -180
   gemBodyLean: 10
   gemBlendSpeed: 8
+  kickLegForwardAngle: -85
+  kickBodyLean: 12
+  kickArmBackAngle: -25
+  kickBlendSpeed: 12
 --- !u!1 &7097405853788024637
 GameObject:
   m_ObjectHideFlags: 0

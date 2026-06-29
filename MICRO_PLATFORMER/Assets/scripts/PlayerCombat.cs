@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
@@ -16,6 +17,13 @@ public class PlayerCombat : MonoBehaviour
 
     public CombatTool CurrentTool => currentTool;
 
+    PlayerAnimator animator;
+
+    void Awake()
+    {
+        animator = GetComponentInChildren<PlayerAnimator>();
+    }
+
     public void OnAttack(InputAction.CallbackContext context)
     {
         if (!context.performed)
@@ -24,7 +32,7 @@ public class PlayerCombat : MonoBehaviour
         switch (currentTool)
         {
             case CombatTool.Kick:
-                Debug.Log("Kick!");
+                StartCoroutine(KickRoutine());
                 break;
 
             case CombatTool.BaseballBat:
@@ -39,5 +47,14 @@ public class PlayerCombat : MonoBehaviour
                 Debug.Log("Punch!");
                 break;
         }
+    }
+
+    IEnumerator KickRoutine()
+    {
+        animator.SetKick(true);
+
+        yield return new WaitForSeconds(0.18f);
+
+        animator.SetKick(false);
     }
 }

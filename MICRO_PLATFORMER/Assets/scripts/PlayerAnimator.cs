@@ -17,7 +17,6 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] float idleArmBobAmount = 6f;
     [SerializeField] float idleArmBobSpeed = 2f;
     [SerializeField] float idleBlendSpeed = 6f;
-
     float idleBlend; // 0 = active, 1 = idle
 
 
@@ -27,7 +26,6 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] float walkSpeed = 8f;
     [SerializeField] float bodyBobAmount = 0.1f;
     [SerializeField] float bodyBobSpeed = 6f;
-
     float externalMoveBlend; // 0..1
     public void SetMoveBlend(float v) => externalMoveBlend = Mathf.Clamp01(v);
 
@@ -45,7 +43,6 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] float diveBodyPitch = 40f;
     [SerializeField] float diveLegBackAngle = 20f;
     [SerializeField] float diveBlendSpeed = 10f;
-
     float diveBlend;
     bool isDiving;
 
@@ -54,7 +51,6 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] float poundLegStraightAngle = 0f;
     [SerializeField] float poundBodyLean = 25f;
     [SerializeField] float poundBlendSpeed = 12f;
-
     float poundBlend;
     bool isGroundPounding;
 
@@ -62,7 +58,6 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] float carryArmForwardAngle = 55f;   // tweak in inspector
     [SerializeField] float carryArmOutAngle = 10f;       // slight outward spread
     [SerializeField] float carryBlendSpeed = 12f;
-
     bool isCarrying;
     float carryBlend;
 
@@ -70,9 +65,16 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] float gemArmUpAngle = -120f;
     [SerializeField] float gemBodyLean = -10f;
     [SerializeField] float gemBlendSpeed = 8f;
-
     float gemBlend;
     bool isGemPose;
+
+    [Header("Kick Pose")]
+    [SerializeField] float kickLegForwardAngle = 85f;
+    [SerializeField] float kickBodyLean = -12f;
+    [SerializeField] float kickArmBackAngle = -25f;
+    [SerializeField] float kickBlendSpeed = 12f;
+    bool isKicking;
+    float kickBlend;
 
 
     Vector3 bodyStartPos;
@@ -97,6 +99,11 @@ public class PlayerAnimator : MonoBehaviour
     public void SetDive(bool diving)
     {
         isDiving = diving;
+    }
+
+    public void SetKick(bool kicking)
+    {
+        isKicking = kicking;
     }
 
     public void SetGroundPound(bool active)
@@ -162,6 +169,12 @@ public class PlayerAnimator : MonoBehaviour
             Time.deltaTime * poundBlendSpeed
         );
 
+        float kickTarget = isKicking ? 1f : 0f;
+        kickBlend = Mathf.MoveTowards(
+            kickBlend,
+            kickTarget,
+            Time.deltaTime * kickBlendSpeed);
+
         // Smooth blend
         float target = grounded ? 0f : 1f;
         jumpBlend = Mathf.MoveTowards(jumpBlend, target, Time.deltaTime * jumpBlendSpeed);
@@ -186,6 +199,8 @@ public class PlayerAnimator : MonoBehaviour
         AnimateIdle(idleBlend);
 
         AnimateGemPose(gemBlend);
+
+        AnimateKick(kickBlend);
 
     }
 
@@ -459,6 +474,32 @@ public class PlayerAnimator : MonoBehaviour
             rightLegStartRot,
             blend
         );
+    }
+
+    void AnimateKick(float blend)
+    {
+        if (blend <= 0f)
+            return;
+
+        body.localRotation = Quaternion.Lerp(
+            body.localRotation,
+            Quaternion.Euler(kickBodyLean, 0, 0),
+            blend);
+
+        rightLeg.localRotation = Quaternion.Lerp(
+            rightLeg.localRotation,
+            rightLegStartRot * Quaternion.Euler(-kickLegForwardAngle, 0, 0),
+            blend);
+
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            leftArmStartRot * Quaternion.Euler(kickArmBackAngle, 0, 0),
+            blend);
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            rightArmStartRot * Quaternion.Euler(kickArmBackAngle, 0, 0),
+            blend);
     }
 
 }
