@@ -1066,6 +1066,9 @@ MonoBehaviour:
   - {fileID: 2524894209803863018}
   - {fileID: 6012810932889176944}
   flashInterval: 0.1
+  kickKnockbackForce: 14
+  kickKnockbackUpForce: 4
+  kickKnockbackLockTime: 0.3
   groundIndicatorPrefab: {fileID: 5632946183400775603, guid: 67d415a42dea31f428aaaee93f60fb17, type: 3}
   player1Mat: {fileID: 2100000, guid: fa4ce82ec46d54948994ea68ca013516, type: 2}
   player2Mat: {fileID: 2100000, guid: 0d378cef7be53b647841cf7caefcad9a, type: 2}
@@ -1092,6 +1095,7 @@ MonoBehaviour:
   fakeGem: {fileID: 244084223741686200}
   gemSFX: {fileID: 1977592341932922149}
   fakeKey: {fileID: 4015452593592067211}
+  hitSFX: {fileID: 814280539526220528}
   groundCheckRadius: 0.25
   groundCheckDistance: 0.75
   footstepSource: {fileID: 1547875759244458518}
@@ -1175,9 +1179,6 @@ MonoBehaviour:
   currentTool: 0
   kickPoint: {fileID: 9181839625594344049}
   kickRadius: 1
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 512
 --- !u!1 &1853980739637342296
 GameObject:
   m_ObjectHideFlags: 0

@@ -88,8 +88,11 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] Renderer[] renderers;
     [SerializeField] float flashInterval = 0.1f;
     Material[][] cachedMaterials;
-    
 
+    [Header("Kick Knockback")]
+    [SerializeField] float kickKnockbackForce = 14f;
+    [SerializeField] float kickKnockbackUpForce = 4f;
+    [SerializeField] float kickKnockbackLockTime = 0.3f;
 
     bool isKnockedBack;
 
@@ -143,6 +146,8 @@ public class PlayerController3D : MonoBehaviour
     public GameObject fakeGem;
     public AudioSource gemSFX;
     public GameObject fakeKey;
+
+    public AudioSource hitSFX;
 
     float carryMoveMul = 1f;
     float carryJumpMul = 1f;
@@ -729,7 +734,7 @@ public class PlayerController3D : MonoBehaviour
     }
 
 
-    void ApplyKnockback(Vector3 sourcePosition)
+    public void ApplyKnockback(Vector3 sourcePosition)
     {
         if (isKnockedBack)
             return;
@@ -740,6 +745,13 @@ public class PlayerController3D : MonoBehaviour
         StartCoroutine(FlashCoroutine(health.InvulnerabilityDuration));
     }
 
+    public void ApplyKickKnockback(Vector3 sourcePosition)
+    {
+        if (isKnockedBack)
+            return;
+
+        StartCoroutine(KickKnockbackCoroutine(sourcePosition));
+    }
 
     void SetFlash(bool normal)
     {
@@ -913,6 +925,31 @@ public class PlayerController3D : MonoBehaviour
         rb.AddForce(force, ForceMode.Impulse);
 
         yield return new WaitForSeconds(knockbackLockTime);
+
+        isKnockedBack = false;
+    }
+
+    IEnumerator KickKnockbackCoroutine(Vector3 sourcePosition)
+    {
+        isKnockedBack = true;
+
+        Vector3 direction =
+            (transform.position - sourcePosition).normalized;
+
+        direction.y = 0f;
+        direction.Normalize();
+
+        rb.linearVelocity = Vector3.zero;
+
+        Vector3 force =
+            direction * kickKnockbackForce +
+            Vector3.up * kickKnockbackUpForce;
+
+        rb.AddForce(force, ForceMode.Impulse);
+
+        hitSFX.Play();
+
+        yield return new WaitForSeconds(kickKnockbackLockTime);
 
         isKnockedBack = false;
     }

@@ -40,7 +40,7 @@ public class BreakableBox : MonoBehaviour
             Break();
     }
 
-    void Break()
+    public void Break()
     {
         if (broken) return;
         broken = true;

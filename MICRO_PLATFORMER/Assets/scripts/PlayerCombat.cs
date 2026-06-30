@@ -18,6 +18,7 @@ public class PlayerCombat : MonoBehaviour
     public CombatTool CurrentTool => currentTool;
 
     PlayerAnimator animator;
+    bool isAttacking;
 
     [Header("Kick")]
     [SerializeField] Transform kickPoint;
@@ -32,6 +33,9 @@ public class PlayerCombat : MonoBehaviour
     public void OnAttack(InputAction.CallbackContext context)
     {
         if (!context.performed)
+            return;
+
+        if (isAttacking)
             return;
 
         switch (currentTool)
@@ -56,6 +60,7 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator KickRoutine()
     {
+        isAttacking = true;
         Debug.Log("Kick started");
 
         animator.SetKick(true);
@@ -71,25 +76,47 @@ public class PlayerCombat : MonoBehaviour
 
         foreach (Collider hit in hits)
         {
-            if (!hit.CompareTag("Enemy"))
-                continue;
-
-            Enemy enemy =
-                hit.GetComponentInParent<Enemy>();
+            // ---------- Enemy ----------
+            Enemy enemy = hit.GetComponentInParent<Enemy>();
 
             if (enemy != null)
             {
-                Vector3 direction = enemy.transform.position - transform.position;
+                Vector3 direction =
+                    enemy.transform.position - transform.position;
 
                 direction.y = 0f;
                 direction.Normalize();
 
                 enemy.TakeKick(direction);
+
+                continue;
             }
-                
+
+            // ---------- Breakable Box ----------
+            BreakableBox box =
+                hit.GetComponentInParent<BreakableBox>();
+
+            if (box != null)
+            {
+                box.Break();
+                continue;
+            }
+
+            // ---------- Player ----------
+            PlayerController3D player =
+                hit.GetComponentInParent<PlayerController3D>();
+
+            if (player != null && player.gameObject != gameObject)
+            {
+                player.ApplyKickKnockback(transform.position);
+
+                continue;
+            }
         }
 
         animator.SetKick(false);
+        yield return new WaitForSeconds(0.1f);
+        isAttacking = false;
     }
 
     void OnDrawGizmosSelected()
