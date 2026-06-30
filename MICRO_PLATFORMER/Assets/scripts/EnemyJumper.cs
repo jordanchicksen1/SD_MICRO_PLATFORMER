@@ -17,11 +17,13 @@ public class EnemyJumper : MonoBehaviour
 
     Rigidbody rb;
     Transform target;
+    Enemy enemy;
     float hopTimer;
     bool grounded;
 
     void Awake()
     {
+        enemy = GetComponent<Enemy>();
         rb = GetComponent<Rigidbody>();
         rb.useGravity = true;
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
@@ -30,6 +32,9 @@ public class EnemyJumper : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (enemy != null && enemy.IsDead)
+            return;
+
         FindTarget();
 
         // ? ALWAYS face the player while they're in range (even between hops)

@@ -25,10 +25,7 @@ public class EnemyChaser : MonoBehaviour
     void FixedUpdate()
     {
         if (enemy != null && enemy.IsDead)
-        {
-            rb.linearVelocity = Vector3.zero;
             return;
-        }
 
         FindTarget();
 
