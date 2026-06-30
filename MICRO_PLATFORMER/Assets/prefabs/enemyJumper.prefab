@@ -1154,6 +1154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 1
   deathEffect: {fileID: 4434047942948711427}
+  kickForce: 10
+  kickUpForce: 4
 --- !u!54 &372100679546201915
 Rigidbody:
   m_ObjectHideFlags: 0

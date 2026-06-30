@@ -22,7 +22,7 @@ public class PlayerCombat : MonoBehaviour
     [Header("Kick")]
     [SerializeField] Transform kickPoint;
     [SerializeField] float kickRadius = 1f;
-    [SerializeField] LayerMask enemyLayer;
+   
 
     void Awake()
     {
@@ -64,19 +64,29 @@ public class PlayerCombat : MonoBehaviour
         yield return new WaitForSeconds(0.10f);
 
         // Check everything inside the kick area
-        Collider[] hits = Physics.OverlapSphere(
-            kickPoint.position,
-            kickRadius,
-            enemyLayer);
+        Collider[] hits =
+     Physics.OverlapSphere(
+         kickPoint.position,
+         kickRadius);
 
         foreach (Collider hit in hits)
         {
-            Enemy enemy = hit.GetComponentInParent<Enemy>();
+            if (!hit.CompareTag("Enemy"))
+                continue;
+
+            Enemy enemy =
+                hit.GetComponentInParent<Enemy>();
 
             if (enemy != null)
             {
-                enemy.TakeHit();
+                Vector3 direction = enemy.transform.position - transform.position;
+
+                direction.y = 0f;
+                direction.Normalize();
+
+                enemy.TakeKick(direction);
             }
+                
         }
 
         animator.SetKick(false);
