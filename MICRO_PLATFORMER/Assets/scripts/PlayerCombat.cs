@@ -21,6 +21,8 @@ public class PlayerCombat : MonoBehaviour
     PlayerAnimator animator;
     CombatCameraShake combatShake;
     bool isAttacking;
+    bool isBatCharging;
+    bool isBatSpinning;
 
     [Header("Kick")]
     [SerializeField] Transform kickPoint;
@@ -51,8 +53,7 @@ public class PlayerCombat : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (!context.performed)
-            return;
+       
 
         if (isAttacking)
             return;
@@ -64,8 +65,22 @@ public class PlayerCombat : MonoBehaviour
                 break;
 
             case CombatTool.BaseballBat:
-                StartCoroutine(BatRoutine());
-                Debug.Log("Bat Attack");
+
+                if (context.started)
+                {
+                    StartBatCharge();
+                }
+
+                if (context.performed)
+                {
+                    BeginBatSpin();
+                }
+
+                if (context.canceled)
+                {
+                    ReleaseBat();
+                }
+
                 break;
 
             case CombatTool.Boomerang:
@@ -78,6 +93,51 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    void StartBatCharge()
+    {
+        if (isAttacking)
+            return;
+
+        isBatCharging = true;
+
+        animator.SetBatWindup(true);
+
+        Debug.Log("Charging...");
+    }
+
+    void BeginBatSpin()
+    {
+        if (!isBatCharging)
+            return;
+
+        isBatCharging = false;
+        isBatSpinning = true;
+
+        Debug.Log("Spin Started");
+    }
+
+    void ReleaseBat()
+    {
+        if (isBatSpinning)
+        {
+            isBatSpinning = false;
+
+            animator.SetBatWindup(false);
+
+            Debug.Log("Spin Ended");
+
+            return;
+        }
+
+        if (isBatCharging)
+        {
+            isBatCharging = false;
+
+            animator.SetBatWindup(false);
+
+            StartCoroutine(BatRoutine());
+        }
+    }
 
     IEnumerator KickRoutine()
     {
