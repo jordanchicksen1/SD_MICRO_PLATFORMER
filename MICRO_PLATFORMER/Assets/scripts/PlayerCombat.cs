@@ -65,6 +65,7 @@ public class PlayerCombat : MonoBehaviour
 
             case CombatTool.BaseballBat:
                 StartCoroutine(BatRoutine());
+                Debug.Log("Bat Attack");
                 break;
 
             case CombatTool.Boomerang:
@@ -75,6 +76,21 @@ public class PlayerCombat : MonoBehaviour
                 Debug.Log("Punch!");
                 break;
         }
+    }
+
+    public void OnChargeAttack(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+            return;
+
+        if (isAttacking)
+            return;
+
+        if (currentTool != CombatTool.BaseballBat)
+            return;
+
+        StartCoroutine(BatSpinRoutine());
+        Debug.Log("Bat Charge");
     }
 
     IEnumerator KickRoutine()
@@ -202,6 +218,19 @@ public class PlayerCombat : MonoBehaviour
         animator.SetBatFollowThrough(false);
 
         yield return new WaitForSeconds(0.15f);
+
+        isAttacking = false;
+    }
+
+    IEnumerator BatSpinRoutine()
+    {
+        isAttacking = true;
+
+       // animator.SetBatSpin(true);
+
+        yield return new WaitForSeconds(5f);
+
+        //animator.SetBatSpin(false);
 
         isAttacking = false;
     }

@@ -75,7 +75,16 @@
                     "id": "ba4d04ff-4093-4a1e-84a7-de11ce35adcb",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ChargeAttack",
+                    "type": "Button",
+                    "id": "5a14831b-cbdc-4773-8021-fe0b52656851",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Hold",
                     "initialStateCheck": false
                 }
             ],
@@ -176,6 +185,17 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bb688b70-8727-4d03-9a74-075446c48e64",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "ChargeAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

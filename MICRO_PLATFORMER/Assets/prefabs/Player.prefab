@@ -1010,6 +1010,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: ba4d04ff-4093-4a1e-84a7-de11ce35adcb
     m_ActionName: 'Gameplay/Attack[/DualShock4GamepadHID/buttonEast]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 906103391160815305}
+        m_TargetAssemblyTypeName: PlayerCombat, Assembly-CSharp
+        m_MethodName: OnChargeAttack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 5a14831b-cbdc-4773-8021-fe0b52656851
+    m_ActionName: 'Gameplay/ChargeAttack[/DualShock4GamepadHID/buttonEast]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Gameplay
@@ -1070,6 +1086,9 @@ MonoBehaviour:
   kickKnockbackForce: 14
   kickKnockbackUpForce: 4
   kickKnockbackLockTime: 0.3
+  batKnockbackForce: 20
+  batKnockbackUpForce: 6
+  batKnockbackLockTime: 0.45
   groundIndicatorPrefab: {fileID: 5632946183400775603, guid: 67d415a42dea31f428aaaee93f60fb17, type: 3}
   player1Mat: {fileID: 2100000, guid: fa4ce82ec46d54948994ea68ca013516, type: 2}
   player2Mat: {fileID: 2100000, guid: 0d378cef7be53b647841cf7caefcad9a, type: 2}
