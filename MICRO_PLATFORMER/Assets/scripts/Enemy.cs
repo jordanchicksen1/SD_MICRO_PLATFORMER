@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] float batForce = 30f;
     [SerializeField] float batUpForce = 8f;
     [SerializeField] float batSpinForce = 40f;
+    [SerializeField] AudioSource batSFX;
 
     [Header("Enemy Stuff")]
     [SerializeField] Transform visuals;
@@ -111,8 +112,8 @@ public class Enemy : MonoBehaviour
             return;
 
         isDead = true;
-        if (kickSFX != null)
-            kickSFX.Play();
+        if (batSFX != null)
+            batSFX.Play();
         DisableAI();
 
         if (rb != null)
