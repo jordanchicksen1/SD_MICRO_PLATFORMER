@@ -25,6 +25,10 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Transform kickPoint;
     [SerializeField] float kickRadius = 1f;
 
+    [Header("Baseball Bat")]
+    [SerializeField] Transform batHitPoint;
+    [SerializeField] float batRadius = 1.8f;
+
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
     [SerializeField] GameObject boomerangObject;
@@ -144,7 +148,50 @@ public class PlayerCombat : MonoBehaviour
 
         animator.SetBatFollowThrough(true);
 
-        // We'll put the hit detection here later.
+        Collider[] hits =
+    Physics.OverlapSphere(
+        batHitPoint.position,
+        batRadius);
+
+        foreach (Collider hit in hits)
+        {
+            // ---------- Enemy ----------
+            Enemy enemy = hit.GetComponentInParent<Enemy>();
+
+            if (enemy != null)
+            {
+                Vector3 direction =
+                    enemy.transform.position - transform.position;
+
+                direction.y = 0f;
+                direction.Normalize();
+
+                enemy.TakeBatHit(direction);
+
+                continue;
+            }
+
+            // ---------- Breakable Box ----------
+            BreakableBox box =
+                hit.GetComponentInParent<BreakableBox>();
+
+            if (box != null)
+            {
+                box.Break();
+                continue;
+            }
+
+            // ---------- Player ----------
+            PlayerController3D player =
+                hit.GetComponentInParent<PlayerController3D>();
+
+            if (player != null && player.gameObject != gameObject)
+            {
+                player.ApplyBatKnockback(transform.position);
+
+                continue;
+            }
+        }
 
         yield return new WaitForSeconds(0.12f);
 

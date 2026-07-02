@@ -1289,6 +1289,9 @@ MonoBehaviour:
   kickUpForce: 4
   kickSpinForce: 20
   kickSFX: {fileID: 309165394886515027}
+  batForce: 15
+  batUpForce: 8
+  batSpinForce: 40
   visuals: {fileID: 7533421590669571011}
 --- !u!54 &372100679546201915
 Rigidbody:

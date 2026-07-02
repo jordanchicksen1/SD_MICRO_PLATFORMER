@@ -1104,6 +1104,9 @@ MonoBehaviour:
   kickUpForce: 4
   kickSpinForce: 20
   kickSFX: {fileID: 7694136747362753623}
+  batForce: 15
+  batUpForce: 8
+  batSpinForce: 40
   visuals: {fileID: 4328636749451121632}
 --- !u!114 &5783143894102321493
 MonoBehaviour:

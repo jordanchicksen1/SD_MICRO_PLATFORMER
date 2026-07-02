@@ -610,9 +610,9 @@ public class PlayerAnimator : MonoBehaviour
         rightArm.localRotation = Quaternion.Lerp(
             rightArm.localRotation,
             rightArmStartRot * Quaternion.Euler(
-             -40f,
+             10f,
              -75f,
-             -35f),
+             -15f),
             blend);
 
         // Head follows the swing

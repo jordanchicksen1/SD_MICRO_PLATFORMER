@@ -14,6 +14,11 @@ public class Enemy : MonoBehaviour
     [SerializeField] float kickSpinForce = 20f;
     [SerializeField] AudioSource kickSFX;
 
+    [Header("Bat")]
+    [SerializeField] float batForce = 30f;
+    [SerializeField] float batUpForce = 8f;
+    [SerializeField] float batSpinForce = 40f;
+
     [Header("Enemy Stuff")]
     [SerializeField] Transform visuals;
 
@@ -84,6 +89,38 @@ public class Enemy : MonoBehaviour
                 direction.normalized * kickForce;
 
             launch.y = kickUpForce;
+
+            rb.AddForce(
+                launch,
+                ForceMode.Impulse);
+
+            StartCoroutine(SpinWhileFlying());
+        }
+
+        StartCoroutine(DieDelayed());
+    }
+
+    public void TakeBatHit(Vector3 direction)
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+
+        if (rb != null)
+            rb.linearVelocity = Vector3.zero;
+
+        if (isDead)
+            return;
+
+        isDead = true;
+        if (kickSFX != null)
+            kickSFX.Play();
+        DisableAI();
+
+        if (rb != null)
+        {
+            Vector3 launch =
+                direction.normalized * batForce;
+
+            launch.y = batUpForce;
 
             rb.AddForce(
                 launch,

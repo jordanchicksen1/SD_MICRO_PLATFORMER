@@ -96,6 +96,11 @@ public class PlayerController3D : MonoBehaviour
 
     bool isKnockedBack;
 
+    [Header("Bat Knockback")]
+    [SerializeField] float batKnockbackForce = 20f;
+    [SerializeField] float batKnockbackUpForce = 6f;
+    [SerializeField] float batKnockbackLockTime = 0.45f;
+
     [Header("Ground Indicator")]
     [SerializeField] GameObject groundIndicatorPrefab;
     [SerializeField] Material player1Mat;
@@ -753,6 +758,14 @@ public class PlayerController3D : MonoBehaviour
         StartCoroutine(KickKnockbackCoroutine(sourcePosition));
     }
 
+    public void ApplyBatKnockback(Vector3 sourcePosition)
+    {
+        if (isKnockedBack)
+            return;
+
+        StartCoroutine(BatKnockbackCoroutine(sourcePosition));
+    }
+
     void SetFlash(bool normal)
     {
         for (int i = 0; i < cachedMaterials.Length; i++)
@@ -950,6 +963,31 @@ public class PlayerController3D : MonoBehaviour
         hitSFX.Play();
 
         yield return new WaitForSeconds(kickKnockbackLockTime);
+
+        isKnockedBack = false;
+    }
+
+    IEnumerator BatKnockbackCoroutine(Vector3 sourcePosition)
+    {
+        isKnockedBack = true;
+
+        Vector3 direction =
+            (transform.position - sourcePosition).normalized;
+
+        direction.y = 0f;
+        direction.Normalize();
+
+        rb.linearVelocity = Vector3.zero;
+
+        Vector3 force =
+            direction * batKnockbackForce +
+            Vector3.up * batKnockbackUpForce;
+
+        rb.AddForce(force, ForceMode.Impulse);
+
+        hitSFX.Play();
+
+        yield return new WaitForSeconds(batKnockbackLockTime);
 
         isKnockedBack = false;
     }
