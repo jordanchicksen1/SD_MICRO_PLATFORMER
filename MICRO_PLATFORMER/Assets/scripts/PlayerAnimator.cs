@@ -79,6 +79,17 @@ public class PlayerAnimator : MonoBehaviour
     bool isKicking;
     float kickBlend;
 
+    [Header("Bat Pose")]
+    [SerializeField] float batSwingAngle = 140f;
+    [SerializeField] float batWindupAngle = -55f;
+    [SerializeField] float batBodyTurn = 25f;
+    [SerializeField] float batBodyLean = -8f;
+    [SerializeField] float batBlendSpeed = 14f;
+    bool isBatWindup;
+    bool isBatFollowThrough;
+    float batWindupBlend;
+    float batFollowBlend;
+
 
     Vector3 bodyStartPos;
 
@@ -109,6 +120,16 @@ public class PlayerAnimator : MonoBehaviour
     public void SetKick(bool kicking)
     {
         isKicking = kicking;
+    }
+
+    public void SetBatWindup(bool active)
+    {
+        isBatWindup = active;
+    }
+
+    public void SetBatFollowThrough(bool active)
+    {
+        isBatFollowThrough = active;
     }
 
     public void SetGroundPound(bool active)
@@ -180,6 +201,20 @@ public class PlayerAnimator : MonoBehaviour
             kickTarget,
             Time.deltaTime * kickBlendSpeed);
 
+        float windupTarget = isBatWindup ? 1f : 0f;
+
+        batWindupBlend = Mathf.MoveTowards(
+            batWindupBlend,
+            windupTarget,
+            Time.deltaTime * batBlendSpeed);
+
+        float followTarget = isBatFollowThrough ? 1f : 0f;
+
+        batFollowBlend = Mathf.MoveTowards(
+            batFollowBlend,
+            followTarget,
+            Time.deltaTime * batBlendSpeed);
+
         // Smooth blend
         float target = grounded ? 0f : 1f;
         jumpBlend = Mathf.MoveTowards(jumpBlend, target, Time.deltaTime * jumpBlendSpeed);
@@ -206,6 +241,9 @@ public class PlayerAnimator : MonoBehaviour
         AnimateGemPose(gemBlend);
 
         AnimateKick(kickBlend);
+
+        AnimateBatWindup(batWindupBlend);
+        AnimateBatFollowThrough(batFollowBlend);
 
     }
 
@@ -526,6 +564,61 @@ public class PlayerAnimator : MonoBehaviour
         rightArm.localRotation = Quaternion.Lerp(
             rightArm.localRotation,
             rightArmStartRot * Quaternion.Euler(kickArmBackAngle, 0, 0),
+            blend);
+    }
+
+    void AnimateBatWindup(float blend)
+    {
+        if (blend <= 0f)
+            return;
+
+        // Body twists into the swing
+        body.localRotation = Quaternion.Lerp(
+            body.localRotation,
+            Quaternion.Euler(batBodyLean, batBodyTurn, 0f),
+            blend);
+
+        // Right arm swings the bat
+        rightArm.localRotation = Quaternion.Lerp(
+    rightArm.localRotation,
+    rightArmStartRot * Quaternion.Euler(
+        120f,
+        45f,
+        -15f),
+    blend);
+
+
+        // Head leans slightly into the hit
+        head.localPosition = Vector3.Lerp(
+            head.localPosition,
+            headStartPos + new Vector3(0f, 0.03f, 0.06f),
+            blend);
+    }
+
+    void AnimateBatFollowThrough(float blend)
+    {
+        if (blend <= 0f)
+            return;
+
+        // Twist body the opposite direction
+        body.localRotation = Quaternion.Lerp(
+            body.localRotation,
+            Quaternion.Euler(-6f, -25f, 0f),
+            blend);
+
+        // Right arm swings across the player
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            rightArmStartRot * Quaternion.Euler(
+             -40f,
+             -75f,
+             -35f),
+            blend);
+
+        // Head follows the swing
+        head.localPosition = Vector3.Lerp(
+            head.localPosition,
+            headStartPos + new Vector3(0f, 0.02f, -0.04f),
             blend);
     }
 

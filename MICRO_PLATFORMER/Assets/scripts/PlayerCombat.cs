@@ -17,17 +17,30 @@ public class PlayerCombat : MonoBehaviour
 
     public CombatTool CurrentTool => currentTool;
 
+
     PlayerAnimator animator;
     bool isAttacking;
 
     [Header("Kick")]
     [SerializeField] Transform kickPoint;
     [SerializeField] float kickRadius = 1f;
-   
+
+    [Header("Weapon Models")]
+    [SerializeField] GameObject baseballBatObject;
+    [SerializeField] GameObject boomerangObject;
+    [SerializeField] GameObject boxingGlovesObject1;
+    [SerializeField] GameObject boxingGlovesObject2;
+
 
     void Awake()
     {
         animator = GetComponentInChildren<PlayerAnimator>();
+    }
+
+    void Start()
+    {
+        UpdateWeaponVisuals();
+        SetWeaponLayers();
     }
 
     public void OnAttack(InputAction.CallbackContext context)
@@ -45,7 +58,7 @@ public class PlayerCombat : MonoBehaviour
                 break;
 
             case CombatTool.BaseballBat:
-                Debug.Log("Bat!");
+                StartCoroutine(BatRoutine());
                 break;
 
             case CombatTool.Boomerang:
@@ -117,6 +130,83 @@ public class PlayerCombat : MonoBehaviour
         animator.SetKick(false);
         yield return new WaitForSeconds(0.1f);
         isAttacking = false;
+    }
+
+    IEnumerator BatRoutine()
+    {
+        isAttacking = true;
+
+        animator.SetBatWindup(true);
+
+        yield return new WaitForSeconds(0.12f);
+
+        animator.SetBatWindup(false);
+
+        animator.SetBatFollowThrough(true);
+
+        // We'll put the hit detection here later.
+
+        yield return new WaitForSeconds(0.12f);
+
+        animator.SetBatFollowThrough(false);
+
+        yield return new WaitForSeconds(0.15f);
+
+        isAttacking = false;
+    }
+
+    public void SetCombatTool(CombatTool tool)
+    {
+        currentTool = tool;
+
+        UpdateWeaponVisuals();
+    }
+
+    void UpdateWeaponVisuals()
+    {
+        baseballBatObject.SetActive(false);
+        boomerangObject.SetActive(false);
+        boxingGlovesObject1.SetActive(false);
+        boxingGlovesObject2.SetActive(false);
+
+        switch (currentTool)
+        {
+            case CombatTool.BaseballBat:
+                baseballBatObject.SetActive(true);
+                break;
+
+            case CombatTool.Boomerang:
+                boomerangObject.SetActive(true);
+                break;
+
+            case CombatTool.BoxingGloves:
+                boxingGlovesObject1.SetActive(true);
+                boxingGlovesObject2.SetActive(true);
+                break;
+        }
+    }
+
+    void SetWeaponLayers()
+    {
+        int playerLayer = gameObject.layer;
+
+        SetLayerRecursively(baseballBatObject, playerLayer);
+        SetLayerRecursively(boomerangObject, playerLayer);
+        SetLayerRecursively(boxingGlovesObject1, playerLayer);
+        SetLayerRecursively(boxingGlovesObject2 , playerLayer);
+    }
+
+    void SetLayerRecursively(GameObject obj, int layer)
+    {
+        if (obj == null)
+            return;
+
+        obj.layer = layer;
+
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, layer);
+        }
     }
 
     void OnDrawGizmosSelected()
