@@ -78,20 +78,6 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    public void OnChargeAttack(InputAction.CallbackContext context)
-    {
-        if (!context.performed)
-            return;
-
-        if (isAttacking)
-            return;
-
-        if (currentTool != CombatTool.BaseballBat)
-            return;
-
-        StartCoroutine(BatSpinRoutine());
-        Debug.Log("Bat Charge");
-    }
 
     IEnumerator KickRoutine()
     {
