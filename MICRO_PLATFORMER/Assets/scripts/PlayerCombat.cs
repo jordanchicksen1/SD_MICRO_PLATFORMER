@@ -19,6 +19,7 @@ public class PlayerCombat : MonoBehaviour
 
 
     PlayerAnimator animator;
+    CombatCameraShake combatShake;
     bool isAttacking;
 
     [Header("Kick")]
@@ -39,6 +40,7 @@ public class PlayerCombat : MonoBehaviour
     void Awake()
     {
         animator = GetComponentInChildren<PlayerAnimator>();
+        combatShake = FindFirstObjectByType<CombatCameraShake>();
     }
 
     void Start()
@@ -167,7 +169,7 @@ public class PlayerCombat : MonoBehaviour
                 direction.Normalize();
 
                 enemy.TakeBatHit(direction);
-
+                combatShake.Shake(0.10f, 0.12f);
                 continue;
             }
 
@@ -188,10 +190,12 @@ public class PlayerCombat : MonoBehaviour
             if (player != null && player.gameObject != gameObject)
             {
                 player.ApplyBatKnockback(transform.position);
-
+                combatShake.Shake(0.10f, 0.12f);
                 continue;
             }
         }
+
+       
 
         yield return new WaitForSeconds(0.12f);
 
