@@ -35,6 +35,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] float batRadius = 1.8f;
     [SerializeField] Transform batSpinHitPoint;
     [SerializeField] float batSpinRadius = 1.5f;
+    bool canChargeBat = true;
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -132,6 +133,9 @@ public class PlayerCombat : MonoBehaviour
 
     void BeginBatSpin()
     {
+        if (!canChargeBat)
+            return;
+
         if (!isBatCharging)
             return;
 
@@ -284,6 +288,7 @@ public class PlayerCombat : MonoBehaviour
     IEnumerator BatRoutine()
     {
         isAttacking = true;
+        canChargeBat = false;
 
         animator.SetBatWindup(true);
 
@@ -347,6 +352,10 @@ public class PlayerCombat : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
 
         isAttacking = false;
+
+        yield return new WaitForSeconds(0.2f);
+
+        canChargeBat = true;
     }
 
     IEnumerator BatSpinRoutine()
