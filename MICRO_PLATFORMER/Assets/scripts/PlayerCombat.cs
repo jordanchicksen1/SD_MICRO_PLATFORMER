@@ -36,6 +36,10 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Transform batSpinHitPoint;
     [SerializeField] float batSpinRadius = 1.5f;
     bool canChargeBat = true;
+    [SerializeField] float maxSpinTime = 5f;
+    [SerializeField] float spinRechargeTime = 5f;
+    float currentSpinTime;
+    bool canSpin = true;
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -54,6 +58,7 @@ public class PlayerCombat : MonoBehaviour
     {
         UpdateWeaponVisuals();
         SetWeaponLayers();
+        currentSpinTime = maxSpinTime;
     }
 
     void Update()
@@ -75,11 +80,42 @@ public class PlayerCombat : MonoBehaviour
         {
             SpinAttack();
         }
+
+        if (isBatSpinning)
+        {
+            currentSpinTime -= Time.deltaTime;
+
+            if (currentSpinTime <= 0f)
+            {
+                currentSpinTime = 0f;
+
+                canSpin = false;
+
+                EndBatSpin();
+            }
+        }
+        else
+        {
+            currentSpinTime +=
+                Time.deltaTime * (maxSpinTime / spinRechargeTime);
+
+            currentSpinTime =
+                Mathf.Clamp(currentSpinTime, 0f, maxSpinTime);
+        }
+
+        if (!canSpin && currentSpinTime >= maxSpinTime)
+        {
+            currentSpinTime = maxSpinTime;
+            canSpin = true;
+
+            Debug.Log("Spin Recharged!");
+        }
     }
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-       
+        if (isBatSpinning)
+            return;
 
         if (isAttacking)
             return;
@@ -119,6 +155,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    //=============== BAT ===================
     void StartBatCharge()
     {
         if (isAttacking)
@@ -133,6 +170,9 @@ public class PlayerCombat : MonoBehaviour
 
     void BeginBatSpin()
     {
+        if (!canSpin)
+            return;
+
         if (!canChargeBat)
             return;
 
@@ -149,17 +189,6 @@ public class PlayerCombat : MonoBehaviour
 
     void ReleaseBat()
     {
-        if (isBatSpinning)
-        {
-            isBatSpinning = false;
-
-            animator.SetBatWindup(false);
-            animator.SetBatSpin(false);
-
-            Debug.Log("Spin Ended");
-
-            return;
-        }
 
         if (isBatCharging)
         {
@@ -169,6 +198,16 @@ public class PlayerCombat : MonoBehaviour
 
             StartCoroutine(BatRoutine());
         }
+    }
+
+    void EndBatSpin()
+    {
+        isBatSpinning = false;
+
+        animator.SetBatWindup(false);
+        animator.SetBatSpin(false);
+
+        Debug.Log("Spin Ended");
     }
 
     void SpinAttack()
@@ -223,6 +262,26 @@ public class PlayerCombat : MonoBehaviour
             }
         }
     }
+
+    public float SpinPercent
+    {
+        get
+        {
+            return currentSpinTime / maxSpinTime;
+        }
+    }
+
+    public bool IsSpinning
+    {
+        get { return isBatSpinning; }
+    }
+
+    public bool CanSpin
+    {
+        get { return canSpin; }
+    }
+
+    //===================== BOOMERANG ===========================
 
     IEnumerator KickRoutine()
     {
@@ -358,18 +417,6 @@ public class PlayerCombat : MonoBehaviour
         canChargeBat = true;
     }
 
-    IEnumerator BatSpinRoutine()
-    {
-        isAttacking = true;
-
-       // animator.SetBatSpin(true);
-
-        yield return new WaitForSeconds(5f);
-
-        //animator.SetBatSpin(false);
-
-        isAttacking = false;
-    }
 
     public void SetCombatTool(CombatTool tool)
     {
