@@ -9,12 +9,19 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] Transform rightLeg;
     [SerializeField] Transform body;
     [SerializeField] Transform head;
+    [SerializeField] Transform model;
+    [SerializeField] Transform baseballBat;
     Vector3 headStartPos;
     Vector3 rightLegStartPos;
+    Vector3 rightArmStartPos;
+    Vector3 leftArmStartPos;
     Quaternion leftArmStartRot;
     Quaternion rightArmStartRot;
     Quaternion leftLegStartRot;
     Quaternion rightLegStartRot;
+    Quaternion modelStartRotation;
+    Quaternion batStartRot;
+    Vector3 batStartPos;
 
     [Header("Idle Animation")]
     [SerializeField] float idleArmBobAmount = 6f;
@@ -85,6 +92,8 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] float batBodyTurn = 25f;
     [SerializeField] float batBodyLean = -8f;
     [SerializeField] float batBlendSpeed = 14f;
+    bool isBatSpin;
+    float batSpinBlend;
     bool isBatWindup;
     bool isBatFollowThrough;
     float batWindupBlend;
@@ -105,6 +114,11 @@ public class PlayerAnimator : MonoBehaviour
         rightLegStartRot = rightLeg.localRotation;
         headStartPos = head.localPosition;
         rightLegStartPos = rightLeg.localPosition;
+        modelStartRotation = model.localRotation;
+        batStartRot = baseballBat.localRotation;
+        batStartPos = baseballBat.localPosition;
+        rightArmStartPos = rightArm.localPosition;
+        leftArmStartPos = leftArm.localPosition;
     }
 
     bool IsGrounded()
@@ -130,6 +144,16 @@ public class PlayerAnimator : MonoBehaviour
     public void SetBatFollowThrough(bool active)
     {
         isBatFollowThrough = active;
+    }
+
+    public void SetBatSpin(bool spinning)
+    {
+        isBatSpin = spinning;
+
+        if (!spinning)
+        {
+            model.localRotation = modelStartRotation;
+        }
     }
 
     public void SetGroundPound(bool active)
@@ -179,7 +203,7 @@ public class PlayerAnimator : MonoBehaviour
 
         float idleTarget = shouldIdle ? 1f : 0f;
 
-        idleBlend = Mathf.MoveTowards(idleBlend,idleTarget,Time.deltaTime * idleBlendSpeed);
+        idleBlend = Mathf.MoveTowards(idleBlend, idleTarget, Time.deltaTime * idleBlendSpeed);
 
         float diveTarget = isDiving ? 1f : 0f;
         diveBlend = Mathf.MoveTowards(
@@ -215,6 +239,14 @@ public class PlayerAnimator : MonoBehaviour
             followTarget,
             Time.deltaTime * batBlendSpeed);
 
+        float spinTarget =
+    isBatSpin ? 1f : 0f;
+
+        batSpinBlend = Mathf.MoveTowards(
+            batSpinBlend,
+            spinTarget,
+            Time.deltaTime * batBlendSpeed);
+
         // Smooth blend
         float target = grounded ? 0f : 1f;
         jumpBlend = Mathf.MoveTowards(jumpBlend, target, Time.deltaTime * jumpBlendSpeed);
@@ -244,6 +276,8 @@ public class PlayerAnimator : MonoBehaviour
 
         AnimateBatWindup(batWindupBlend);
         AnimateBatFollowThrough(batFollowBlend);
+        AnimateBatSpin(batSpinBlend);
+
 
     }
 
@@ -251,6 +285,8 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (isGemPose) return;
 
+        if (isBatSpin)
+            return;
 
         float speed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude;
 
@@ -298,6 +334,8 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (isGemPose) return;
 
+        if (isBatSpin)
+            return;
 
         if (isGroundPounding)
             return;
@@ -309,7 +347,7 @@ public class PlayerAnimator : MonoBehaviour
             blend
         );
 
-        
+
         // Arms swing back
         Quaternion leftJumpArm =
             leftArmStartRot * Quaternion.Euler(-jumpArmBackAngle, -jumpArmSideAngle, 0);
@@ -334,6 +372,8 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (isGemPose) return;
 
+        if (isBatSpin)
+            return;
 
         if (isGroundPounding)
             return;
@@ -378,6 +418,9 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (isGemPose) return;
 
+        if (isBatSpin)
+            return;
+
 
         if (blend <= 0f) return;
 
@@ -420,6 +463,8 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (isGemPose) return;
 
+        if (isBatSpin)
+            return;
 
         if (isGroundPounding)
             return;
@@ -467,6 +512,9 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateCarryPose(float blend)
     {
+        if (isBatSpin)
+            return;
+
         if (blend <= 0f) return;
         if (isGroundPounding) return; // optional: ground pound overrides carry
 
@@ -484,6 +532,9 @@ public class PlayerAnimator : MonoBehaviour
     void AnimateGemPose(float blend)
     {
         if (blend <= 0f) return;
+
+        if (isBatSpin)
+            return;
 
         // Body slight lean back (celebratory)
         body.localRotation = Quaternion.Lerp(
@@ -521,6 +572,11 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateKick(float blend)
     {
+        if (isGemPose) return;
+
+        if (isBatSpin)
+            return;
+
         if (blend <= 0f)
         {
             head.localPosition = Vector3.Lerp(
@@ -569,6 +625,11 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateBatWindup(float blend)
     {
+        if (isGemPose) return;
+
+        if (isBatSpin)
+            return;
+
         if (blend <= 0f)
             return;
 
@@ -597,6 +658,11 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateBatFollowThrough(float blend)
     {
+        if (isGemPose) return;
+
+        if (isBatSpin)
+            return;
+
         if (blend <= 0f)
             return;
 
@@ -622,4 +688,110 @@ public class PlayerAnimator : MonoBehaviour
             blend);
     }
 
+
+    void AnimateBatSpin(float blend)
+    {
+        if (isGemPose) return;
+
+
+        if (blend <= 0f)
+        {
+            model.localRotation = Quaternion.Lerp(
+                model.localRotation,
+                modelStartRotation,
+                Time.deltaTime * 15f);
+
+            baseballBat.localRotation = Quaternion.Lerp(
+                baseballBat.localRotation,
+                batStartRot,
+                Time.deltaTime * 15f);
+
+            baseballBat.localPosition = Vector3.Lerp(
+                baseballBat.localPosition,
+                batStartPos,
+                Time.deltaTime * 15f);
+
+            leftArm.localPosition = Vector3.Lerp(
+    leftArm.localPosition,
+    leftArmStartPos,
+    Time.deltaTime * 15f);
+
+            leftArm.localRotation = Quaternion.Lerp(
+                leftArm.localRotation,
+                leftArmStartRot,
+                Time.deltaTime * 15f);
+
+            rightArm.localPosition = Vector3.Lerp(
+    rightArm.localPosition,
+    rightArmStartPos,
+    Time.deltaTime * 15f);
+
+            rightArm.localRotation = Quaternion.Lerp(
+                rightArm.localRotation,
+                rightArmStartRot,
+                Time.deltaTime * 15f);
+
+            return;
+        }
+
+        model.Rotate(
+                Vector3.up,
+                900f * Time.deltaTime,
+                Space.Self);
+
+        body.localRotation = Quaternion.Lerp(
+            body.localRotation,
+            Quaternion.Euler(0f, 0f, 0f),
+            blend);
+
+        leftArm.localPosition = Vector3.Lerp(
+    leftArm.localPosition,
+    new Vector3(
+        0.347000003f,
+        0.273999989f,
+        -0.337000012f),
+    blend);
+
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            Quaternion.Euler(
+                0f,
+                105.748154f,
+                0f),
+            blend);
+
+        rightArm.localPosition = Vector3.Lerp(
+    rightArm.localPosition,
+    new Vector3(
+        -0.360000014f,
+        0.307999998f,
+        -0.326000005f),
+    blend);
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            Quaternion.Euler(
+                0f,
+                252.36673f,
+                0f),
+            blend);
+
+        baseballBat.localPosition = Vector3.Lerp(
+    baseballBat.localPosition,
+    new Vector3(
+        -2.1500001f,
+        -2.8599999f,
+        0.189999998f),
+    blend);
+
+        baseballBat.localRotation = Quaternion.Lerp(
+            baseballBat.localRotation,
+            Quaternion.Euler(
+                42.6191826f,
+                293.049744f,
+                196.07251f),
+            blend);
+
+    }
 }
+

@@ -735,7 +735,6 @@ Transform:
   - {fileID: 8702214011198884373}
   - {fileID: 6742853665561135942}
   - {fileID: 268661696464382026}
-  - {fileID: 6767112153084121126}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2398046072453190077
@@ -1201,6 +1200,8 @@ MonoBehaviour:
   kickRadius: 1
   batHitPoint: {fileID: 6767112153084121126}
   batRadius: 1.8
+  batSpinHitPoint: {fileID: 6767112153084121126}
+  batSpinRadius: 1.5
   baseballBatObject: {fileID: 2266087533681769718}
   boomerangObject: {fileID: 514676593268089417}
   boxingGlovesObject1: {fileID: 4910302009879227025}
@@ -7006,7 +7007,7 @@ Transform:
   m_LocalScale: {x: 15, y: 15, z: 47.46151}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4881151161573125792}
+  m_Father: {fileID: 8656675331107104454}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3969354698589084729
 GameObject:
@@ -8974,6 +8975,7 @@ Transform:
   - {fileID: 7464993858723858299}
   - {fileID: 4282180500909100410}
   - {fileID: 9181839625594344049}
+  - {fileID: 6767112153084121126}
   m_Father: {fileID: 4881151161573125792}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8546901014492568972
@@ -8994,6 +8996,8 @@ MonoBehaviour:
   rightLeg: {fileID: 7464993858723858299}
   body: {fileID: 5974815712758450438}
   head: {fileID: 4254587992642729171}
+  model: {fileID: 8656675331107104454}
+  baseballBat: {fileID: 1457215984308495948}
   idleArmBobAmount: 6
   idleArmBobSpeed: 2
   idleBlendSpeed: 6

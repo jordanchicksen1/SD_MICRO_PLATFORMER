@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
@@ -23,6 +24,7 @@ public class PlayerCombat : MonoBehaviour
     bool isAttacking;
     bool isBatCharging;
     bool isBatSpinning;
+    Dictionary<Enemy, float> enemyHitCooldowns = new Dictionary<Enemy, float>();
 
     [Header("Kick")]
     [SerializeField] Transform kickPoint;
@@ -31,6 +33,8 @@ public class PlayerCombat : MonoBehaviour
     [Header("Baseball Bat")]
     [SerializeField] Transform batHitPoint;
     [SerializeField] float batRadius = 1.8f;
+    [SerializeField] Transform batSpinHitPoint;
+    [SerializeField] float batSpinRadius = 1.5f;
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -49,6 +53,27 @@ public class PlayerCombat : MonoBehaviour
     {
         UpdateWeaponVisuals();
         SetWeaponLayers();
+    }
+
+    void Update()
+    {
+        List<Enemy> expired = new List<Enemy>();
+
+        foreach (var pair in enemyHitCooldowns)
+        {
+            if (Time.time >= pair.Value)
+                expired.Add(pair.Key);
+        }
+
+        foreach (Enemy enemy in expired)
+        {
+            enemyHitCooldowns.Remove(enemy);
+        }
+
+        if (isBatSpinning)
+        {
+            SpinAttack();
+        }
     }
 
     public void OnAttack(InputAction.CallbackContext context)
@@ -113,6 +138,8 @@ public class PlayerCombat : MonoBehaviour
         isBatCharging = false;
         isBatSpinning = true;
 
+        animator.SetBatSpin(true);
+
         Debug.Log("Spin Started");
     }
 
@@ -123,6 +150,7 @@ public class PlayerCombat : MonoBehaviour
             isBatSpinning = false;
 
             animator.SetBatWindup(false);
+            animator.SetBatSpin(false);
 
             Debug.Log("Spin Ended");
 
@@ -136,6 +164,59 @@ public class PlayerCombat : MonoBehaviour
             animator.SetBatWindup(false);
 
             StartCoroutine(BatRoutine());
+        }
+    }
+
+    void SpinAttack()
+    {
+        Collider[] hits = Physics.OverlapSphere(
+            batSpinHitPoint.position,
+            batSpinRadius);
+
+        foreach (Collider hit in hits)
+        {
+            // Enemy
+            Enemy enemy = hit.GetComponentInParent<Enemy>();
+
+            if (enemy != null)
+            {
+                Vector3 direction =
+                    enemy.transform.position - transform.position;
+
+                direction.y = 0f;
+                direction.Normalize();
+
+                if (!enemyHitCooldowns.ContainsKey(enemy))
+                {
+                    enemy.TakeBatHit(direction);
+
+                    enemyHitCooldowns.Add(
+                        enemy,
+                        Time.time + 0.25f);
+                }
+
+                continue;
+            }
+
+            // Breakable Box
+            BreakableBox box =
+                hit.GetComponentInParent<BreakableBox>();
+
+            if (box != null)
+            {
+                box.Break();
+                continue;
+            }
+
+            // Player
+            PlayerController3D player =
+                hit.GetComponentInParent<PlayerController3D>();
+
+            if (player != null &&
+                player.gameObject != gameObject)
+            {
+                player.ApplyBatKnockback(transform.position);
+            }
         }
     }
 
