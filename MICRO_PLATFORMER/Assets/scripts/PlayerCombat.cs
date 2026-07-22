@@ -21,6 +21,7 @@ public class PlayerCombat : MonoBehaviour
 
     PlayerAnimator animator;
     CombatCameraShake combatShake;
+    PlayerController3D playerController;
     bool isAttacking;
     bool isBatCharging;
     bool isBatSpinning;
@@ -29,6 +30,8 @@ public class PlayerCombat : MonoBehaviour
     [Header("Kick")]
     [SerializeField] Transform kickPoint;
     [SerializeField] float kickRadius = 1f;
+    [SerializeField] float kickBallForce = 10f;
+    
 
     [Header("Baseball Bat")]
     [SerializeField] Transform batHitPoint;
@@ -40,6 +43,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] float spinRechargeTime = 5f;
     float currentSpinTime;
     bool canSpin = true;
+    [SerializeField] float batBallForce = 20f;
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -58,6 +62,7 @@ public class PlayerCombat : MonoBehaviour
     {
         animator = GetComponentInChildren<PlayerAnimator>();
         combatShake = FindFirstObjectByType<CombatCameraShake>();
+        playerController = GetComponent<PlayerController3D>();
     }
 
     void Start()
@@ -308,11 +313,16 @@ public class PlayerCombat : MonoBehaviour
         // Wind-up
         yield return new WaitForSeconds(0.10f);
 
+        if (playerController.CarriedBall != null)
+        {
+            Vector3 launchDirection = (playerController.CarriedBall.transform.position - transform.position).normalized;
+
+            playerController.CarriedBall.Launch(launchDirection,kickBallForce);
+
+        }
+
         // Check everything inside the kick area
-        Collider[] hits =
-     Physics.OverlapSphere(
-         kickPoint.position,
-         kickRadius);
+        Collider[] hits = Physics.OverlapSphere(kickPoint.position, kickRadius);
 
         foreach (Collider hit in hits)
         {
@@ -352,6 +362,8 @@ public class PlayerCombat : MonoBehaviour
 
                 continue;
             }
+
+      
         }
 
         animator.SetKick(false);
@@ -369,57 +381,64 @@ public class PlayerCombat : MonoBehaviour
         batTrail.emitting = true;
         yield return new WaitForSeconds(0.12f);
 
+        if (playerController.CarriedBall != null)
+        {
+            Vector3 launchDirection = (playerController.CarriedBall.transform.position - transform.position).normalized;
+
+            playerController.CarriedBall.Launch(launchDirection,batBallForce);
+        }
+
+        
+        
+            Collider[] hits = Physics.OverlapSphere(batHitPoint.position,batRadius);
+
+            foreach (Collider hit in hits)
+            {
+                // ---------- Enemy ----------
+                Enemy enemy = hit.GetComponentInParent<Enemy>();
+
+                if (enemy != null)
+                {
+                    Vector3 direction =
+                        enemy.transform.position - transform.position;
+
+                    direction.y = 0f;
+                    direction.Normalize();
+
+                    enemy.TakeBatHit(direction);
+                    combatShake.Shake(0.10f, 0.12f);
+                    continue;
+                }
+
+                // ---------- Breakable Box ----------
+                BreakableBox box =
+                    hit.GetComponentInParent<BreakableBox>();
+
+                if (box != null)
+                {
+                    box.Break();
+                    continue;
+                }
+
+                // ---------- Player ----------
+                PlayerController3D player =
+                    hit.GetComponentInParent<PlayerController3D>();
+
+                if (player != null && player.gameObject != gameObject)
+                {
+                    player.ApplyBatKnockback(transform.position);
+                    combatShake.Shake(0.10f, 0.12f);
+                    continue;
+                }
+
+            
+
+        }
         animator.SetBatWindup(false);
 
         animator.SetBatFollowThrough(true);
 
-        Collider[] hits =
-    Physics.OverlapSphere(
-        batHitPoint.position,
-        batRadius);
-
-        foreach (Collider hit in hits)
-        {
-            // ---------- Enemy ----------
-            Enemy enemy = hit.GetComponentInParent<Enemy>();
-
-            if (enemy != null)
-            {
-                Vector3 direction =
-                    enemy.transform.position - transform.position;
-
-                direction.y = 0f;
-                direction.Normalize();
-
-                enemy.TakeBatHit(direction);
-                combatShake.Shake(0.10f, 0.12f);
-                continue;
-            }
-
-            // ---------- Breakable Box ----------
-            BreakableBox box =
-                hit.GetComponentInParent<BreakableBox>();
-
-            if (box != null)
-            {
-                box.Break();
-                continue;
-            }
-
-            // ---------- Player ----------
-            PlayerController3D player =
-                hit.GetComponentInParent<PlayerController3D>();
-
-            if (player != null && player.gameObject != gameObject)
-            {
-                player.ApplyBatKnockback(transform.position);
-                combatShake.Shake(0.10f, 0.12f);
-                continue;
-            }
-        }
-
-       
-
+      
         yield return new WaitForSeconds(0.12f);
 
         animator.SetBatFollowThrough(false);

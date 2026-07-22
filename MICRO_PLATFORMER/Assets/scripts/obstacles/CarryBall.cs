@@ -146,8 +146,11 @@ public class CarryBall : MonoBehaviour, IInteractable
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        rb.AddForce(direction.normalized * force, ForceMode.Impulse);
+        Vector3 launchDirection = (direction + Vector3.up * 0.35f).normalized;
+        rb.AddForce(launchDirection * force, ForceMode.Impulse);
 
-        Debug.Log("Ball launched!");
+        Debug.Log("LAUNCHED!");
+        Debug.Log(rb.isKinematic);
+        Debug.Log(rb.linearVelocity);
     }
 }

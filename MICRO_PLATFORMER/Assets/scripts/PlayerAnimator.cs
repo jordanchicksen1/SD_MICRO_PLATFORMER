@@ -298,10 +298,14 @@ public class PlayerAnimator : MonoBehaviour
         float armSwing = Mathf.Sin(t) * armSwingAmount;
         float legSwing = Mathf.Sin(t) * legSwingAmount;
 
-        // Arms (slightly softer)
-        leftArm.localRotation = leftArmStartRot * Quaternion.Euler(armSwing, 0, 0);
-        rightArm.localRotation = rightArmStartRot * Quaternion.Euler(-armSwing, 0, 0);
+        if (!isCarrying) 
+        {
+            // Arms (slightly softer)
+            leftArm.localRotation = leftArmStartRot * Quaternion.Euler(armSwing, 0, 0);
+            rightArm.localRotation = rightArmStartRot * Quaternion.Euler(-armSwing, 0, 0);
+        }
 
+       
         // Legs (walk ? air blend)
         Quaternion walkLeftLeg =
             leftLegStartRot * Quaternion.Euler(-legSwing, 0, 0);
@@ -348,24 +352,28 @@ public class PlayerAnimator : MonoBehaviour
         );
 
 
-        // Arms swing back
-        Quaternion leftJumpArm =
-            leftArmStartRot * Quaternion.Euler(-jumpArmBackAngle, -jumpArmSideAngle, 0);
+        if (!isCarrying)
+        {
+            // Arms swing back
+            Quaternion leftJumpArm =
+                leftArmStartRot * Quaternion.Euler(-jumpArmBackAngle, -jumpArmSideAngle, 0);
 
-        Quaternion rightJumpArm =
-            rightArmStartRot * Quaternion.Euler(-jumpArmBackAngle, jumpArmSideAngle, 0);
+            Quaternion rightJumpArm =
+                rightArmStartRot * Quaternion.Euler(-jumpArmBackAngle, jumpArmSideAngle, 0);
 
-        leftArm.localRotation = Quaternion.Lerp(
-            leftArm.localRotation,
-            leftJumpArm,
-            blend
-        );
+            leftArm.localRotation = Quaternion.Lerp(
+                leftArm.localRotation,
+                leftJumpArm,
+                blend
+            );
 
-        rightArm.localRotation = Quaternion.Lerp(
-            rightArm.localRotation,
-            rightJumpArm,
-            blend
-        );
+            rightArm.localRotation = Quaternion.Lerp(
+                rightArm.localRotation,
+                rightJumpArm,
+                blend
+            );
+        }
+       
     }
 
     void AnimateDivePose(float blend)
@@ -693,6 +701,8 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (isGemPose) return;
 
+        if (isCarrying)
+            return;
 
         if (blend <= 0f)
         {

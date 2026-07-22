@@ -65,6 +65,7 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] Transform holdPoint;
     public Transform HoldPoint => holdPoint;
     CarryBall carriedBall;   // null = not holding anything
+    public CarryBall CarriedBall => carriedBall;
 
     [Header("Player Differentiation")]
     int playerIndex;
