@@ -9,6 +9,7 @@ public class CarryBall : MonoBehaviour, IInteractable
 
     Rigidbody rb;
     Collider col;
+    public PlayerController3D Holder => holder;
 
     PlayerController3D holder;
 
@@ -118,5 +119,35 @@ public class CarryBall : MonoBehaviour, IInteractable
         rb.isKinematic = true;
 
         if (col != null) col.enabled = false; // no more collisions
+    }
+
+    public void Launch(Vector3 direction, float force)
+    {
+        if (holder == null)
+            return;
+
+        // Restore player movement
+        holder.SetCarryModifiers(1f, 1f);
+
+        PlayerAnimator anim = holder.GetComponentInChildren<PlayerAnimator>();
+
+        if (anim != null)
+            anim.SetCarrying(false);
+
+        holder = null;
+
+        transform.SetParent(null);
+
+        rb.isKinematic = false;
+
+        if (col != null)
+            col.enabled = true;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        rb.AddForce(direction.normalized * force, ForceMode.Impulse);
+
+        Debug.Log("Ball launched!");
     }
 }
