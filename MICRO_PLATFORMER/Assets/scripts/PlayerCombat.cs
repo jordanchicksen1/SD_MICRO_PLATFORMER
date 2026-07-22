@@ -47,6 +47,12 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] GameObject boxingGlovesObject1;
     [SerializeField] GameObject boxingGlovesObject2;
 
+    [Header("Audio")]
+    [SerializeField] AudioSource batAudio;
+    [SerializeField] AudioClip batSwingSFX;
+
+    [Header("Trail Renderers")]
+    [SerializeField] TrailRenderer batTrail;
 
     void Awake()
     {
@@ -181,7 +187,11 @@ public class PlayerCombat : MonoBehaviour
 
         isBatCharging = false;
         isBatSpinning = true;
-
+        batAudio.clip = batSwingSFX;
+        batAudio.pitch = 1.5f;
+        batAudio.loop = true;
+        batAudio.Play();
+        batTrail.emitting = true;
         animator.SetBatSpin(true);
 
         Debug.Log("Spin Started");
@@ -206,6 +216,11 @@ public class PlayerCombat : MonoBehaviour
 
         animator.SetBatWindup(false);
         animator.SetBatSpin(false);
+        batTrail.emitting = false;
+        batAudio.Stop();
+        batAudio.pitch = 1.3f;
+        batAudio.loop = false;
+        batAudio.clip = null;
 
         Debug.Log("Spin Ended");
     }
@@ -348,9 +363,10 @@ public class PlayerCombat : MonoBehaviour
     {
         isAttacking = true;
         canChargeBat = false;
-
+        batAudio.pitch = 1.3f;
+        batAudio.PlayOneShot(batSwingSFX);
         animator.SetBatWindup(true);
-
+        batTrail.emitting = true;
         yield return new WaitForSeconds(0.12f);
 
         animator.SetBatWindup(false);
@@ -407,7 +423,7 @@ public class PlayerCombat : MonoBehaviour
         yield return new WaitForSeconds(0.12f);
 
         animator.SetBatFollowThrough(false);
-
+        batTrail.emitting = false;
         yield return new WaitForSeconds(0.15f);
 
         isAttacking = false;
