@@ -9,6 +9,12 @@ public class EnemyProjectile : MonoBehaviour
     bool reflected;
     Collider ownerCollider;
     Vector3 direction;
+    TrailRenderer trail;
+
+    void Awake()
+    {
+        trail = GetComponent<TrailRenderer>();
+    }
 
     public void Init(Vector3 dir, Enemy enemy)
     {
@@ -17,6 +23,10 @@ public class EnemyProjectile : MonoBehaviour
 
         if (owner != null)
             ownerCollider = owner.GetComponent<Collider>();
+
+        if (trail != null)
+            trail.emitting = true;
+
 
         Destroy(gameObject, lifetime);
     }

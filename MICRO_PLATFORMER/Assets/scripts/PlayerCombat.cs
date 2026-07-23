@@ -54,6 +54,7 @@ public class PlayerCombat : MonoBehaviour
     [Header("Audio")]
     [SerializeField] AudioSource batAudio;
     [SerializeField] AudioClip batSwingSFX;
+    [SerializeField] AudioSource projectileReflectSFX;
 
     [Header("Trail Renderers")]
     [SerializeField] TrailRenderer batTrail;
@@ -436,7 +437,11 @@ public class PlayerCombat : MonoBehaviour
 
                  if (projectile != null)
                  {
-                    projectile.Reflect();
+                
+                
+                if (projectileReflectSFX != null)
+                projectileReflectSFX.Play();
+                projectile.Reflect();
                     continue;
                  }
 

@@ -15,14 +15,32 @@ public class CarryBall : MonoBehaviour, IInteractable
 
     bool lockedInHole; // once in hole, can't be picked up
 
+    TrailRenderer trail;
+
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+        trail = GetComponent<TrailRenderer>();
+
+        if (trail != null)
+            trail.emitting = false;
     }
 
     public bool IsHeld => holder != null;
     public bool IsLockedInHole => lockedInHole;
+
+    void Update()
+    {
+        if (trail == null)
+            return;
+
+        if (trail.emitting && rb.linearVelocity.magnitude < 1f)
+        {
+            trail.emitting = false;
+        }
+    }
 
     public void Interact(PlayerController3D player)
     {
@@ -145,6 +163,12 @@ public class CarryBall : MonoBehaviour, IInteractable
 
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+
+        if (trail != null)
+        {
+            trail.Clear();
+            trail.emitting = true;
+        }
 
         Vector3 launchDirection = (direction + Vector3.up * 0.35f).normalized;
         rb.AddForce(launchDirection * force, ForceMode.Impulse);
