@@ -17,9 +17,11 @@ public class CarryBall : MonoBehaviour, IInteractable
 
     TrailRenderer trail;
 
+    AudioSource kickSFX;
 
     void Awake()
     {
+        kickSFX = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
         trail = GetComponent<TrailRenderer>();
@@ -31,16 +33,7 @@ public class CarryBall : MonoBehaviour, IInteractable
     public bool IsHeld => holder != null;
     public bool IsLockedInHole => lockedInHole;
 
-    void Update()
-    {
-        if (trail == null)
-            return;
-
-        if (trail.emitting && rb.linearVelocity.magnitude < 1f)
-        {
-            trail.emitting = false;
-        }
-    }
+   
 
     public void Interact(PlayerController3D player)
     {
@@ -55,6 +48,13 @@ public class CarryBall : MonoBehaviour, IInteractable
 
     public void PickUp(PlayerController3D player)
     {
+        if (trail != null)
+        {
+            trail.emitting = false;
+            trail.Clear();
+        }
+
+
         if (lockedInHole) return;
         if (player == null) return;
 
@@ -116,6 +116,12 @@ public class CarryBall : MonoBehaviour, IInteractable
     // Called by the hole when the ball is placed successfully
     public void LockIntoHole(Transform snapPoint)
     {
+        if (trail != null)
+        {
+            trail.emitting = false;
+            trail.Clear();
+        }
+
         // If it was held, restore player stats
         if (holder != null)
         {
@@ -169,6 +175,8 @@ public class CarryBall : MonoBehaviour, IInteractable
             trail.Clear();
             trail.emitting = true;
         }
+
+        kickSFX.Play();
 
         Vector3 launchDirection = (direction + Vector3.up * 0.35f).normalized;
         rb.AddForce(launchDirection * force, ForceMode.Impulse);
