@@ -146,7 +146,7 @@ public class EnemyShooter : MonoBehaviour
         Vector3 dir = (target.position - firePoint.position).normalized;
         GameObject proj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
         EnemyProjectile ep = proj.GetComponent<EnemyProjectile>();
-        ep.Init(dir);
+        ep.Init(dir, GetComponent<Enemy>());
         shootSFX.Play();
 
         // Ignore collision with self

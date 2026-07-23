@@ -431,9 +431,16 @@ public class PlayerCombat : MonoBehaviour
                     continue;
                 }
 
-            
+                 // ---------- Enemy Projectile ----------
+                 EnemyProjectile projectile =hit.GetComponentInParent<EnemyProjectile>();
 
-        }
+                 if (projectile != null)
+                 {
+                    projectile.Reflect();
+                    continue;
+                 }
+
+            }
         animator.SetBatWindup(false);
 
         animator.SetBatFollowThrough(true);
