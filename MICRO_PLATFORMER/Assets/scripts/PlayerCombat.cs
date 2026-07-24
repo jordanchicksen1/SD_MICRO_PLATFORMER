@@ -45,6 +45,10 @@ public class PlayerCombat : MonoBehaviour
     bool canSpin = true;
     [SerializeField] float batBallForce = 20f;
 
+    [Header("Boomerang")]
+    [SerializeField] GameObject boomerangProjectilePrefab;
+    bool boomerangInFlight;
+
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
     [SerializeField] GameObject boomerangObject;
@@ -126,6 +130,9 @@ public class PlayerCombat : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext context)
     {
+        Debug.Log("Current Tool = " + currentTool);
+        Debug.Log($"Started:{context.started}  Performed:{context.performed}  Canceled:{context.canceled}");
+
         if (isBatSpinning)
             return;
 
@@ -158,7 +165,13 @@ public class PlayerCombat : MonoBehaviour
                 break;
 
             case CombatTool.Boomerang:
-                Debug.Log("Boomerang!");
+
+                Debug.Log("Before Throw");
+
+                ThrowBoomerang();
+
+                Debug.Log("After Throw");
+
                 break;
 
             case CombatTool.BoxingGloves:
@@ -304,6 +317,33 @@ public class PlayerCombat : MonoBehaviour
 
     //===================== BOOMERANG ===========================
 
+    void ThrowBoomerang()
+    {
+        Debug.Log("INSIDE THROW");
+
+        if (boomerangInFlight)
+        {
+            Debug.Log("Already in flight");
+            return;
+        }
+
+        boomerangInFlight = true;
+
+        Debug.Log("Prefab = " + boomerangProjectilePrefab);
+
+        Vector3 dir = -transform.forward;
+
+        GameObject b = Instantiate(
+            boomerangProjectilePrefab,
+            transform.position + dir,
+            Quaternion.LookRotation(dir));
+
+        Debug.Log("Spawned = " + b.name);
+
+        b.GetComponent<BoomerangProjectile>().Init(this, dir);
+    }
+
+    //======================== COROUTINES =======================
     IEnumerator KickRoutine()
     {
         isAttacking = true;
