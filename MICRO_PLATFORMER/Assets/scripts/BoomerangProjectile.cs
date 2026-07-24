@@ -23,6 +23,31 @@ public class BoomerangProjectile : MonoBehaviour
 
     void Update()
     {
+        if (!returning)
+        {
+            transform.position += direction * speed * Time.deltaTime;
 
+            if (Vector3.Distance(startPosition, transform.position) >= maxDistance)
+            {
+                returning = true;
+            }
+        }
+        else
+        {
+            Vector3 returnDir =
+                (owner.transform.position - transform.position).normalized;
+
+            transform.position +=
+                returnDir * speed * Time.deltaTime;
+
+            if (Vector3.Distance(transform.position, owner.transform.position) < 1f)
+            {
+                owner.BoomerangReturned();
+
+                Destroy(gameObject);
+            }
+        }
+
+        transform.Rotate(0f, 1080f * Time.deltaTime, 0f);
     }
 }

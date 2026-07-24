@@ -320,7 +320,7 @@ public class PlayerCombat : MonoBehaviour
     void ThrowBoomerang()
     {
         Debug.Log("INSIDE THROW");
-
+        boomerangObject.SetActive(false);
         if (boomerangInFlight)
         {
             Debug.Log("Already in flight");
@@ -336,11 +336,17 @@ public class PlayerCombat : MonoBehaviour
         GameObject b = Instantiate(
             boomerangProjectilePrefab,
             transform.position + dir,
-            Quaternion.LookRotation(dir));
+            Quaternion.identity);
 
         Debug.Log("Spawned = " + b.name);
 
         b.GetComponent<BoomerangProjectile>().Init(this, dir);
+    }
+
+    public void BoomerangReturned()
+    {
+        boomerangInFlight = false;
+        boomerangObject.SetActive(true);
     }
 
     //======================== COROUTINES =======================
