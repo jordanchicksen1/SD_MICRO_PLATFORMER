@@ -99,6 +99,14 @@ public class PlayerAnimator : MonoBehaviour
     float batWindupBlend;
     float batFollowBlend;
 
+    [Header("Boomerang Pose")]
+    [SerializeField] float boomerangBlendSpeed = 5f;
+    bool isBoomerangWindup;
+    bool isBoomerangThrow;
+
+    float boomerangWindupBlend;
+    float boomerangThrowBlend;
+
 
     Vector3 bodyStartPos;
 
@@ -154,6 +162,16 @@ public class PlayerAnimator : MonoBehaviour
         {
             model.localRotation = modelStartRotation;
         }
+    }
+
+    public void SetBoomerangWindup(bool active)
+    {
+        isBoomerangWindup = active;
+    }
+
+    public void SetBoomerangThrow(bool active)
+    {
+        isBoomerangThrow = active;
     }
 
     public void SetGroundPound(bool active)
@@ -239,13 +257,27 @@ public class PlayerAnimator : MonoBehaviour
             followTarget,
             Time.deltaTime * batBlendSpeed);
 
-        float spinTarget =
-    isBatSpin ? 1f : 0f;
+        float spinTarget = isBatSpin ? 1f : 0f;
 
         batSpinBlend = Mathf.MoveTowards(
             batSpinBlend,
             spinTarget,
             Time.deltaTime * batBlendSpeed);
+
+        float boomerangWindupTarget = isBoomerangWindup ? 1f : 0f;
+
+        boomerangWindupBlend = Mathf.MoveTowards(
+            boomerangWindupBlend,
+            boomerangWindupTarget,
+            Time.deltaTime * boomerangBlendSpeed);
+
+
+        float boomerangThrowTarget = isBoomerangThrow ? 1f : 0f;
+
+        boomerangThrowBlend = Mathf.MoveTowards(
+            boomerangThrowBlend,
+            boomerangThrowTarget,
+            Time.deltaTime * boomerangBlendSpeed);
 
         // Smooth blend
         float target = grounded ? 0f : 1f;
@@ -278,6 +310,9 @@ public class PlayerAnimator : MonoBehaviour
         AnimateBatFollowThrough(batFollowBlend);
         AnimateBatSpin(batSpinBlend);
 
+
+        AnimateBoomerangWindup(boomerangWindupBlend);
+        AnimateBoomerangThrow(boomerangThrowBlend);
 
     }
 
@@ -802,6 +837,82 @@ public class PlayerAnimator : MonoBehaviour
                 196.07251f),
             blend);
 
+    }
+
+    void AnimateBoomerangWindup(float blend)
+    {
+        if (blend <= 0f)
+            return;
+
+        leftArm.localPosition = Vector3.Lerp(
+            leftArm.localPosition,
+            new Vector3(
+                -0.018f,
+                0.274f,
+                -0.416f),
+            blend);
+
+        rightArm.localPosition = Vector3.Lerp(
+            rightArm.localPosition,
+            new Vector3(
+                -0.005f,
+                0.296f,
+                0.416f),
+            blend);
+
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            Quaternion.Euler(
+                0f,
+                90f,
+                45f),
+            blend);
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            Quaternion.Euler(
+                0f,
+                90f,
+                -45f),
+            blend);
+    }
+
+    void AnimateBoomerangThrow(float blend)
+    {
+        if (blend <= 0f)
+            return;
+
+        leftArm.localPosition = Vector3.Lerp(
+            leftArm.localPosition,
+            new Vector3(
+                -0.005f,
+                0.296f,
+                0.416f),
+            blend);
+
+        rightArm.localPosition = Vector3.Lerp(
+            rightArm.localPosition,
+            new Vector3(
+                -0.018f,
+                0.274f,
+                -0.416f),
+            blend);
+
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            Quaternion.Euler(
+                0f,
+                -90f,
+                45f),
+            blend);
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            Quaternion.Euler(
+                0f,
+                -90f,
+                -45f),
+            blend);
     }
 }
 

@@ -168,7 +168,7 @@ public class PlayerCombat : MonoBehaviour
 
                 Debug.Log("Before Throw");
 
-                ThrowBoomerang();
+                StartCoroutine(ThrowBoomerang());
 
                 Debug.Log("After Throw");
 
@@ -317,19 +317,24 @@ public class PlayerCombat : MonoBehaviour
 
     //===================== BOOMERANG ===========================
 
-    void ThrowBoomerang()
+    IEnumerator ThrowBoomerang()
     {
-        Debug.Log("INSIDE THROW");
-        boomerangObject.SetActive(false);
+        animator.SetBoomerangWindup(true);
+
+        yield return new WaitForSeconds(0.35f);
+
+        animator.SetBoomerangWindup(false);
+        animator.SetBoomerangThrow(true);
+
         if (boomerangInFlight)
         {
-            Debug.Log("Already in flight");
-            return;
+            animator.SetBoomerangThrow(false);
+            yield break;
         }
 
         boomerangInFlight = true;
 
-        Debug.Log("Prefab = " + boomerangProjectilePrefab);
+        boomerangObject.SetActive(false);
 
         Vector3 dir = -transform.forward;
 
@@ -338,9 +343,11 @@ public class PlayerCombat : MonoBehaviour
             transform.position + dir,
             Quaternion.identity);
 
-        Debug.Log("Spawned = " + b.name);
-
         b.GetComponent<BoomerangProjectile>().Init(this, dir);
+
+        yield return new WaitForSeconds(0.20f);
+
+        animator.SetBoomerangThrow(false);
     }
 
     public void BoomerangReturned()
