@@ -29,7 +29,12 @@ public class TitleSceneController : MonoBehaviour
 
     bool menuOpened = false;
 
-    
+    void Awake()
+    {
+        //set the framerate
+        Application.targetFrameRate = 120;
+        QualitySettings.vSyncCount = 0;
+    }
 
     void Start()
     {
