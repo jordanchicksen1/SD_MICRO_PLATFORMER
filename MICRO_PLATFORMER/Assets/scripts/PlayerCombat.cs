@@ -48,6 +48,7 @@ public class PlayerCombat : MonoBehaviour
     [Header("Boomerang")]
     [SerializeField] GameObject boomerangProjectilePrefab;
     bool boomerangInFlight;
+    
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -166,11 +167,10 @@ public class PlayerCombat : MonoBehaviour
 
             case CombatTool.Boomerang:
 
-                Debug.Log("Before Throw");
-
-                StartCoroutine(ThrowBoomerang());
-
-                Debug.Log("After Throw");
+                if(boomerangInFlight == false)
+                {
+                    StartCoroutine(ThrowBoomerang());
+                }
 
                 break;
 
