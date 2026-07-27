@@ -48,7 +48,9 @@ public class PlayerCombat : MonoBehaviour
     [Header("Boomerang")]
     [SerializeField] GameObject boomerangProjectilePrefab;
     bool boomerangInFlight;
-    
+    bool isBoomerangCharging;
+    bool isBoomerangAimMode;
+
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -167,9 +169,19 @@ public class PlayerCombat : MonoBehaviour
 
             case CombatTool.Boomerang:
 
-                if(boomerangInFlight == false)
+                if (context.started)
                 {
-                    StartCoroutine(ThrowBoomerang());
+                    StartBoomerangCharge();
+                }
+
+                if (context.performed)
+                {
+                    BeginBoomerangAim();
+                }
+
+                if (context.canceled)
+                {
+                    ReleaseBoomerang();
                 }
 
                 break;
@@ -316,6 +328,53 @@ public class PlayerCombat : MonoBehaviour
     }
 
     //===================== BOOMERANG ===========================
+
+    void StartBoomerangCharge()
+    {
+        if (boomerangInFlight)
+            return;
+
+        isBoomerangCharging = true;
+
+        Debug.Log("Boomerang Charging");
+    }
+
+    void BeginBoomerangAim()
+    {
+        if (boomerangInFlight)
+            return;
+
+        if (!isBoomerangCharging)
+            return;
+
+        isBoomerangCharging = false;
+        isBoomerangAimMode = true;
+
+        Debug.Log("Aim Mode");
+    }
+
+    void ReleaseBoomerang()
+    {
+        if (isBoomerangCharging)
+        {
+            isBoomerangCharging = false;
+
+            Debug.Log("Normal Throw");
+
+            StartCoroutine(ThrowBoomerang());
+
+            return;
+        }
+
+        if (isBoomerangAimMode)
+        {
+            isBoomerangAimMode = false;
+
+            Debug.Log("Charge Attack");
+
+            return;
+        }
+    }
 
     IEnumerator ThrowBoomerang()
     {
