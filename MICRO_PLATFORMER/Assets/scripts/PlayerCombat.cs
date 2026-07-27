@@ -374,11 +374,26 @@ public class PlayerCombat : MonoBehaviour
         if (isBoomerangAimMode)
         {
             targetSelector.EndAim();
+
+            List<BoomerangTarget> targets =
+                targetSelector.GetSelectedTargets();
+
+            Debug.Log("Targets Selected: " + targets.Count);
+
             isBoomerangAimMode = false;
+
             playerController.SetBoomerangAim(false);
+
             animator.SetBoomerangWindup(false);
-            //animator.SetBoomerangThrow(true);
-            Debug.Log("Charge Attack");
+
+            if (targets.Count == 0)
+            {
+                StartCoroutine(ThrowBoomerang());
+            }
+            else
+            {
+                StartCoroutine(ThrowBoomerang(targets));
+            }
 
             return;
         }
@@ -411,6 +426,42 @@ public class PlayerCombat : MonoBehaviour
             Quaternion.identity);
 
         b.GetComponent<BoomerangProjectile>().Init(this, dir);
+
+        yield return new WaitForSeconds(0.20f);
+
+        animator.SetBoomerangThrow(false);
+    }
+
+    IEnumerator ThrowBoomerang(List<BoomerangTarget> targets)
+    {
+        animator.SetBoomerangWindup(true);
+
+        yield return new WaitForSeconds(0.35f);
+
+        animator.SetBoomerangWindup(false);
+        animator.SetBoomerangThrow(true);
+
+        if (boomerangInFlight)
+        {
+            animator.SetBoomerangThrow(false);
+            yield break;
+        }
+
+        boomerangInFlight = true;
+
+        boomerangObject.SetActive(false);
+
+        Vector3 dir = -transform.forward;
+
+        GameObject b = Instantiate(
+     boomerangProjectilePrefab,
+     transform.position + dir,
+     Quaternion.identity);
+
+        BoomerangProjectile projectile =
+            b.GetComponent<BoomerangProjectile>();
+
+        projectile.Init(this, dir, targets);
 
         yield return new WaitForSeconds(0.20f);
 

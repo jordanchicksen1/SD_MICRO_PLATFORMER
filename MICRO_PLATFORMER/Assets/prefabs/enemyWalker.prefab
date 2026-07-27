@@ -765,6 +765,7 @@ GameObject:
   - component: {fileID: 1178367607329270587}
   - component: {fileID: 5750797931434496713}
   - component: {fileID: 5535518763591722216}
+  - component: {fileID: 2088687021406808295}
   m_Layer: 6
   m_Name: enemyWalker
   m_TagString: Enemy
@@ -909,6 +910,18 @@ MonoBehaviour:
   walkSpeed: 6
   bodyBobAmount: 0.08
   idleLegResetSpeed: 8
+--- !u!114 &2088687021406808295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4403468288674849894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f78e4850d0c72a4ba66ab697ec69592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4717340378543413718
 GameObject:
   m_ObjectHideFlags: 0

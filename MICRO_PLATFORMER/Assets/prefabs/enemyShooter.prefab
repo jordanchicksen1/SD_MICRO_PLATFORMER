@@ -1112,6 +1112,7 @@ GameObject:
   - component: {fileID: 7086678986542401131}
   - component: {fileID: 1576720903398471450}
   - component: {fileID: 5783143894102321493}
+  - component: {fileID: 1708945962246950912}
   m_Layer: 6
   m_Name: enemyShooter
   m_TagString: Enemy
@@ -1263,6 +1264,18 @@ MonoBehaviour:
   throwBackAngle: 20
   throwSpeed: 1.5
   throwForwardAngle: -70
+--- !u!114 &1708945962246950912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6328620100087313596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f78e4850d0c72a4ba66ab697ec69592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6359199605948830585
 GameObject:
   m_ObjectHideFlags: 0

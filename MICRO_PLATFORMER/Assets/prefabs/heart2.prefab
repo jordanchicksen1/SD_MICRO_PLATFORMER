@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3361797686630746121}
   - component: {fileID: 6272850828147234521}
   - component: {fileID: 5658591068387674113}
+  - component: {fileID: 879175871610376993}
   m_Layer: 0
   m_Name: heart2
   m_TagString: Heart
@@ -124,3 +125,15 @@ MonoBehaviour:
   rotateX: 45
   rotateY: 0
   rotateZ: 0
+--- !u!114 &879175871610376993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459401485880756939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f78e4850d0c72a4ba66ab697ec69592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

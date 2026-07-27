@@ -1380,7 +1380,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab0f9eacf27511d40987cf807ab17a90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reticleSpeed: 1000
+  maxTargets: 3
+  reticleSpeed: 250
   maxRadius: 300
 --- !u!1 &1853980739637342296
 GameObject:

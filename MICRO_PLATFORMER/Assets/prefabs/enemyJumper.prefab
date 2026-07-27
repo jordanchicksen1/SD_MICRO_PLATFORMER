@@ -1344,6 +1344,7 @@ GameObject:
   - component: {fileID: 372100679546201915}
   - component: {fileID: 6554646488713597204}
   - component: {fileID: 3375077635814929508}
+  - component: {fileID: 2793764317063237500}
   m_Layer: 6
   m_Name: enemyJumper
   m_TagString: Enemy
@@ -1491,6 +1492,18 @@ MonoBehaviour:
   bodyBob: 0.05
   idleBodyBob: 0.03
   idleSpeed: 2
+--- !u!114 &2793764317063237500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7540294398207378407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f78e4850d0c72a4ba66ab697ec69592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8752871157845048220
 GameObject:
   m_ObjectHideFlags: 0
