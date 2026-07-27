@@ -26,6 +26,23 @@ public class BoomerangProjectile : MonoBehaviour
 
     float nextAfterImageTime;
 
+    [Header("SFX")]
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioSource flyingSource;
+    [SerializeField] AudioClip throwSFX;
+    [SerializeField] AudioClip flightLoopSFX;
+    [SerializeField] AudioClip catchSFX;
+    [SerializeField] AudioClip collectPingSFX;
+
+
+    private void Start()
+    {
+        audioSource.PlayOneShot(throwSFX);
+
+        flyingSource.clip = flightLoopSFX;
+        flyingSource.loop = true;
+        flyingSource.Play();
+    }
     public void Init(PlayerCombat combat, Vector3 throwDirection)
     {
         owner = combat;
@@ -67,7 +84,7 @@ public class BoomerangProjectile : MonoBehaviour
                 }
 
                 collectedItems.Clear();
-
+                //audioSource.Stop();
                 Destroy(gameObject);
             }
         }
@@ -156,6 +173,7 @@ public class BoomerangProjectile : MonoBehaviour
 
                 hitTargets.Add(coin.gameObject);
 
+                audioSource.PlayOneShot(collectPingSFX);
                 collectedItems.Add(coin.transform);
 
                 coin.transform.SetParent(transform);
@@ -170,6 +188,7 @@ public class BoomerangProjectile : MonoBehaviour
 
                 hitTargets.Add(hit.gameObject);
 
+                audioSource.PlayOneShot(collectPingSFX);
                 collectedItems.Add(hit.transform);
 
                 hit.transform.SetParent(transform);
