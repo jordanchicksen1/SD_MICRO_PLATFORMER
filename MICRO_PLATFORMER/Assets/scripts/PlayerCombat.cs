@@ -50,7 +50,7 @@ public class PlayerCombat : MonoBehaviour
     bool boomerangInFlight;
     bool isBoomerangCharging;
     bool isBoomerangAimMode;
-
+    BoomerangTargetSelector targetSelector;
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -71,6 +71,7 @@ public class PlayerCombat : MonoBehaviour
         animator = GetComponentInChildren<PlayerAnimator>();
         combatShake = FindFirstObjectByType<CombatCameraShake>();
         playerController = GetComponent<PlayerController3D>();
+        targetSelector = GetComponent<BoomerangTargetSelector>();
     }
 
     void Start()
@@ -335,6 +336,7 @@ public class PlayerCombat : MonoBehaviour
             return;
 
         isBoomerangCharging = true;
+        animator.SetBoomerangWindup(true);
 
         Debug.Log("Boomerang Charging");
     }
@@ -349,7 +351,8 @@ public class PlayerCombat : MonoBehaviour
 
         isBoomerangCharging = false;
         isBoomerangAimMode = true;
-
+        playerController.SetBoomerangAim(true);
+        targetSelector.BeginAim();
         Debug.Log("Aim Mode");
     }
 
@@ -357,6 +360,8 @@ public class PlayerCombat : MonoBehaviour
     {
         if (isBoomerangCharging)
         {
+            animator.SetBoomerangWindup(false);
+            playerController.SetBoomerangAim(false);
             isBoomerangCharging = false;
 
             Debug.Log("Normal Throw");
@@ -368,8 +373,11 @@ public class PlayerCombat : MonoBehaviour
 
         if (isBoomerangAimMode)
         {
+            targetSelector.EndAim();
             isBoomerangAimMode = false;
-
+            playerController.SetBoomerangAim(false);
+            animator.SetBoomerangWindup(false);
+            //animator.SetBoomerangThrow(true);
             Debug.Log("Charge Attack");
 
             return;

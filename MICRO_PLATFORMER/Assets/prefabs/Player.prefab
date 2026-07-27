@@ -863,6 +863,7 @@ GameObject:
   - component: {fileID: 5437180449285708875}
   - component: {fileID: 2350974571123287552}
   - component: {fileID: 906103391160815305}
+  - component: {fileID: 1973581416899015860}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -1367,6 +1368,20 @@ MonoBehaviour:
   batSwingSFX: {fileID: 8300000, guid: 8772d3ef2e948cf418a8e5ef534ccb21, type: 3}
   projectileReflectSFX: {fileID: 8846773063929723423}
   batTrail: {fileID: 50208882669748016}
+--- !u!114 &1973581416899015860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751935968643041694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab0f9eacf27511d40987cf807ab17a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reticleSpeed: 1000
+  maxRadius: 300
 --- !u!1 &1853980739637342296
 GameObject:
   m_ObjectHideFlags: 0

@@ -172,6 +172,19 @@ public class PlayerController3D : MonoBehaviour
     float nextStepTime;
     bool useFirstClip = true;
 
+    bool isBoomerangAiming;
+    public Vector2 MoveInput => moveInput;
+    public void SetBoomerangAim(bool aiming)
+    {
+        Debug.Log("Boomerang Aim = " + aiming);
+
+        isBoomerangAiming = aiming;
+
+        if (aiming)
+        {
+            rb.linearVelocity = Vector3.zero;
+        }
+    }
 
     public void SetCarryModifiers(float moveMultiplier, float jumpMultiplier)
     {
@@ -433,11 +446,11 @@ public class PlayerController3D : MonoBehaviour
         CheckGroundPoundAutoEnd(); 
 
 
-        if (!isGroundPounding && !isKnockedBack && !isDiving && !isLongJumping)
+        if (!isGroundPounding && !isKnockedBack && !isDiving && !isLongJumping && !isBoomerangAiming)
             Move();
 
 
-        if (!isKnockedBack && !isDiving && !isLongJumping)
+        if (!isKnockedBack && !isDiving && !isLongJumping && !isBoomerangAiming)
             RotateTowardsMovement();
 
 
@@ -638,7 +651,7 @@ public class PlayerController3D : MonoBehaviour
         if (IsGrounded(out RaycastHit hit))
         {
             // Ground ? Long Jump
-            if (!isLongJumping && !isGroundPounding && !isKnockedBack)
+            if (!isLongJumping && !isGroundPounding && !isKnockedBack && !isBoomerangAiming)
             {
                 StartCoroutine(LongJumpCoroutine());
             }
@@ -648,7 +661,7 @@ public class PlayerController3D : MonoBehaviour
             // Air ? Dive (existing behavior)
            
             
-                if (!isDiving && !isGroundPounding && !hasUsedAirDive)
+                if (!isDiving && !isGroundPounding && !hasUsedAirDive && !isBoomerangAiming)
                 {
                     hasUsedAirDive = true;
                     StartCoroutine(DiveCoroutine());
@@ -677,7 +690,7 @@ public class PlayerController3D : MonoBehaviour
 
         bool canCoyoteJump = Time.time - lastGroundedTime <= coyoteTime;
 
-        if (canCoyoteJump && !isGroundPounding && !isDiving && !isLongJumping)
+        if (canCoyoteJump && !isGroundPounding && !isDiving && !isLongJumping && !isBoomerangAiming)
         {
             // Clear downward velocity so jump is consistent
             rb.linearVelocity = new Vector3(
