@@ -22,6 +22,7 @@ public class PlayerCombat : MonoBehaviour
     PlayerAnimator animator;
     CombatCameraShake combatShake;
     PlayerController3D playerController;
+    PlayerInput PlayerInput;
     bool isAttacking;
     bool isBatCharging;
     bool isBatSpinning;
@@ -72,6 +73,7 @@ public class PlayerCombat : MonoBehaviour
         combatShake = FindFirstObjectByType<CombatCameraShake>();
         playerController = GetComponent<PlayerController3D>();
         targetSelector = GetComponent<BoomerangTargetSelector>();
+        PlayerInput = GetComponent<PlayerInput>();
     }
 
     void Start()
@@ -699,5 +701,13 @@ public class PlayerCombat : MonoBehaviour
         Gizmos.DrawWireSphere(
             kickPoint.position,
             kickRadius);
+    }
+
+    public int PlayerIndex
+    {
+        get
+        {
+            return PlayerInput.playerIndex;
+        }
     }
 }

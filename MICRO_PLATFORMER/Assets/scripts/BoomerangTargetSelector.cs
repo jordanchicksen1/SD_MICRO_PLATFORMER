@@ -117,7 +117,7 @@ public class BoomerangTargetSelector : MonoBehaviour
             return;
 
         selectedTargets.Add(target);
-
+        target.ShowMarker(playerInput.playerIndex);
         Debug.Log(target.name + " Added!");
     }
 

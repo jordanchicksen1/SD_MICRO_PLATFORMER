@@ -159,6 +159,16 @@ public class BoomerangProjectile : MonoBehaviour
 
     void AdvanceToNextTarget()
     {
+        if (currentTargetIndex < targets.Count)
+        {
+            BoomerangTarget completedTarget = targets[currentTargetIndex];
+
+            if (completedTarget != null)
+            {
+                completedTarget.HideMarker(owner.PlayerIndex);
+            }
+        }
+
         currentTargetIndex++;
 
         if (currentTargetIndex >= targets.Count)
@@ -292,6 +302,7 @@ public class BoomerangProjectile : MonoBehaviour
                 BoomerangTarget target = hit.GetComponent<BoomerangTarget>();
 
                 bool isCurrentTarget = targetedThrow && currentTargetIndex < targets.Count && targets[currentTargetIndex] == target;
+
 
                 if (!targetedThrow || isCurrentTarget)
                 {
