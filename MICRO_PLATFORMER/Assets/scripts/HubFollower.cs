@@ -16,6 +16,15 @@ public class HubFollower : MonoBehaviour
 
     [SerializeField] Collider followerCollider;
 
+    [SerializeField] Transform leftFoot;
+    [SerializeField] Transform rightFoot;
+
+    [SerializeField] float dustInterval = 0.35f;
+
+    float nextDustTime;
+    bool useLeftFoot = true;
+    
+
     HubPlayerAnimator anim;
 
 
@@ -77,9 +86,22 @@ public class HubFollower : MonoBehaviour
 
         rb.MovePosition(pos);
 
+        float moved = (pos - startPos).magnitude;
+
+        if (moved > 0.01f && Time.time >= nextDustTime)
+        {
+            Transform foot = useLeftFoot ? leftFoot : rightFoot;
+
+            if (DustPool.Instance != null && foot != null)
+                DustPool.Instance.Spawn(foot.position);
+
+            useLeftFoot = !useLeftFoot;
+            nextDustTime = Time.time + dustInterval;
+        }
+
         if (anim != null)
         {
-            float moved = (pos - startPos).magnitude;
+            
             float speed01 = Mathf.Clamp01(moved / (moveSpeed * Time.fixedDeltaTime));
             anim.SetMoveBlend(speed01);
         }

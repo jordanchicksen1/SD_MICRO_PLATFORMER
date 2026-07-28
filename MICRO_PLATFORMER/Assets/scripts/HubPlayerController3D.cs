@@ -152,6 +152,8 @@ public class HubPlayerController3D : MonoBehaviour
     [SerializeField] AudioClip footstepClipB;
     [SerializeField] float stepInterval = 0.4f;
     [SerializeField] float moveThreshold = 0.15f;
+    [SerializeField] Transform leftFoot;
+    [SerializeField] Transform rightFoot;
 
     float nextStepTime;
     bool useFirstClip = true;
@@ -484,8 +486,16 @@ public class HubPlayerController3D : MonoBehaviour
         Debug.Log($"FOOTSTEP from {gameObject.name} at {Time.time}");
 
         AudioClip clip = useFirstClip ? footstepClipA : footstepClipB;
+
         if (clip != null)
             footstepSource.PlayOneShot(clip);
+
+        Transform foot = useFirstClip ? leftFoot : rightFoot;
+
+        if (DustPool.Instance != null && foot != null)
+        {
+            DustPool.Instance.Spawn(foot.position);
+        }
 
         useFirstClip = !useFirstClip;
 
