@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using TMPro;
 
 public class BoomerangTargetSelector : MonoBehaviour
 {
@@ -21,11 +22,13 @@ public class BoomerangTargetSelector : MonoBehaviour
     PlayerInput playerInput;
     Vector3 reticleOriginalScale;
     Coroutine reticleAnimation;
+    AudioSource audioSource;
+    [SerializeField] AudioClip targetSelectSFX;
 
     void Awake()
     {
         playerCamera = Camera.main;
-        
+        audioSource = GetComponent<AudioSource>();
         playerController = GetComponent<PlayerController3D>();
         playerInput = GetComponent<PlayerInput>();
         GameObject reticleObject;
@@ -131,6 +134,14 @@ public class BoomerangTargetSelector : MonoBehaviour
             return;
 
         selectedTargets.Add(target);
+        if (reticleAnimation != null)
+            StopCoroutine(reticleAnimation);
+
+        if (targetSelectSFX != null)
+        {
+            audioSource.PlayOneShot(targetSelectSFX);
+        }
+        reticleAnimation = StartCoroutine(ReticleSelectPop());
         UpdateCounter();
         target.ShowMarker(playerInput.playerIndex);
         Debug.Log(target.name + " Added!");
@@ -227,6 +238,43 @@ public class BoomerangTargetSelector : MonoBehaviour
 
         reticle.localScale = reticleOriginalScale;
         reticle.gameObject.SetActive(false);
+    }
+
+    IEnumerator ReticleSelectPop()
+    {
+        float timer = 0f;
+        float duration = 0.08f;
+
+        Vector3 start = reticleOriginalScale;
+        Vector3 pop = reticleOriginalScale * 1.1f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / duration;
+
+            reticle.localScale =
+                Vector3.Lerp(start, pop, t);
+
+            yield return null;
+        }
+
+        timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / duration;
+
+            reticle.localScale =
+                Vector3.Lerp(pop, start, t);
+
+            yield return null;
+        }
+
+        reticle.localScale = start;
     }
 
     public List<BoomerangTarget> GetSelectedTargets()
