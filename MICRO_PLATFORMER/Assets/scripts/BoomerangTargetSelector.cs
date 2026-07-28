@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using TMPro;
 
 public class BoomerangTargetSelector : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class BoomerangTargetSelector : MonoBehaviour
     List<BoomerangTarget> selectedTargets = new List<BoomerangTarget>();
     BoomerangTarget currentTarget;
     [SerializeField] int maxTargets = 3;
+    [SerializeField] TMP_Text targetCounterText;
     Camera playerCamera;
     [SerializeField] float reticleSpeed = 1000f;
     [SerializeField] float maxRadius = 300f;
@@ -17,7 +19,8 @@ public class BoomerangTargetSelector : MonoBehaviour
     bool isAiming;
     RectTransform reticle;
     PlayerInput playerInput;
-
+    Vector3 reticleOriginalScale;
+    Coroutine reticleAnimation;
 
     void Awake()
     {
@@ -27,9 +30,11 @@ public class BoomerangTargetSelector : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         GameObject reticleObject;
 
+
         if (playerInput.playerIndex == 0)
         {
             reticleObject = GameObject.Find("P1Reticle");
+
         }
         else
         {
@@ -44,7 +49,10 @@ public class BoomerangTargetSelector : MonoBehaviour
             return;
         }
 
-        reticle = reticleObject.GetComponent<RectTransform>();
+        reticle = reticleObject.GetComponentInChildren<RectTransform>();
+        reticleOriginalScale = reticle.localScale;
+        targetCounterText = reticleObject.transform.Find("TargetCounter").GetComponent<TMP_Text>();
+        UpdateCounter();
         reticle.gameObject.SetActive(false);
         Debug.Log(gameObject.name + " is using " + reticle.name);
     }
@@ -52,8 +60,14 @@ public class BoomerangTargetSelector : MonoBehaviour
     {
         isAiming = true;
         selectedTargets.Clear();
+        UpdateCounter();
         currentTarget = null;
         reticle.gameObject.SetActive(true);
+
+        if (reticleAnimation != null)
+            StopCoroutine(reticleAnimation);
+
+        reticleAnimation = StartCoroutine(PopInReticle());
         reticlePosition = Vector2.zero;
         reticle.anchoredPosition = reticlePosition;
     }
@@ -117,6 +131,7 @@ public class BoomerangTargetSelector : MonoBehaviour
             return;
 
         selectedTargets.Add(target);
+        UpdateCounter();
         target.ShowMarker(playerInput.playerIndex);
         Debug.Log(target.name + " Added!");
     }
@@ -124,6 +139,93 @@ public class BoomerangTargetSelector : MonoBehaviour
     public void EndAim()
     {
         isAiming = false;
+        UpdateCounter();
+        if (reticleAnimation != null)
+            StopCoroutine(reticleAnimation);
+
+        reticleAnimation = StartCoroutine(PopOutReticle());
+    }
+
+    void UpdateCounter()
+    {
+        int remainingTargets = maxTargets - selectedTargets.Count;
+
+        targetCounterText.text = remainingTargets.ToString();
+    }
+
+    System.Collections.IEnumerator PopInReticle()
+    {
+        float timer = 0f;
+        float duration = 0.15f;
+
+        Vector3 start = Vector3.zero;
+        Vector3 overshoot = reticleOriginalScale * 1.2f;
+
+        reticle.localScale = start;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / duration;
+
+            reticle.localScale =
+                Vector3.Lerp(start, overshoot, t);
+
+            yield return null;
+        }
+
+        timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / duration;
+
+            reticle.localScale =
+                Vector3.Lerp(overshoot, reticleOriginalScale, t);
+
+            yield return null;
+        }
+
+        reticle.localScale = reticleOriginalScale;
+    }
+
+    System.Collections.IEnumerator PopOutReticle()
+    {
+        float timer = 0f;
+        float duration = 0.12f;
+
+        Vector3 overshoot = reticleOriginalScale * 1.2f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / duration;
+
+            reticle.localScale =
+                Vector3.Lerp(reticleOriginalScale, overshoot, t);
+
+            yield return null;
+        }
+
+        timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / duration;
+
+            reticle.localScale =
+                Vector3.Lerp(overshoot, Vector3.zero, t);
+
+            yield return null;
+        }
+
+        reticle.localScale = reticleOriginalScale;
         reticle.gameObject.SetActive(false);
     }
 
