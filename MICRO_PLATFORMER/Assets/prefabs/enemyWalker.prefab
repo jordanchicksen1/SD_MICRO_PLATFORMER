@@ -889,6 +889,10 @@ MonoBehaviour:
   batUpForce: 8
   batSpinForce: 40
   batSFX: {fileID: 7366176680372289249}
+  uppercutForce: 4
+  uppercutUpForce: 6
+  uppercutSpinForce: 25
+  uppercutSFX: {fileID: 0}
   visuals: {fileID: 313629342928792189}
 --- !u!114 &5535518763591722216
 MonoBehaviour:

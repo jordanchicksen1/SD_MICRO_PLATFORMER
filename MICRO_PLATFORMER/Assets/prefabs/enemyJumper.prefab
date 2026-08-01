@@ -1425,6 +1425,10 @@ MonoBehaviour:
   batUpForce: 8
   batSpinForce: 40
   batSFX: {fileID: 1282097008309191275}
+  uppercutForce: 4
+  uppercutUpForce: 6
+  uppercutSpinForce: 25
+  uppercutSFX: {fileID: 0}
   visuals: {fileID: 7533421590669571011}
 --- !u!54 &372100679546201915
 Rigidbody:
