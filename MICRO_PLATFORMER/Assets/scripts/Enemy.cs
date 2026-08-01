@@ -20,6 +20,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] float batSpinForce = 40f;
     [SerializeField] AudioSource batSFX;
 
+    [Header("Uppercut")]
+    [SerializeField] float uppercutForce = 12f;
+    [SerializeField] float uppercutUpForce = 8f;
+    [SerializeField] float uppercutSpinForce = 20f;
+    [SerializeField] AudioSource uppercutSFX;
+
     [Header("Enemy Stuff")]
     [SerializeField] Transform visuals;
 
@@ -122,6 +128,40 @@ public class Enemy : MonoBehaviour
                 direction.normalized * batForce;
 
             launch.y = batUpForce;
+
+            rb.AddForce(
+                launch,
+                ForceMode.Impulse);
+
+            StartCoroutine(SpinWhileFlying());
+        }
+
+        StartCoroutine(DieDelayed());
+    }
+
+    public void TakeUppercut(Vector3 direction)
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+
+        if (rb != null)
+            rb.linearVelocity = Vector3.zero;
+
+        if (isDead)
+            return;
+
+        isDead = true;
+
+        if (uppercutSFX != null)
+            uppercutSFX.Play();
+
+        DisableAI();
+
+        if (rb != null)
+        {
+            Vector3 launch =
+                direction.normalized * uppercutForce;
+
+            launch.y = uppercutUpForce;
 
             rb.AddForce(
                 launch,

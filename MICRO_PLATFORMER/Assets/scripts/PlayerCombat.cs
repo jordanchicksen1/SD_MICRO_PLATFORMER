@@ -53,6 +53,16 @@ public class PlayerCombat : MonoBehaviour
     bool isBoomerangAimMode;
     BoomerangTargetSelector targetSelector;
 
+    [Header("Boxing Gloves")]
+    [SerializeField] Transform gloveHitPoint;
+    [SerializeField] float gloveRadius = 1.2f;
+    [SerializeField] float uppercutForce = 8f;
+    [SerializeField] float enemyLaunchForce = 5f;
+    bool isGloveCharging;
+    bool canUppercutLift = true;
+    bool punchRight = true;
+    [SerializeField] float slamRadius = 3f;
+
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
     [SerializeField] GameObject boomerangObject;
@@ -67,6 +77,8 @@ public class PlayerCombat : MonoBehaviour
     [Header("Trail Renderers")]
     [SerializeField] TrailRenderer batTrail;
 
+    Rigidbody rb;
+
     void Awake()
     {
         animator = GetComponentInChildren<PlayerAnimator>();
@@ -74,6 +86,7 @@ public class PlayerCombat : MonoBehaviour
         playerController = GetComponent<PlayerController3D>();
         targetSelector = GetComponent<BoomerangTargetSelector>();
         PlayerInput = GetComponent<PlayerInput>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Start()
@@ -190,7 +203,22 @@ public class PlayerCombat : MonoBehaviour
                 break;
 
             case CombatTool.BoxingGloves:
-                Debug.Log("Punch!");
+
+                if (context.started)
+                {
+                    StartGloveCharge();
+                }
+
+                if (context.performed)
+                {
+                    // Ground slam later
+                }
+
+                if (context.canceled)
+                {
+                    ReleaseGloves();
+                }
+
                 break;
         }
     }
@@ -474,6 +502,136 @@ public class PlayerCombat : MonoBehaviour
     {
         boomerangInFlight = false;
         boomerangObject.SetActive(true);
+    }
+
+    //======================== BOXING GLOVES ====================
+
+    void StartGloveCharge()
+    {
+        if (isAttacking)
+            return;
+
+        isGloveCharging = true;
+
+        animator.SetGloveWindup(true);
+
+        Debug.Log("Gloves Charging");
+    }
+
+    void ReleaseGloves()
+    {
+        if (!isGloveCharging)
+            return;
+
+        isGloveCharging = false;
+
+        animator.SetGloveWindup(false);
+        animator.SetRightPunch(punchRight);
+        StartCoroutine(UppercutRoutine());
+    }
+
+    IEnumerator UppercutRoutine()
+    {
+        isAttacking = true;
+
+        animator.SetUppercut(true);
+
+        // One boost per airtime
+        if (canUppercutLift)
+        {
+            canUppercutLift = false;
+
+            rb.linearVelocity = new Vector3(
+                rb.linearVelocity.x,
+                0f,
+                rb.linearVelocity.z);
+
+            rb.AddForce(
+                Vector3.up * uppercutForce,
+                ForceMode.Impulse);
+        }
+
+        // Wait until the fist reaches the hit frame
+        yield return new WaitForSeconds(0.08f);
+
+        // Launch carried ball
+        if (playerController.CarriedBall != null)
+        {
+            Vector3 launchDirection =
+                (playerController.CarriedBall.transform.position - transform.position).normalized;
+
+            playerController.CarriedBall.Launch(
+                launchDirection,
+                kickBallForce);
+        }
+
+        // Check everything inside the punch area
+        Collider[] hits = Physics.OverlapSphere(
+            gloveHitPoint.position,
+            gloveRadius);
+
+        foreach (Collider hit in hits)
+        {
+            // ---------- Enemy ----------
+            Enemy enemy = hit.GetComponentInParent<Enemy>();
+
+            if (enemy != null)
+            {
+                Vector3 direction =
+                    enemy.transform.position - transform.position;
+
+                direction.y = 0f;
+                direction.Normalize();
+
+                // We'll make this function next
+                enemy.TakeUppercut(direction);
+
+                combatShake.Shake(0.10f, 0.12f);
+
+                continue;
+            }
+
+            // ---------- Breakable Box ----------
+            BreakableBox box =
+                hit.GetComponentInParent<BreakableBox>();
+
+            if (box != null)
+            {
+                box.Break();
+                continue;
+            }
+
+            // ---------- Player ----------
+            PlayerController3D player =
+                hit.GetComponentInParent<PlayerController3D>();
+
+            if (player != null && player.gameObject != gameObject)
+            {
+                // We'll make this function next
+                player.ApplyUppercutKnockback(transform.position);
+
+                combatShake.Shake(0.10f, 0.12f);
+
+                continue;
+            }
+        }
+
+        // Finish the animation
+        yield return new WaitForSeconds(0.17f);
+
+        animator.SetUppercut(false);
+
+        yield return new WaitForSeconds(0.20f);
+
+        punchRight = !punchRight;
+        animator.SetRightPunch(punchRight);
+
+        isAttacking = false;
+    }
+
+    public void ResetUppercutLift()
+    {
+        canUppercutLift = true;
     }
 
     //======================== COROUTINES =======================

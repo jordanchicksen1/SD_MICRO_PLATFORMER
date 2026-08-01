@@ -20,7 +20,8 @@ public class PlayerController3D : MonoBehaviour
     public AudioSource jumpSFX;
 
     float lastGroundedTime;
-
+    bool wasGrounded;
+    PlayerCombat playerCombat;
 
     Rigidbody rb;
     Vector2 moveInput;
@@ -101,6 +102,11 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] float batKnockbackForce = 20f;
     [SerializeField] float batKnockbackUpForce = 6f;
     [SerializeField] float batKnockbackLockTime = 0.45f;
+
+    [Header("Uppercut Knockback")]
+    [SerializeField] float uppercutKnockbackForce = 8f;
+    [SerializeField] float uppercutKnockbackUpForce = 7f;
+    [SerializeField] float uppercutKnockbackLockTime = 0.25f;
 
     [Header("Ground Indicator")]
     [SerializeField] GameObject groundIndicatorPrefab;
@@ -226,7 +232,7 @@ public class PlayerController3D : MonoBehaviour
         if (healthUIManager != null)
             healthUIManager.RegisterPlayer(GetComponent<PlayerHealth>());
 
-
+        playerCombat = GetComponent<PlayerCombat>();
         playerIndex = GetComponent<PlayerInput>().playerIndex;
         playerNumber = playerIndex + 1;
 
@@ -431,16 +437,29 @@ public class PlayerController3D : MonoBehaviour
 
         platformVelocity = Vector3.zero;
 
-        if (IsGrounded(out RaycastHit hit))
+        bool grounded = IsGrounded(out RaycastHit hit);
+
+        if (grounded)
         {
+            if (!wasGrounded)
+            {
+                playerCombat.ResetUppercutLift();
+            }
+
+            wasGrounded = true;
+
             lastGroundedTime = Time.time;
 
             hasUsedAirDive = false;
 
-            // If we're standing on a moving platform, grab its velocity
             MovingPlatform mp = hit.collider.GetComponentInParent<MovingPlatform>();
+
             if (mp != null)
                 platformVelocity = mp.Velocity;
+        }
+        else
+        {
+            wasGrounded = false;
         }
 
 
@@ -784,6 +803,14 @@ public class PlayerController3D : MonoBehaviour
         StartCoroutine(BatKnockbackCoroutine(sourcePosition));
     }
 
+    public void ApplyUppercutKnockback(Vector3 sourcePosition)
+    {
+        if (isKnockedBack)
+            return;
+
+        StartCoroutine(UppercutKnockbackCoroutine(sourcePosition));
+    }
+
     void SetFlash(bool normal)
     {
         for (int i = 0; i < cachedMaterials.Length; i++)
@@ -1006,6 +1033,31 @@ public class PlayerController3D : MonoBehaviour
         hitSFX.Play();
 
         yield return new WaitForSeconds(batKnockbackLockTime);
+
+        isKnockedBack = false;
+    }
+
+    IEnumerator UppercutKnockbackCoroutine(Vector3 sourcePosition)
+    {
+        isKnockedBack = true;
+
+        Vector3 direction =
+            (transform.position - sourcePosition).normalized;
+
+        direction.y = 0f;
+        direction.Normalize();
+
+        rb.linearVelocity = Vector3.zero;
+
+        Vector3 force =
+            direction * uppercutKnockbackForce +
+            Vector3.up * uppercutKnockbackUpForce;
+
+        rb.AddForce(force, ForceMode.Impulse);
+
+        hitSFX.Play();
+
+        yield return new WaitForSeconds(uppercutKnockbackLockTime);
 
         isKnockedBack = false;
     }
