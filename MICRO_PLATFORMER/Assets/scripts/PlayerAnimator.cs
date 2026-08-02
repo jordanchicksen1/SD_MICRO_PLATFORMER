@@ -1083,19 +1083,12 @@ public class PlayerAnimator : MonoBehaviour
             // Right arm uppercut
             rightArm.localPosition = Vector3.Lerp(
                 rightArm.localPosition,
-                new Vector3(
-                    -0.649999976f,
-                     0.114f,
-                    -0.111000001f),
+                new Vector3(-0.537999988f, 0.250999987f, -0.222000003f),
                 blend);
 
             rightArm.localRotation = Quaternion.Lerp(
                 rightArm.localRotation,
-                new Quaternion(
-                     0.809917808f,
-                    -0.258967102f,
-                     0.18282482f,
-                     0.4935022f),
+                new Quaternion(0.396975577f, -0.637150705f, -0.41621387f, 0.513045251f),
                 blend);
 
             // Left arm guard
@@ -1121,19 +1114,12 @@ public class PlayerAnimator : MonoBehaviour
             // Left arm uppercut
             leftArm.localPosition = Vector3.Lerp(
                 leftArm.localPosition,
-                new Vector3(
-                     0.578000009f,
-                     0.104999997f,
-                    -0.0710000023f),
+                new Vector3(0.456f, 0.273000002f, -0.293000013f),
                 blend);
 
             leftArm.localRotation = Quaternion.Lerp(
                 leftArm.localRotation,
-                new Quaternion(
-                     0.808958948f,
-                     0.198380738f,
-                    -0.210754827f,
-                     0.51167661f),
+                new Quaternion(0.418233216f, 0.580632448f, 0.469551772f, 0.517173171f),
                 blend);
 
             // Right arm guard

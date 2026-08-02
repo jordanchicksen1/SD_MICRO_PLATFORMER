@@ -62,6 +62,9 @@ public class PlayerCombat : MonoBehaviour
     bool canUppercutLift = true;
     bool punchRight = true;
     [SerializeField] float slamRadius = 3f;
+    [SerializeField] AudioSource glovePunchSFX;
+    [SerializeField] AudioClip rightPunchClip;
+    [SerializeField] AudioClip leftPunchClip;
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -553,6 +556,16 @@ public class PlayerCombat : MonoBehaviour
 
         // Wait until the fist reaches the hit frame
         yield return new WaitForSeconds(0.08f);
+
+        if (glovePunchSFX != null)
+        {
+            glovePunchSFX.clip = punchRight
+                ? rightPunchClip
+                : leftPunchClip;
+
+            glovePunchSFX.pitch = Random.Range(0.97f, 1.03f);
+            glovePunchSFX.Play();
+        }
 
         // Launch carried ball
         if (playerController.CarriedBall != null)
