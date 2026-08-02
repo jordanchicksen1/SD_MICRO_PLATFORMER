@@ -65,6 +65,11 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] AudioSource glovePunchSFX;
     [SerializeField] AudioClip rightPunchClip;
     [SerializeField] AudioClip leftPunchClip;
+    [SerializeField] float gloveChargeTime = 2f;
+    [SerializeField] float slamForwardForce = 9f;
+    [SerializeField] float slamUpForce = 4f;
+    bool slamCharged;
+    Coroutine gloveChargeRoutine;
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -515,10 +520,12 @@ public class PlayerCombat : MonoBehaviour
             return;
 
         isGloveCharging = true;
+        slamCharged = false;
 
         animator.SetGloveWindup(true);
 
-        Debug.Log("Gloves Charging");
+        gloveChargeRoutine =
+            StartCoroutine(ChargeGlovesRoutine());
     }
 
     void ReleaseGloves()
@@ -529,7 +536,12 @@ public class PlayerCombat : MonoBehaviour
         isGloveCharging = false;
 
         animator.SetGloveWindup(false);
+
+        if (gloveChargeRoutine != null)
+            StopCoroutine(gloveChargeRoutine);
+
         animator.SetRightPunch(punchRight);
+
         StartCoroutine(UppercutRoutine());
     }
 
@@ -638,6 +650,28 @@ public class PlayerCombat : MonoBehaviour
 
         punchRight = !punchRight;
         animator.SetRightPunch(punchRight);
+
+        isAttacking = false;
+    }
+
+    IEnumerator ChargeGlovesRoutine()
+    {
+        yield return new WaitForSeconds(gloveChargeTime);
+
+        isGloveCharging = false;
+
+        animator.SetGloveWindup(false);
+
+        StartCoroutine(GroundSlamRoutine());
+    }
+
+    IEnumerator GroundSlamRoutine()
+    {
+        isAttacking = true;
+
+        Debug.Log("GROUND SLAM");
+
+        yield return new WaitForSeconds(0.5f);
 
         isAttacking = false;
     }

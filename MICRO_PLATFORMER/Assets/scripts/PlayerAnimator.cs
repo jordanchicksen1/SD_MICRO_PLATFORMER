@@ -109,13 +109,14 @@ public class PlayerAnimator : MonoBehaviour
 
     [Header("Boxing Gloves Pose")]
     [SerializeField] float gloveBlendSpeed = 14f;
-
     bool isGloveWindup;
     bool isUppercut;
-
+    bool isGroundSlamJump;
+    bool isGroundSlamImpact;
     float gloveWindupBlend;
     float uppercutBlend;
-
+    float groundSlamJumpBlend;
+    float groundSlamImpactBlend;
     bool rightPunch;
 
 
@@ -198,6 +199,16 @@ public class PlayerAnimator : MonoBehaviour
     public void SetRightPunch(bool value)
     {
         rightPunch = value;
+    }
+
+    public void SetGroundSlamJump(bool active)
+    {
+        isGroundSlamJump = active;
+    }
+
+    public void SetGroundSlamImpact(bool active)
+    {
+        isGroundSlamImpact = active;
     }
 
     public void SetGroundPound(bool active)
@@ -319,6 +330,20 @@ public class PlayerAnimator : MonoBehaviour
             uppercutTarget,
             Time.deltaTime * gloveBlendSpeed);
 
+        float slamJumpTarget = isGroundSlamJump ? 1f : 0f;
+
+        groundSlamJumpBlend = Mathf.MoveTowards(
+            groundSlamJumpBlend,
+            slamJumpTarget,
+            Time.deltaTime * gloveBlendSpeed);
+
+        float slamImpactTarget = isGroundSlamImpact ? 1f : 0f;
+
+        groundSlamImpactBlend = Mathf.MoveTowards(
+            groundSlamImpactBlend,
+            slamImpactTarget,
+            Time.deltaTime * gloveBlendSpeed);
+
         // Smooth blend
         float target = grounded ? 0f : 1f;
         jumpBlend = Mathf.MoveTowards(jumpBlend, target, Time.deltaTime * jumpBlendSpeed);
@@ -356,6 +381,8 @@ public class PlayerAnimator : MonoBehaviour
 
         AnimateGloveWindup(gloveWindupBlend);
         AnimateUppercut(uppercutBlend);
+        AnimateGroundSlamJump(groundSlamJumpBlend);
+        AnimateGroundSlamImpact(groundSlamImpactBlend);
 
     }
 
@@ -1140,6 +1167,18 @@ public class PlayerAnimator : MonoBehaviour
                      0.956883669f),
                 blend);
         }
+    }
+
+    void AnimateGroundSlamJump(float blend)
+    {
+        if (blend <= 0f)
+            return;
+    }
+
+    void AnimateGroundSlamImpact(float blend)
+    {
+        if (blend <= 0f)
+            return;
     }
 
 }
