@@ -398,6 +398,7 @@ public class PlayerAnimator : MonoBehaviour
         if (isBatSpin)
             return;
 
+
         float speed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude;
 
         if (speed < 0.1f)
@@ -454,6 +455,9 @@ public class PlayerAnimator : MonoBehaviour
         if (isGroundPounding)
             return;
 
+        if (IsAnyWeaponAnimationActive())
+            return;
+
         // Body lean
         body.localRotation = Quaternion.Lerp(
             Quaternion.identity,
@@ -494,6 +498,9 @@ public class PlayerAnimator : MonoBehaviour
             return;
 
         if (isGroundPounding)
+            return;
+
+        if (IsAnyWeaponAnimationActive())
             return;
 
         if (blend <= 0f) return;
@@ -539,6 +546,8 @@ public class PlayerAnimator : MonoBehaviour
         if (isBatSpin)
             return;
 
+        if (IsAnyWeaponAnimationActive())
+            return;
 
         if (blend <= 0f) return;
 
@@ -585,6 +594,9 @@ public class PlayerAnimator : MonoBehaviour
             return;
 
         if (isGroundPounding)
+            return;
+
+        if (IsAnyWeaponAnimationActive())
             return;
 
         if (blend <= 0f) return;
@@ -634,7 +646,10 @@ public class PlayerAnimator : MonoBehaviour
             return;
 
         if (blend <= 0f) return;
-        if (isGroundPounding) return; // optional: ground pound overrides carry
+        if (isGroundPounding) return;
+
+        if (IsAnyWeaponAnimationActive())
+            return;
 
         // Arms forward like holding something
         Quaternion leftCarry =
@@ -652,6 +667,9 @@ public class PlayerAnimator : MonoBehaviour
         if (blend <= 0f) return;
 
         if (isBatSpin)
+            return;
+
+        if (IsAnyWeaponAnimationActive())
             return;
 
         // Body slight lean back (celebratory)
@@ -686,6 +704,19 @@ public class PlayerAnimator : MonoBehaviour
             rightLegStartRot,
             blend
         );
+    }
+
+    bool IsAnyWeaponAnimationActive()
+    {
+        return isBatWindup ||
+               isBatFollowThrough ||
+               isBatSpin ||
+               isBoomerangWindup ||
+               isBoomerangThrow ||
+               isGloveWindup ||
+               isUppercut ||
+               isGroundSlamJump ||
+               isGroundSlamImpact;
     }
 
     void AnimateKick(float blend)
@@ -766,6 +797,7 @@ public class PlayerAnimator : MonoBehaviour
         -15f),
     blend);
 
+        Debug.Log(rightArm.localRotation.eulerAngles);
 
         // Head leans slightly into the hit
         head.localPosition = Vector3.Lerp(
