@@ -60,7 +60,7 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] float longJumpLockTime = 0.2f;
 
     bool isLongJumping;
-    
+    bool isGroundSlamLeaping;
 
     [Header("Carrying")] 
     [SerializeField] Transform holdPoint;
@@ -444,10 +444,16 @@ public class PlayerController3D : MonoBehaviour
             if (!wasGrounded)
             {
                 playerCombat.ResetUppercutLift();
+
+                if (isGroundSlamLeaping)
+                {
+                    isGroundSlamLeaping = false;
+                    playerCombat.OnGroundSlamLanded();
+                }
             }
 
             wasGrounded = true;
-
+            
             lastGroundedTime = Time.time;
 
             hasUsedAirDive = false;
@@ -467,11 +473,11 @@ public class PlayerController3D : MonoBehaviour
         CheckGroundPoundAutoEnd(); 
 
 
-        if (!isGroundPounding && !isKnockedBack && !isDiving && !isLongJumping && !isBoomerangAiming)
+        if (!isGroundPounding && !isKnockedBack && !isDiving && !isLongJumping && !isBoomerangAiming && !isGroundSlamLeaping)
             Move();
 
 
-        if (!isKnockedBack && !isDiving && !isLongJumping && !isBoomerangAiming)
+        if (!isKnockedBack && !isDiving && !isLongJumping && !isBoomerangAiming && !isGroundSlamLeaping)
             RotateTowardsMovement();
 
 
@@ -515,6 +521,19 @@ public class PlayerController3D : MonoBehaviour
         if (playerAnimator != null)
             playerAnimator.SetMoveBlend(Mathf.Clamp01(moveInput.magnitude));
 
+    }
+
+    public void BeginGroundSlamLeap()
+    {
+        isGroundSlamLeaping = true;
+
+        rb.linearVelocity = Vector3.zero;
+
+        Vector3 leap =
+            (-transform.forward * 10f) +
+            (Vector3.up * 5f);
+
+        rb.AddForce(leap, ForceMode.Impulse);
     }
 
     void HandleFootsteps()

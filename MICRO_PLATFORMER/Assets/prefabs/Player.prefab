@@ -112,7 +112,7 @@ Transform:
   m_GameObject: {fileID: 665969806646957899}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.28, y: -0.326, z: 0}
+  m_LocalPosition: {x: -0.28, y: -0.363, z: -0.026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1376,6 +1376,9 @@ MonoBehaviour:
   glovePunchSFX: {fileID: 6378822941289518594}
   rightPunchClip: {fileID: 8300000, guid: 68a5b6cd8b8a870419a4c27d66fc800b, type: 3}
   leftPunchClip: {fileID: 8300000, guid: 176b83485287541458be69f28fe75321, type: 3}
+  gloveChargeTime: 2
+  slamForwardForce: 9
+  slamUpForce: 4
   baseballBatObject: {fileID: 2266087533681769718}
   boomerangObject: {fileID: 514676593268089417}
   boxingGlovesObject1: {fileID: 4910302009879227025}
@@ -7073,7 +7076,7 @@ Transform:
   m_GameObject: {fileID: 3360473554589247897}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.28, y: -0.284, z: 0}
+  m_LocalPosition: {x: 0.28, y: -0.32484347, z: -0.024}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -15037,7 +15040,7 @@ Transform:
   m_GameObject: {fileID: 7303057037023528442}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.426, y: 0.308, z: 0}
+  m_LocalPosition: {x: -0.46, y: 0.245, z: 0.02710247}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -15526,7 +15529,7 @@ Transform:
   m_GameObject: {fileID: 8174309636550427224}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.408, y: 0.274, z: 0}
+  m_LocalPosition: {x: 0.446, y: 0.219, z: -0.017}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

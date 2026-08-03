@@ -12,7 +12,10 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] Transform model;
     [SerializeField] Transform baseballBat;
     Vector3 headStartPos;
+    Vector3 modelStartPos;
+    Quaternion headStartRot;
     Vector3 rightLegStartPos;
+    Vector3 leftLegStartPos;
     Vector3 rightArmStartPos;
     Vector3 leftArmStartPos;
     Quaternion leftArmStartRot;
@@ -133,12 +136,14 @@ public class PlayerAnimator : MonoBehaviour
         leftLegStartRot = leftLeg.localRotation;
         rightLegStartRot = rightLeg.localRotation;
         headStartPos = head.localPosition;
+        headStartRot = head.localRotation;
         rightLegStartPos = rightLeg.localPosition;
         modelStartRotation = model.localRotation;
         batStartRot = baseballBat.localRotation;
         batStartPos = baseballBat.localPosition;
         rightArmStartPos = rightArm.localPosition;
         leftArmStartPos = leftArm.localPosition;
+        leftLegStartPos = leftLeg.localPosition;
     }
 
     bool IsGrounded()
@@ -1171,14 +1176,174 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateGroundSlamJump(float blend)
     {
-        if (blend <= 0f)
+        if (isGemPose) return;
+
+        if (isBatSpin)
             return;
+
+        if (blend <= 0f)
+        {
+            model.localPosition = Vector3.Lerp(model.localPosition, Vector3.zero, Time.deltaTime * 15f);
+            model.localRotation = Quaternion.Lerp(model.localRotation, modelStartRotation, Time.deltaTime * 15f);
+
+            head.localPosition = Vector3.Lerp(head.localPosition, headStartPos, Time.deltaTime * 15f);
+            head.localRotation = Quaternion.Lerp(head.localRotation, headStartRot, Time.deltaTime * 15f);
+
+            leftArm.localPosition = Vector3.Lerp(leftArm.localPosition, leftArmStartPos, Time.deltaTime * 15f);
+            leftArm.localRotation = Quaternion.Lerp(leftArm.localRotation, leftArmStartRot, Time.deltaTime * 15f);
+
+            rightArm.localPosition = Vector3.Lerp(rightArm.localPosition, rightArmStartPos, Time.deltaTime * 15f);
+            rightArm.localRotation = Quaternion.Lerp(rightArm.localRotation, rightArmStartRot, Time.deltaTime * 15f);
+
+            leftLeg.localPosition = Vector3.Lerp(leftLeg.localPosition, leftLegStartPos, Time.deltaTime * 15f);
+            leftLeg.localRotation = Quaternion.Lerp(leftLeg.localRotation, leftLegStartRot, Time.deltaTime * 15f);
+
+            rightLeg.localPosition = Vector3.Lerp(rightLeg.localPosition, rightLegStartPos, Time.deltaTime * 15f);
+            rightLeg.localRotation = Quaternion.Lerp(rightLeg.localRotation, rightLegStartRot, Time.deltaTime * 15f);
+
+            return;
+        }
+
+        head.localPosition = Vector3.Lerp(
+            head.localPosition,
+            new Vector3(0f, 0.560222983f, -0.00424337387f),
+            blend);
+
+        head.localRotation = Quaternion.Lerp(
+            head.localRotation,
+            new Quaternion(0.151070535f, 0f, 0f, 0.988523006f),
+            blend);
+
+        leftArm.localPosition = Vector3.Lerp(
+            leftArm.localPosition,
+            new Vector3(0.402666807f, 0.236000001f, 0.100000001f),
+            blend);
+
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            new Quaternion(-0.139028266f, -0.178253889f, 0.599084675f, 0.768110871f),
+            blend);
+
+        rightArm.localPosition = Vector3.Lerp(
+            rightArm.localPosition,
+            new Vector3(-0.372319162f, 0.287999988f, 0.0489999987f),
+            blend);
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            new Quaternion(-0.106027693f, 0.136001959f, -0.605626822f, 0.776838303f),
+            blend);
+
+        leftLeg.localPosition = Vector3.Lerp(
+            leftLeg.localPosition,
+            new Vector3(0.280000001f, -0.324843466f, 0.0719999969f),
+            blend);
+
+        leftLeg.localRotation = Quaternion.Lerp(
+            leftLeg.localRotation,
+            new Quaternion(-0.268155158f, 0f, 0f, 0.963375747f),
+            blend);
+
+        rightLeg.localPosition = Vector3.Lerp(
+            rightLeg.localPosition,
+            new Vector3(-0.280000001f, -0.352935255f, 0.119999997f),
+            blend);
+
+        rightLeg.localRotation = Quaternion.Lerp(
+            rightLeg.localRotation,
+            new Quaternion(-0.235904902f, 0f, 0f, 0.971776128f),
+            blend);
     }
 
     void AnimateGroundSlamImpact(float blend)
     {
-        if (blend <= 0f)
+        if (isGemPose) return;
+
+        if (isBatSpin)
             return;
+
+        if (blend <= 0f)
+        {
+            model.localPosition = Vector3.Lerp(model.localPosition, Vector3.zero, Time.deltaTime * 15f);
+            model.localRotation = Quaternion.Lerp(model.localRotation, modelStartRotation, Time.deltaTime * 15f);
+
+            head.localPosition = Vector3.Lerp(head.localPosition, headStartPos, Time.deltaTime * 15f);
+            head.localRotation = Quaternion.Lerp(head.localRotation, headStartRot, Time.deltaTime * 15f);
+
+            leftArm.localPosition = Vector3.Lerp(leftArm.localPosition, leftArmStartPos, Time.deltaTime * 15f);
+            leftArm.localRotation = Quaternion.Lerp(leftArm.localRotation, leftArmStartRot, Time.deltaTime * 15f);
+
+            rightArm.localPosition = Vector3.Lerp(rightArm.localPosition, rightArmStartPos, Time.deltaTime * 15f);
+            rightArm.localRotation = Quaternion.Lerp(rightArm.localRotation, rightArmStartRot, Time.deltaTime * 15f);
+
+            leftLeg.localPosition = Vector3.Lerp(leftLeg.localPosition, leftLegStartPos, Time.deltaTime * 15f);
+            leftLeg.localRotation = Quaternion.Lerp(leftLeg.localRotation, leftLegStartRot, Time.deltaTime * 15f);
+
+            rightLeg.localPosition = Vector3.Lerp(rightLeg.localPosition, rightLegStartPos, Time.deltaTime * 15f);
+            rightLeg.localRotation = Quaternion.Lerp(rightLeg.localRotation, rightLegStartRot, Time.deltaTime * 15f);
+
+            return;
+        }
+
+        model.localPosition = Vector3.Lerp(
+            model.localPosition,
+            new Vector3(0f, -0.0748822689f, 0.209164143f),
+            blend);
+
+        model.localRotation = Quaternion.Lerp(
+            model.localRotation,
+            new Quaternion(-0.712179244f, 0f, 0f, 0.701997697f),
+            blend);
+
+        head.localPosition = Vector3.Lerp(
+            head.localPosition,
+            new Vector3(0f, 0.54428792f, 0.146905661f),
+            blend);
+
+        head.localRotation = Quaternion.Lerp(
+            head.localRotation,
+            new Quaternion(0.284923673f, 0f, 0f, 0.958550274f),
+            blend);
+
+        leftArm.localPosition = Vector3.Lerp(
+            leftArm.localPosition,
+            new Vector3(0.418938845f, 0.377999991f, -0.196999997f),
+            blend);
+
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            new Quaternion(0.309688658f, 0.183409095f, 0.59752667f, 0.716530621f),
+            blend);
+
+        rightArm.localPosition = Vector3.Lerp(
+            rightArm.localPosition,
+            new Vector3(-0.355157316f, 0.291999996f, -0.238999993f),
+            blend);
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            new Quaternion(0.12802209f, -0.162709579f, -0.605677366f, 0.768303931f),
+            blend);
+
+        leftLeg.localPosition = Vector3.Lerp(
+            leftLeg.localPosition,
+            new Vector3(0.280000001f, -0.310000002f, -0.199000001f),
+            blend);
+
+        leftLeg.localRotation = Quaternion.Lerp(
+            leftLeg.localRotation,
+            new Quaternion(0.245990425f, 0f, 0f, 0.969272316f),
+            blend);
+
+        rightLeg.localPosition = Vector3.Lerp(
+            rightLeg.localPosition,
+            new Vector3(-0.280000001f, -0.351000011f, -0.194000006f),
+            blend);
+
+        rightLeg.localRotation = Quaternion.Lerp(
+            rightLeg.localRotation,
+            new Quaternion(0.262517631f, 0f, 0f, 0.964927256f),
+            blend);
     }
 
 }

@@ -70,6 +70,11 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] float slamUpForce = 4f;
     bool slamCharged;
     Coroutine gloveChargeRoutine;
+    [SerializeField] float slamLeapForwardForce = 10f;
+    [SerializeField] float slamLeapUpForce = 5f;
+    [SerializeField] float slamAirTime = 0.15f;
+    bool isGroundSlamming;
+    bool hasGroundSlamLanded;
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -669,16 +674,69 @@ public class PlayerCombat : MonoBehaviour
     {
         isAttacking = true;
 
-        Debug.Log("GROUND SLAM");
+        isGroundSlamming = true;
+        hasGroundSlamLanded = false;
 
-        yield return new WaitForSeconds(0.5f);
+        animator.SetGroundSlamJump(true);
 
+        yield return null;
+
+        playerController.BeginGroundSlamLeap();
+
+        while (!hasGroundSlamLanded)
+            yield return null;
+
+        yield return new WaitForSeconds(0.25f);
+
+        animator.SetGroundSlamImpact(false);
+
+        isGroundSlamming = false;
         isAttacking = false;
     }
 
     public void ResetUppercutLift()
     {
         canUppercutLift = true;
+    }
+
+    public bool IsGroundSlamming()
+    {
+        return isGroundSlamming;
+    }
+
+    public void LaunchGroundSlam()
+    {
+        rb.linearVelocity = Vector3.zero;
+
+        Vector3 leap =
+            (-transform.forward * slamLeapForwardForce) +
+            (Vector3.up * slamLeapUpForce);
+
+        rb.AddForce(leap, ForceMode.Impulse);
+    }
+
+    public void OnGroundSlamLanded()
+    {
+        if (!isGroundSlamming)
+            return;
+
+        if (hasGroundSlamLanded)
+            return;
+
+        hasGroundSlamLanded = true;
+
+        animator.SetGroundSlamJump(false);
+        animator.SetGroundSlamImpact(true);
+
+        combatShake.Shake(0.18f, 0.25f);
+
+        // We'll add:
+        // Damage
+        // Dust
+        // Shockwave
+        // Camera shake
+        // Rock VFX
+        // here later.
     }
 
     //======================== COROUTINES =======================
