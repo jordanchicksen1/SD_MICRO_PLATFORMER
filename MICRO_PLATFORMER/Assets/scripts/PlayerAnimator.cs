@@ -1183,6 +1183,12 @@ public class PlayerAnimator : MonoBehaviour
 
         if (blend <= 0f)
         {
+            if (isGloveWindup ||
+       isUppercut ||
+       isGroundSlamImpact)
+                return;
+
+
             model.localPosition = Vector3.Lerp(model.localPosition, Vector3.zero, Time.deltaTime * 15f);
             model.localRotation = Quaternion.Lerp(model.localRotation, modelStartRotation, Time.deltaTime * 15f);
 
@@ -1264,6 +1270,12 @@ public class PlayerAnimator : MonoBehaviour
 
         if (blend <= 0f)
         {
+            if (isGloveWindup ||
+        isUppercut ||
+        isGroundSlamJump)
+                return;
+
+
             model.localPosition = Vector3.Lerp(model.localPosition, Vector3.zero, Time.deltaTime * 15f);
             model.localRotation = Quaternion.Lerp(model.localRotation, modelStartRotation, Time.deltaTime * 15f);
 
