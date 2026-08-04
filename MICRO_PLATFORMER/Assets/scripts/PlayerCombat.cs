@@ -53,6 +53,29 @@ public class PlayerCombat : MonoBehaviour
     bool isBoomerangAimMode;
     BoomerangTargetSelector targetSelector;
 
+    [Header("Boxing Gloves")]
+    [SerializeField] Transform gloveHitPoint;
+    [SerializeField] float gloveRadius = 1.2f;
+    [SerializeField] float uppercutForce = 8f;
+    [SerializeField] float enemyLaunchForce = 5f;
+    bool isGloveCharging;
+    bool canUppercutLift = true;
+    bool punchRight = true;
+    [SerializeField] float slamRadius = 3f;
+    [SerializeField] AudioSource glovePunchSFX;
+    [SerializeField] AudioClip rightPunchClip;
+    [SerializeField] AudioClip leftPunchClip;
+    [SerializeField] float gloveChargeTime = 2f;
+    [SerializeField] float slamForwardForce = 9f;
+    [SerializeField] float slamUpForce = 4f;
+    bool slamCharged;
+    Coroutine gloveChargeRoutine;
+    [SerializeField] float slamLeapForwardForce = 10f;
+    [SerializeField] float slamLeapUpForce = 5f;
+    [SerializeField] float slamAirTime = 0.15f;
+    bool isGroundSlamming;
+    bool hasGroundSlamLanded;
+
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
     [SerializeField] GameObject boomerangObject;

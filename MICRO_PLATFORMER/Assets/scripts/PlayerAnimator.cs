@@ -107,6 +107,17 @@ public class PlayerAnimator : MonoBehaviour
     float boomerangWindupBlend;
     float boomerangThrowBlend;
 
+    [Header("Boxing Gloves Pose")]
+    [SerializeField] float gloveBlendSpeed = 14f;
+    bool isGloveWindup;
+    bool isUppercut;
+    bool isGroundSlamJump;
+    bool isGroundSlamImpact;
+    float gloveWindupBlend;
+    float uppercutBlend;
+    float groundSlamJumpBlend;
+    float groundSlamImpactBlend;
+    bool rightPunch;
 
     Vector3 bodyStartPos;
 
@@ -172,6 +183,31 @@ public class PlayerAnimator : MonoBehaviour
     public void SetBoomerangThrow(bool active)
     {
         isBoomerangThrow = active;
+    }
+
+    public void SetGloveWindup(bool active)
+    {
+        isGloveWindup = active;
+    }
+
+    public void SetUppercut(bool active)
+    {
+        isUppercut = active;
+    }
+
+    public void SetRightPunch(bool value)
+    {
+        rightPunch = value;
+    }
+
+    public void SetGroundSlamJump(bool active)
+    {
+        isGroundSlamJump = active;
+    }
+
+    public void SetGroundSlamImpact(bool active)
+    {
+        isGroundSlamImpact = active;
     }
 
     public void SetGroundPound(bool active)
@@ -279,6 +315,34 @@ public class PlayerAnimator : MonoBehaviour
             boomerangThrowTarget,
             Time.deltaTime * boomerangBlendSpeed);
 
+        float gloveWindupTarget = isGloveWindup ? 1f : 0f;
+
+        gloveWindupBlend = Mathf.MoveTowards(
+            gloveWindupBlend,
+            gloveWindupTarget,
+            Time.deltaTime * gloveBlendSpeed);
+
+        float uppercutTarget = isUppercut ? 1f : 0f;
+
+        uppercutBlend = Mathf.MoveTowards(
+            uppercutBlend,
+            uppercutTarget,
+            Time.deltaTime * gloveBlendSpeed);
+
+        float slamJumpTarget = isGroundSlamJump ? 1f : 0f;
+
+        groundSlamJumpBlend = Mathf.MoveTowards(
+            groundSlamJumpBlend,
+            slamJumpTarget,
+            Time.deltaTime * gloveBlendSpeed);
+
+        float slamImpactTarget = isGroundSlamImpact ? 1f : 0f;
+
+        groundSlamImpactBlend = Mathf.MoveTowards(
+            groundSlamImpactBlend,
+            slamImpactTarget,
+            Time.deltaTime * gloveBlendSpeed);
+
         // Smooth blend
         float target = grounded ? 0f : 1f;
         jumpBlend = Mathf.MoveTowards(jumpBlend, target, Time.deltaTime * jumpBlendSpeed);
@@ -314,6 +378,8 @@ public class PlayerAnimator : MonoBehaviour
         AnimateBoomerangWindup(boomerangWindupBlend);
         AnimateBoomerangThrow(boomerangThrowBlend);
 
+        AnimateGloveWindup(gloveWindupBlend);
+        AnimateUppercut(uppercutBlend);
     }
 
     void AnimateWalk()
@@ -913,6 +979,168 @@ public class PlayerAnimator : MonoBehaviour
                 -90f,
                 -45f),
             blend);
+    }
+
+    void AnimateGloveWindup(float blend)
+    {
+        if (isGemPose) return;
+
+        if (isBatSpin)
+            return;
+
+        if (blend <= 0f)
+            return;
+
+        if (rightPunch)
+        {
+            // Right arm (punch arm)
+            rightArm.localPosition = Vector3.Lerp(
+                rightArm.localPosition,
+                new Vector3(
+                    -0.556999981f,
+                    0.25184235f,
+                    0.0480000004f),
+                blend);
+
+            rightArm.localRotation = Quaternion.Lerp(
+                rightArm.localRotation,
+                new Quaternion(
+                    -0.0937879831f,
+                     0.290423512f,
+                    -0.0286157709f,
+                     0.951860845f),
+                blend);
+
+            // Left arm (guard)
+            leftArm.localPosition = Vector3.Lerp(
+                leftArm.localPosition,
+                new Vector3(
+                     0.58379674f,
+                     0.23299998f,
+                     0.0410000011f),
+                blend);
+
+            leftArm.localRotation = Quaternion.Lerp(
+                leftArm.localRotation,
+                new Quaternion(
+                     0.298097938f,
+                     0.22401832f,
+                    -0.0721889734f,
+                     0.925063372f),
+                blend);
+        }
+        else
+        {
+            // Left arm (punch arm)
+            leftArm.localPosition = Vector3.Lerp(
+                leftArm.localPosition,
+                new Vector3(
+                     0.538999975f,
+                     0.169814348f,
+                    -0.0314626694f),
+                blend);
+
+            leftArm.localRotation = Quaternion.Lerp(
+                leftArm.localRotation,
+                new Quaternion(
+                    -0.3253313f,
+                    -0.0734869763f,
+                    -0.0253688842f,
+                     0.942398906f),
+                blend);
+
+            // Right arm (guard)
+            rightArm.localPosition = Vector3.Lerp(
+                rightArm.localPosition,
+                new Vector3(
+                    -0.583000004f,
+                     0.271535039f,
+                     0.142667294f),
+                blend);
+
+            rightArm.localRotation = Quaternion.Lerp(
+                rightArm.localRotation,
+                new Quaternion(
+                     0.201587901f,
+                    -0.178198114f,
+                     0.0373260193f,
+                     0.962400496f),
+                blend);
+        }
+    }
+
+    void AnimateUppercut(float blend)
+    {
+        if (isGemPose) return;
+
+        if (isBatSpin)
+            return;
+
+        if (blend <= 0f)
+            return;
+
+        if (rightPunch)
+        {
+            // Right arm uppercut
+            rightArm.localPosition = Vector3.Lerp(
+                rightArm.localPosition,
+                new Vector3(-0.537999988f, 0.250999987f, -0.222000003f),
+                blend);
+
+            rightArm.localRotation = Quaternion.Lerp(
+                rightArm.localRotation,
+                new Quaternion(0.396975577f, -0.637150705f, -0.41621387f, 0.513045251f),
+                blend);
+
+            // Left arm guard
+            leftArm.localPosition = Vector3.Lerp(
+                leftArm.localPosition,
+                new Vector3(
+                     0.533110857f,
+                     0.270000011f,
+                     0.108999997f),
+                blend);
+
+            leftArm.localRotation = Quaternion.Lerp(
+                leftArm.localRotation,
+                new Quaternion(
+                    -0.107257284f,
+                    -0.288246751f,
+                     0.00292336312f,
+                     0.951525688f),
+                blend);
+        }
+        else
+        {
+            // Left arm uppercut
+            leftArm.localPosition = Vector3.Lerp(
+                leftArm.localPosition,
+                new Vector3(0.456f, 0.273000002f, -0.293000013f),
+                blend);
+
+            leftArm.localRotation = Quaternion.Lerp(
+                leftArm.localRotation,
+                new Quaternion(0.418233216f, 0.580632448f, 0.469551772f, 0.517173171f),
+                blend);
+
+            // Right arm guard
+            rightArm.localPosition = Vector3.Lerp(
+                rightArm.localPosition,
+                new Vector3(
+                    -0.563000023f,
+                     0.254999995f,
+                     0.0799999982f),
+                blend);
+
+            rightArm.localRotation = Quaternion.Lerp(
+                rightArm.localRotation,
+                new Quaternion(
+                    -0.130079657f,
+                     0.257350147f,
+                    -0.0349844657f,
+                     0.956883669f),
+                blend);
+        }
     }
 }
 
