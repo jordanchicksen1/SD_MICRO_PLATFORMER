@@ -389,6 +389,7 @@ public class PlayerAnimator : MonoBehaviour
         AnimateGroundSlamJump(groundSlamJumpBlend);
         AnimateGroundSlamImpact(groundSlamImpactBlend);
 
+        
     }
 
     void AnimateWalk()
@@ -774,6 +775,8 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateBatWindup(float blend)
     {
+       
+
         if (isGemPose) return;
 
         if (isBatSpin)
@@ -797,7 +800,7 @@ public class PlayerAnimator : MonoBehaviour
         -15f),
     blend);
 
-        Debug.Log(rightArm.localRotation.eulerAngles);
+     
 
         // Head leans slightly into the hit
         head.localPosition = Vector3.Lerp(
@@ -808,6 +811,8 @@ public class PlayerAnimator : MonoBehaviour
 
     void AnimateBatFollowThrough(float blend)
     {
+      
+
         if (isGemPose) return;
 
         if (isBatSpin)
