@@ -76,6 +76,10 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] float slamAirTime = 0.15f;
     bool isGroundSlamming;
     bool hasGroundSlamLanded;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip groundSlamSFX;
+    bool showGroundSlamUI;
+    float groundSlamChargeTimer;
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -527,11 +531,20 @@ public class PlayerCombat : MonoBehaviour
 
         isGloveCharging = true;
         slamCharged = false;
-
+        groundSlamChargeTimer = 0f;
         animator.SetGloveWindup(true);
-
+        showGroundSlamUI = false;
+        StartCoroutine(ShowGroundSlamUICoroutine());
         gloveChargeRoutine =
             StartCoroutine(ChargeGlovesRoutine());
+    }
+
+    IEnumerator ShowGroundSlamUICoroutine()
+    {
+        yield return new WaitForSeconds(0.15f);
+
+        if (isGloveCharging)
+            showGroundSlamUI = true;
     }
 
     void ReleaseGloves()
@@ -540,7 +553,7 @@ public class PlayerCombat : MonoBehaviour
             return;
 
         isGloveCharging = false;
-
+        showGroundSlamUI = false;
         animator.SetGloveWindup(false);
 
         if (gloveChargeRoutine != null)
@@ -662,12 +675,21 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator ChargeGlovesRoutine()
     {
-        yield return new WaitForSeconds(gloveChargeTime);
+        groundSlamChargeTimer = 0f;
 
+        while (groundSlamChargeTimer < gloveChargeTime)
+        {
+            groundSlamChargeTimer += Time.deltaTime;
+            yield return null;
+        }
+
+        groundSlamChargeTimer = gloveChargeTime;
+
+        slamCharged = true;
         isGloveCharging = false;
 
         animator.SetGloveWindup(false);
-
+        showGroundSlamUI = false;
         StartCoroutine(GroundSlamRoutine());
     }
 
@@ -733,6 +755,10 @@ public class PlayerCombat : MonoBehaviour
         
         StartCoroutine(GroundSlamDustWave());
         combatShake.Shake(0.18f, 0.25f);
+        if (groundSlamSFX != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(groundSlamSFX);
+        }
     }
 
     void GroundSlamAttack()
@@ -807,6 +833,38 @@ public class PlayerCombat : MonoBehaviour
         }
 
         yield break;
+    }
+
+    public float GroundSlamChargePercent
+    {
+        get
+        {
+            return groundSlamChargeTimer / gloveChargeTime;
+        }
+    }
+
+    public bool IsChargingGroundSlam
+    {
+        get
+        {
+            return isGloveCharging;
+        }
+    }
+
+    public bool CanGroundSlam
+    {
+        get
+        {
+            return slamCharged;
+        }
+    }
+
+    public bool ShowGroundSlamUI
+    {
+        get
+        {
+            return showGroundSlamUI;
+        }
     }
 
     //======================== COROUTINES =======================
