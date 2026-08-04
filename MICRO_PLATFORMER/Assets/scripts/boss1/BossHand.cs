@@ -363,6 +363,25 @@ public class BossHand : MonoBehaviour
         }
     }
 
+    public void DamageHand()
+    {
+        if (currentState != HandState.Dazed)
+            return;
+
+        if (gruntSFX)
+            gruntSFX.Play();
+
+        currentState = HandState.Incapacitated;
+
+        CameraShake.Shake(0.25f, 0.15f);
+
+        SpawnStars();
+
+        dazedTimer = 0f;
+
+        boss.OnHandIncapacitated(this);
+    }
+
     public IEnumerator ReturnToStart()
     {
         float t = 0f;

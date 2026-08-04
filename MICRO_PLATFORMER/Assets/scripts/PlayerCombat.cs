@@ -355,6 +355,30 @@ public class PlayerCombat : MonoBehaviour
             {
                 player.ApplyBatKnockback(transform.position);
             }
+
+            //---------- Boss Hand -------
+            BossHand hand = hit.GetComponentInParent<BossHand>();
+
+            if (hand != null)
+            {
+                hand.DamageHand();
+                continue;
+            }
+
+            //---------- Boss Head ---------
+            BossHead head = hit.GetComponentInParent<BossHead>();
+
+            if (head != null)
+            {
+                BossController boss = head.GetComponentInParent<BossController>();
+
+                if (boss != null)
+                {
+                    boss.DamageBoss();
+                }
+
+                continue;
+            }
         }
     }
 
@@ -658,6 +682,30 @@ public class PlayerCombat : MonoBehaviour
 
                 continue;
             }
+
+            //---------- Boss Hand -------
+            BossHand hand = hit.GetComponentInParent<BossHand>();
+
+            if (hand != null)
+            {
+                hand.DamageHand();
+                continue;
+            }
+
+            //---------- Boss Head ---------
+            BossHead head = hit.GetComponentInParent<BossHead>();
+
+            if (head != null)
+            {
+                BossController boss = head.GetComponentInParent<BossController>();
+
+                if (boss != null)
+                {
+                    boss.DamageBoss();
+                }
+
+                continue;
+            }
         }
 
         // Finish the animation
@@ -809,6 +857,31 @@ public class PlayerCombat : MonoBehaviour
 
                 continue;
             }
+
+            //---------- Boss Hand -------
+            BossHand hand = hit.GetComponentInParent<BossHand>();
+
+            if (hand != null)
+            {
+                hand.DamageHand();
+                continue;
+            }
+
+            //---------- Boss Head ---------
+            BossHead head = hit.GetComponentInParent<BossHead>();
+
+            if (head != null)
+            {
+                BossController boss = head.GetComponentInParent<BossController>();
+
+                if (boss != null)
+                {
+                    boss.DamageBoss();
+                }
+
+                continue;
+            }
+
         }
     }
 
@@ -928,7 +1001,30 @@ public class PlayerCombat : MonoBehaviour
                 continue;
             }
 
-      
+            //---------- Boss Hand -------
+            BossHand hand = hit.GetComponentInParent<BossHand>();
+
+            if (hand != null)
+            {
+                hand.DamageHand();
+                continue;
+            }
+
+            //---------- Boss Head ---------
+            BossHead head = hit.GetComponentInParent<BossHead>();
+
+            if (head != null)
+            {
+                BossController boss = head.GetComponentInParent<BossController>();
+
+                if (boss != null)
+                {
+                    boss.DamageBoss();
+                }
+
+                continue;
+            }
+
         }
 
         animator.SetKick(false);
@@ -996,8 +1092,32 @@ public class PlayerCombat : MonoBehaviour
                     continue;
                 }
 
-                 // ---------- Enemy Projectile ----------
-                 EnemyProjectile projectile =hit.GetComponentInParent<EnemyProjectile>();
+            //---------- Boss Hand -------
+            BossHand hand = hit.GetComponentInParent<BossHand>();
+
+            if (hand != null)
+            {
+                hand.DamageHand();
+                continue;
+            }
+
+            //---------- Boss Head ---------
+            BossHead head = hit.GetComponentInParent<BossHead>();
+
+            if (head != null)
+            {
+                BossController boss = head.GetComponentInParent<BossController>();
+
+                if (boss != null)
+                {
+                    boss.DamageBoss();
+                }
+
+                continue;
+            }
+
+            // ---------- Enemy Projectile ----------
+            EnemyProjectile projectile =hit.GetComponentInParent<EnemyProjectile>();
 
                  if (projectile != null)
                  {

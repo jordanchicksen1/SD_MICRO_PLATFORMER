@@ -236,6 +236,17 @@ public class BoomerangProjectile : MonoBehaviour
                 continue;
             }
 
+            //---------- Boss Hand -------
+            BossHand hand = hit.GetComponentInParent<BossHand>();
+
+            if (hand != null)
+            {
+                hand.DamageHand();
+                continue;
+            }
+
+           
+
             // ---------- Player ----------
             PlayerController3D player = hit.GetComponentInParent<PlayerController3D>();
 

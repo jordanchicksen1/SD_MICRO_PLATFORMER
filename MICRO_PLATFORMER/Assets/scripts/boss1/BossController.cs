@@ -44,7 +44,7 @@ public class BossController : MonoBehaviour
 
 
     [SerializeField] AudioSource roarSFX;
-
+    [SerializeField] AudioSource gruntSFX;
     public IEnumerator IntroAnimation()
     {
         if (roarSFX) roarSFX.Play();
@@ -277,6 +277,8 @@ public class BossController : MonoBehaviour
         currentHits++;
         UpdateBossDamageVisual();
         StartCoroutine(HitFlash());
+
+        if (gruntSFX) gruntSFX.Play();
 
         // Phase 3 trigger (boss about to die on next hit)
         if (currentHits == hitsToDefeat - 1)

@@ -39,6 +39,12 @@ public class GroundSlamChargeUI : MonoBehaviour
             PlayPopAnimation();
         }
 
+        // Player stopped charging before reaching full charge.
+        if (!shouldShow && wasVisible)
+        {
+            PlayPopOutAnimation();
+        }
+
         // Pop out immediately when fully charged
         if (combat.CanGroundSlam && !wasFullyCharged)
         {
