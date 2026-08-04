@@ -602,6 +602,16 @@ public class PlayerAnimator : MonoBehaviour
 
         if (blend <= 0f) return;
 
+        head.localRotation = Quaternion.Lerp(
+    head.localRotation,
+    headStartRot,
+    blend);
+
+        head.localPosition = Vector3.Lerp(
+            head.localPosition,
+            headStartPos,
+            blend);
+
         // Body breathe ALWAYS (even while carrying)
         float breathe = Mathf.Sin(Time.time * 2f) * 0.05f;
         body.localPosition = bodyStartPos + Vector3.up * breathe;
@@ -1123,29 +1133,7 @@ public class PlayerAnimator : MonoBehaviour
             return;
 
         if (blend <= 0f)
-        {
-            leftArm.localPosition = Vector3.Lerp(
-                leftArm.localPosition,
-                leftArmStartPos,
-                Time.deltaTime * 15f);
-
-            rightArm.localPosition = Vector3.Lerp(
-                rightArm.localPosition,
-                rightArmStartPos,
-                Time.deltaTime * 15f);
-
-            leftArm.localRotation = Quaternion.Lerp(
-                leftArm.localRotation,
-                leftArmStartRot,
-                Time.deltaTime * 15f);
-
-            rightArm.localRotation = Quaternion.Lerp(
-                rightArm.localRotation,
-                rightArmStartRot,
-                Time.deltaTime * 15f);
-
             return;
-        }
 
         if (rightPunch)
         {
@@ -1219,33 +1207,7 @@ public class PlayerAnimator : MonoBehaviour
             return;
 
         if (blend <= 0f)
-        {
-            if (isGloveWindup ||
-       isUppercut ||
-       isGroundSlamImpact)
-                return;
-
-
-            model.localPosition = Vector3.Lerp(model.localPosition, Vector3.zero, Time.deltaTime * 15f);
-            model.localRotation = Quaternion.Lerp(model.localRotation, modelStartRotation, Time.deltaTime * 15f);
-
-            head.localPosition = Vector3.Lerp(head.localPosition, headStartPos, Time.deltaTime * 15f);
-            head.localRotation = Quaternion.Lerp(head.localRotation, headStartRot, Time.deltaTime * 15f);
-
-            leftArm.localPosition = Vector3.Lerp(leftArm.localPosition, leftArmStartPos, Time.deltaTime * 15f);
-            leftArm.localRotation = Quaternion.Lerp(leftArm.localRotation, leftArmStartRot, Time.deltaTime * 15f);
-
-            rightArm.localPosition = Vector3.Lerp(rightArm.localPosition, rightArmStartPos, Time.deltaTime * 15f);
-            rightArm.localRotation = Quaternion.Lerp(rightArm.localRotation, rightArmStartRot, Time.deltaTime * 15f);
-
-            leftLeg.localPosition = Vector3.Lerp(leftLeg.localPosition, leftLegStartPos, Time.deltaTime * 15f);
-            leftLeg.localRotation = Quaternion.Lerp(leftLeg.localRotation, leftLegStartRot, Time.deltaTime * 15f);
-
-            rightLeg.localPosition = Vector3.Lerp(rightLeg.localPosition, rightLegStartPos, Time.deltaTime * 15f);
-            rightLeg.localRotation = Quaternion.Lerp(rightLeg.localRotation, rightLegStartRot, Time.deltaTime * 15f);
-
             return;
-        }
 
         head.localPosition = Vector3.Lerp(
             head.localPosition,
@@ -1306,33 +1268,7 @@ public class PlayerAnimator : MonoBehaviour
             return;
 
         if (blend <= 0f)
-        {
-            if (isGloveWindup ||
-        isUppercut ||
-        isGroundSlamJump)
-                return;
-
-
-            model.localPosition = Vector3.Lerp(model.localPosition, Vector3.zero, Time.deltaTime * 15f);
-            model.localRotation = Quaternion.Lerp(model.localRotation, modelStartRotation, Time.deltaTime * 15f);
-
-            head.localPosition = Vector3.Lerp(head.localPosition, headStartPos, Time.deltaTime * 15f);
-            head.localRotation = Quaternion.Lerp(head.localRotation, headStartRot, Time.deltaTime * 15f);
-
-            leftArm.localPosition = Vector3.Lerp(leftArm.localPosition, leftArmStartPos, Time.deltaTime * 15f);
-            leftArm.localRotation = Quaternion.Lerp(leftArm.localRotation, leftArmStartRot, Time.deltaTime * 15f);
-
-            rightArm.localPosition = Vector3.Lerp(rightArm.localPosition, rightArmStartPos, Time.deltaTime * 15f);
-            rightArm.localRotation = Quaternion.Lerp(rightArm.localRotation, rightArmStartRot, Time.deltaTime * 15f);
-
-            leftLeg.localPosition = Vector3.Lerp(leftLeg.localPosition, leftLegStartPos, Time.deltaTime * 15f);
-            leftLeg.localRotation = Quaternion.Lerp(leftLeg.localRotation, leftLegStartRot, Time.deltaTime * 15f);
-
-            rightLeg.localPosition = Vector3.Lerp(rightLeg.localPosition, rightLegStartPos, Time.deltaTime * 15f);
-            rightLeg.localRotation = Quaternion.Lerp(rightLeg.localRotation, rightLegStartRot, Time.deltaTime * 15f);
-
             return;
-        }
 
         model.localPosition = Vector3.Lerp(
             model.localPosition,
