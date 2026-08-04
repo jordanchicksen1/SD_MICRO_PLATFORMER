@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9097781369485743717}
   - component: {fileID: 2717535847336132013}
+  - component: {fileID: 3748125761822023322}
   m_Layer: 0
   m_Name: DustPool
   m_TagString: Untagged
@@ -46,3 +47,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dustPrefab: {fileID: 1906283922166387234, guid: 491a1ad99bde8cb4d942feb3e806e9b2, type: 3}
   poolSize: 20
+--- !u!114 &3748125761822023322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5597849767555465925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72dafa4ae8b8c8e45af391c9bdbf7ea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dustPrefab: {fileID: 1906283922166387234, guid: a0e0dc4e3a2c1074caa0b373b51a1915, type: 3}
+  poolSize: 250

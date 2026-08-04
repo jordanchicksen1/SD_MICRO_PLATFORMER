@@ -4063,6 +4063,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3748125761822023322, guid: 93d89449983b8fb40837e9769e747d01, type: 3}
+      propertyPath: poolSize
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 5597849767555465925, guid: 93d89449983b8fb40837e9769e747d01, type: 3}
       propertyPath: m_Name
       value: DustPool

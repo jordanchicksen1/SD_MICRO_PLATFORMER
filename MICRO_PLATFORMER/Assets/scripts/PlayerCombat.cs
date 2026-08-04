@@ -62,6 +62,7 @@ public class PlayerCombat : MonoBehaviour
     bool canUppercutLift = true;
     bool punchRight = true;
     [SerializeField] float slamRadius = 3f;
+    [SerializeField] Transform slamHitPoint;
     [SerializeField] AudioSource glovePunchSFX;
     [SerializeField] AudioClip rightPunchClip;
     [SerializeField] AudioClip leftPunchClip;
@@ -728,15 +729,84 @@ public class PlayerCombat : MonoBehaviour
         animator.SetGroundSlamJump(false);
         animator.SetGroundSlamImpact(true);
 
+        GroundSlamAttack();
+        
+        StartCoroutine(GroundSlamDustWave());
         combatShake.Shake(0.18f, 0.25f);
+    }
 
-        // We'll add:
-        // Damage
-        // Dust
-        // Shockwave
-        // Camera shake
-        // Rock VFX
-        // here later.
+    void GroundSlamAttack()
+    {
+        Collider[] hits = Physics.OverlapSphere(
+            slamHitPoint.position,
+            slamRadius);
+
+        foreach (Collider hit in hits)
+        {
+            // ---------- Enemy ----------
+            Enemy enemy = hit.GetComponentInParent<Enemy>();
+
+            if (enemy != null)
+            {
+                Vector3 direction =
+                    enemy.transform.position - transform.position;
+
+                direction.y = 0f;
+
+                if (direction.sqrMagnitude > 0.001f)
+                    direction.Normalize();
+
+                enemy.TakeUppercut(direction);
+
+                continue;
+            }
+
+            // ---------- Breakable Box ----------
+            BreakableBox box =
+                hit.GetComponentInParent<BreakableBox>();
+
+            if (box != null)
+            {
+                box.Break();
+
+                continue;
+            }
+
+            // ---------- Player ----------
+            PlayerController3D player =
+                hit.GetComponentInParent<PlayerController3D>();
+
+            if (player != null &&
+                player.gameObject != gameObject)
+            {
+                player.ApplyUppercutKnockback(transform.position);
+
+                continue;
+            }
+        }
+    }
+
+    IEnumerator GroundSlamDustWave()
+    {
+        const int dustCount = 250;
+
+        for (int i = 0; i < dustCount; i++)
+        {
+            Vector2 random = Random.insideUnitCircle * slamRadius;
+
+            Vector3 spawnPos =
+                slamHitPoint.position +
+                new Vector3(
+                    random.x,
+                    0f,
+                    random.y);
+
+            GroundSlamDustPool.Instance.Spawn(
+                spawnPos,
+                Vector3.zero);
+        }
+
+        yield break;
     }
 
     //======================== COROUTINES =======================
@@ -964,7 +1034,16 @@ public class PlayerCombat : MonoBehaviour
         Gizmos.DrawWireSphere(
             kickPoint.position,
             kickRadius);
+
+        if (slamHitPoint == null)
+            return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(slamHitPoint.position, slamRadius);
+
     }
+
+
 
     public int PlayerIndex
     {
