@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 6802833377204354464}
   - component: {fileID: 6072024170082792430}
   m_Layer: 6
-  m_Name: breakableBox
+  m_Name: breakableBoxPowerUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -260,7 +260,7 @@ MonoBehaviour:
   coinPrefab: {fileID: 7798238309623276801, guid: ba1efee5700225e4681b5948ced99a44, type: 3}
   heartPrefab: {fileID: 2439673837460094899, guid: 14f4c73798b0c0c4796ec1e70da14cff, type: 3}
   boxBreakSFX: {fileID: 3326686410334275501}
-  isPowerUpBox: 0
+  isPowerUpBox: 1
   baseballBatPickup: {fileID: 513503926211246659, guid: de34e53d983dc5b459f54ec27087c5ec, type: 3}
   boomerangPickup: {fileID: 9114051775578294396, guid: c52aa0a524d87a94cb4e013fb87af8a3, type: 3}
   boxingGlovesPickup: {fileID: 5707589956614885112, guid: 7ab24a3ba57f10545883bd8960e1a247, type: 3}
@@ -1019,15 +1019,15 @@ PrefabInstance:
     - target: {fileID: -6093592463355912122, guid: 5594b07ae6ded7a4cacfb33b7c357b7d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: ec646ecacf2b9ab42affee1a7696fc5b, type: 2}
+      objectReference: {fileID: 2100000, guid: 6a12049083ad98247a0357bfa9a9ed15, type: 2}
     - target: {fileID: -4683669308469848369, guid: 5594b07ae6ded7a4cacfb33b7c357b7d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 011e829c5ad8e9b488ceabca04014d21, type: 2}
+      objectReference: {fileID: 2100000, guid: 7a82ee417957aab4bba7e384e7db3bb8, type: 2}
     - target: {fileID: -1806680513116206669, guid: 5594b07ae6ded7a4cacfb33b7c357b7d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 011e829c5ad8e9b488ceabca04014d21, type: 2}
+      objectReference: {fileID: 2100000, guid: 7a82ee417957aab4bba7e384e7db3bb8, type: 2}
     - target: {fileID: -1599826595754709761, guid: 5594b07ae6ded7a4cacfb33b7c357b7d, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -1035,15 +1035,15 @@ PrefabInstance:
     - target: {fileID: -1461304994638716399, guid: 5594b07ae6ded7a4cacfb33b7c357b7d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: ec646ecacf2b9ab42affee1a7696fc5b, type: 2}
+      objectReference: {fileID: 2100000, guid: 6a12049083ad98247a0357bfa9a9ed15, type: 2}
     - target: {fileID: -804731622281664130, guid: 5594b07ae6ded7a4cacfb33b7c357b7d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: ec646ecacf2b9ab42affee1a7696fc5b, type: 2}
+      objectReference: {fileID: 2100000, guid: 6a12049083ad98247a0357bfa9a9ed15, type: 2}
     - target: {fileID: -678588488315902003, guid: 5594b07ae6ded7a4cacfb33b7c357b7d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: ec646ecacf2b9ab42affee1a7696fc5b, type: 2}
+      objectReference: {fileID: 2100000, guid: 6a12049083ad98247a0357bfa9a9ed15, type: 2}
     - target: {fileID: -516098083770646512, guid: 5594b07ae6ded7a4cacfb33b7c357b7d, type: 3}
       propertyPath: m_Layer
       value: 6

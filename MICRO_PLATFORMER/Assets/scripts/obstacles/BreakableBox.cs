@@ -10,6 +10,14 @@ public class BreakableBox : MonoBehaviour
     [SerializeField] GameObject heartPrefab;
     [SerializeField] AudioSource boxBreakSFX;
 
+    [Header("Box Type")]
+    [SerializeField] bool isPowerUpBox = false;
+
+    [Header("Power Up Drops")]
+    [SerializeField] GameObject baseballBatPickup;
+    [SerializeField] GameObject boomerangPickup;
+    [SerializeField] GameObject boxingGlovesPickup;
+
     [Header("VFX (Prefab)")]
     [SerializeField] GameObject breakEndVFXPrefab;
     [SerializeField] float breakEndVFXLifetime = 2f;
@@ -58,18 +66,55 @@ public class BreakableBox : MonoBehaviour
         piecesRoot.SetActive(true);
         piecesRoot.transform.SetParent(null, true);
 
-        float dropRoll = Random.value;
-
-        if (dropRoll <= 0.8f)
+        if (isPowerUpBox)
         {
-            // 70% chance coin
-            if (coinPrefab != null)
-                Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            GameObject pickup = null;
+
+            switch (Random.Range(0, 3))
+            {
+                case 0:
+                    pickup = baseballBatPickup;
+                    break;
+
+                case 1:
+                    pickup = boomerangPickup;
+                    break;
+
+                case 2:
+                    pickup = boxingGlovesPickup;
+                    break;
+            }
+
+            if (pickup != null)
+            {
+                Instantiate(
+                    pickup,
+                    transform.position,
+                    pickup.transform.rotation);
+            }
         }
         else
         {
-            // 30% chance heart
-            Instantiate(heartPrefab,transform.position,heartPrefab.transform.rotation);
+            float dropRoll = Random.value;
+
+            if (dropRoll <= 0.8f)
+            {
+                if (coinPrefab != null)
+                    Instantiate(
+                        coinPrefab,
+                        transform.position,
+                        Quaternion.identity);
+            }
+            else
+            {
+                if (heartPrefab != null)
+                {
+                    Instantiate(
+                        heartPrefab,
+                        transform.position,
+                        heartPrefab.transform.rotation);
+                }
+            }
         }
 
         foreach (Transform piece in piecesRoot.transform)
