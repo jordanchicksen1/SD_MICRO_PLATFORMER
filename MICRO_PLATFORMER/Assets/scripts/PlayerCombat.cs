@@ -98,6 +98,20 @@ public class PlayerCombat : MonoBehaviour
     [Header("Weapon Pickup Animation")]
     [SerializeField] float pickupJumpForce = 4f;
     [SerializeField] float pickupForwardForce = 1.5f;
+    [SerializeField] Material batPickupMat;
+    [SerializeField] Material boomerangPickupMat;
+    [SerializeField] Material glovesPickupMat;
+    Renderer[] renderers;
+    Material[][] originalMaterials;
+    [SerializeField] GameObject pickupStarPrefab;
+    [SerializeField] int pickupStarCount = 3;
+    [SerializeField] float pickupStarForce = 3f;
+    [SerializeField] float pickupStarUpForce = 2f;
+    [SerializeField] AudioSource pickupAudioSource;
+    [SerializeField] AudioClip pickupJumpSFX;
+    [SerializeField] AudioClip pickupDongSFX;
+    [SerializeField] AudioClip pickupFlashSFX;
+    [SerializeField] AudioClip pickupStarSFX;
     Rigidbody rb;
 
     void Awake()
@@ -109,6 +123,14 @@ public class PlayerCombat : MonoBehaviour
         targetSelector = GetComponent<BoomerangTargetSelector>();
         PlayerInput = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
+        renderers = GetComponentsInChildren<Renderer>();
+
+        originalMaterials = new Material[renderers.Length][];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            originalMaterials[i] = renderers[i].materials;
+        }
     }
 
     void Start()
@@ -257,9 +279,27 @@ public class PlayerCombat : MonoBehaviour
         rb.AddForce(
             Vector3.up * pickupJumpForce,
             ForceMode.Impulse);
+        pickupAudioSource.PlayOneShot(pickupJumpSFX);
+
+        Material flashMaterial = null;
+
+        switch (weapon)
+        {
+            case CombatTool.BaseballBat:
+                flashMaterial = batPickupMat;
+                break;
+
+            case CombatTool.Boomerang:
+                flashMaterial = boomerangPickupMat;
+                break;
+
+            case CombatTool.BoxingGloves:
+                flashMaterial = glovesPickupMat;
+                break;
+        }
 
         // Let the player leave the ground.
-        yield return new WaitForSeconds(0.12f);
+        yield return new WaitForSeconds(0.20f);
 
         // Freeze them in the air.
         rb.linearVelocity = Vector3.zero;
@@ -268,7 +308,7 @@ public class PlayerCombat : MonoBehaviour
         //
         // Step 1 - Spin
         //
-        float spinTime = 0.18f;
+        float spinTime = 0.90f;
 
         float timer = 0f;
 
@@ -276,15 +316,42 @@ public class PlayerCombat : MonoBehaviour
         Quaternion spinEnd =
             spinStart * Quaternion.Euler(0f, 360f, 0f);
 
+        bool flash1 = false;
+        bool flash2 = false;
+        bool flash3 = false;
+
         while (timer < spinTime)
         {
             timer += Time.deltaTime;
+
+            float t = timer / spinTime;
 
             transform.rotation =
                 Quaternion.Slerp(
                     spinStart,
                     spinEnd,
-                    timer / spinTime);
+                    t);
+
+            if (!flash1 && t >= 0.20f)
+            {
+                flash1 = true;
+                SetPickupMaterials(flashMaterial);
+                pickupAudioSource.PlayOneShot(pickupFlashSFX);
+            }
+
+            if (!flash2 && t >= 0.40f)
+            {
+                flash2 = true;
+                RestoreMaterials();
+                pickupAudioSource.PlayOneShot(pickupDongSFX);
+            }
+
+            if (!flash3 && t >= 0.60f)
+            {
+                flash3 = true;
+                SetPickupMaterials(flashMaterial);
+                pickupAudioSource.PlayOneShot(pickupFlashSFX);
+            }
 
             yield return null;
         }
@@ -294,6 +361,8 @@ public class PlayerCombat : MonoBehaviour
         //
         // Step 2 - Face the camera
         //
+
+        RestoreMaterials();
         Camera cam = Camera.main;
 
         Vector3 direction =
@@ -305,7 +374,7 @@ public class PlayerCombat : MonoBehaviour
         Quaternion cameraRotation =
             Quaternion.LookRotation(-direction);
 
-        float faceCameraTime = 0.12f;
+        float faceCameraTime = 0.25f;
 
         timer = 0f;
 
@@ -330,16 +399,20 @@ public class PlayerCombat : MonoBehaviour
         // Step 3 - Hold pose
         //
         animator.SetWeaponPickupPose(true);
+        SpawnPickupStars();
+        pickupAudioSource.PlayOneShot(pickupStarSFX);
         SetCombatTool(weapon);
 
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(1.00f);
 
         animator.SetWeaponPickupPose(false);
+
+        RestoreMaterials();
 
         //
         // Step 4 - Face original direction
         //
-        float rotateBackTime = 0.18f;
+        float rotateBackTime = 0.15f;
 
         timer = 0f;
 
@@ -366,9 +439,83 @@ public class PlayerCombat : MonoBehaviour
         controller.SetMovementLocked(false);
     }
 
+    void SpawnPickupStars()
+    {
+        if (pickupStarPrefab == null)
+            return;
+
+        Vector3 spawnPos = transform.position + Vector3.up * 0.5f;
+
+        // Top star
+        SpawnStar(
+            spawnPos,
+            (Vector3.up + transform.forward * 0.25f).normalized);
+
+        // Bottom left
+        SpawnStar(
+            spawnPos,
+            (Vector3.left * 0.8f +
+             Vector3.down * 0.4f +
+             transform.forward * 0.3f).normalized);
+
+        // Bottom right
+        SpawnStar(
+            spawnPos,
+            (Vector3.right * 0.8f +
+             Vector3.down * 0.4f +
+             transform.forward * 0.3f).normalized);
+    }
+
+    void SpawnStar(Vector3 position, Vector3 direction)
+    {
+        GameObject star = Instantiate(
+            pickupStarPrefab,
+            position,
+            Random.rotation);
+
+        Rigidbody rb = star.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+
+            rb.AddForce(
+                direction * 5f,
+                ForceMode.Impulse);
+
+            rb.AddTorque(
+                Random.onUnitSphere * 8f,
+                ForceMode.Impulse);
+        }
+
+        Destroy(star, 1.5f);
+    }
+
     public void PlayWeaponPickupAnimation(CombatTool weapon)
     {
         StartCoroutine(WeaponPickupAnimation(weapon));
+    }
+
+    void RestoreMaterials()
+    {
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].materials = originalMaterials[i];
+        }
+        
+    }
+
+    void SetPickupMaterials(Material mat)
+    {
+        foreach (Renderer r in renderers)
+        {
+            Material[] mats = new Material[r.materials.Length];
+
+            for (int i = 0; i < mats.Length; i++)
+                mats[i] = mat;
+
+            r.materials = mats;
+        }
     }
 
     //=============== BAT ===================
