@@ -417,6 +417,8 @@ public class PlayerAnimator : MonoBehaviour
             rightArm.localRotation = rightArmStartRot * Quaternion.Euler(-armSwing, 0, 0);
         }
 
+
+
        
         // Legs (walk ? air blend)
         Quaternion walkLeftLeg =
