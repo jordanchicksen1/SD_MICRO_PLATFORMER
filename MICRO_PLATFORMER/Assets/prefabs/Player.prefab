@@ -1466,6 +1466,8 @@ MonoBehaviour:
   batSwingSFX: {fileID: 8300000, guid: 8772d3ef2e948cf418a8e5ef534ccb21, type: 3}
   projectileReflectSFX: {fileID: 8846773063929723423}
   batTrail: {fileID: 50208882669748016}
+  pickupJumpForce: 4
+  pickupForwardForce: 1.5
 --- !u!114 &1973581416899015860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16949,35 +16951,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce420f9599e05d84f9150c9217a59ab9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.074246295
+      value: 0.09203664
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce420f9599e05d84f9150c9217a59ab9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4990664
+      value: 1.5094757
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce420f9599e05d84f9150c9217a59ab9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.032500036
+      value: -0.032499544
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce420f9599e05d84f9150c9217a59ab9, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.5
+      value: 0.48589504
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce420f9599e05d84f9150c9217a59ab9, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.5
+      value: -0.5137179
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce420f9599e05d84f9150c9217a59ab9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.5
+      value: -0.48589504
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce420f9599e05d84f9150c9217a59ab9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.5
+      value: -0.5137179
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce420f9599e05d84f9150c9217a59ab9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 45
+      value: -86.811
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce420f9599e05d84f9150c9217a59ab9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -16985,7 +16987,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce420f9599e05d84f9150c9217a59ab9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce420f9599e05d84f9150c9217a59ab9, type: 3}
       propertyPath: m_ConstrainProportionsScale

@@ -18,7 +18,7 @@ public class PlayerCombat : MonoBehaviour
 
     public CombatTool CurrentTool => currentTool;
 
-
+    PlayerController3D controller;
     PlayerAnimator animator;
     CombatCameraShake combatShake;
     PlayerController3D playerController;
@@ -95,10 +95,14 @@ public class PlayerCombat : MonoBehaviour
     [Header("Trail Renderers")]
     [SerializeField] TrailRenderer batTrail;
 
+    [Header("Weapon Pickup Animation")]
+    [SerializeField] float pickupJumpForce = 4f;
+    [SerializeField] float pickupForwardForce = 1.5f;
     Rigidbody rb;
 
     void Awake()
     {
+        controller = GetComponent<PlayerController3D>();
         animator = GetComponentInChildren<PlayerAnimator>();
         combatShake = FindFirstObjectByType<CombatCameraShake>();
         playerController = GetComponent<PlayerController3D>();
@@ -239,6 +243,132 @@ public class PlayerCombat : MonoBehaviour
 
                 break;
         }
+    }
+
+    IEnumerator WeaponPickupAnimation(CombatTool weapon)
+    {
+        controller.SetMovementLocked(true);
+
+        Quaternion originalRotation = transform.rotation;
+
+        // Small hop.
+        rb.linearVelocity = Vector3.zero;
+
+        rb.AddForce(
+            Vector3.up * pickupJumpForce,
+            ForceMode.Impulse);
+
+        // Let the player leave the ground.
+        yield return new WaitForSeconds(0.12f);
+
+        // Freeze them in the air.
+        rb.linearVelocity = Vector3.zero;
+        rb.isKinematic = true;
+
+        //
+        // Step 1 - Spin
+        //
+        float spinTime = 0.18f;
+
+        float timer = 0f;
+
+        Quaternion spinStart = transform.rotation;
+        Quaternion spinEnd =
+            spinStart * Quaternion.Euler(0f, 360f, 0f);
+
+        while (timer < spinTime)
+        {
+            timer += Time.deltaTime;
+
+            transform.rotation =
+                Quaternion.Slerp(
+                    spinStart,
+                    spinEnd,
+                    timer / spinTime);
+
+            yield return null;
+        }
+
+        transform.rotation = spinEnd;
+
+        //
+        // Step 2 - Face the camera
+        //
+        Camera cam = Camera.main;
+
+        Vector3 direction =
+            cam.transform.position -
+            transform.position;
+
+        direction.y = 0f;
+
+        Quaternion cameraRotation =
+            Quaternion.LookRotation(-direction);
+
+        float faceCameraTime = 0.12f;
+
+        timer = 0f;
+
+        Quaternion currentRotation = transform.rotation;
+
+        while (timer < faceCameraTime)
+        {
+            timer += Time.deltaTime;
+
+            transform.rotation =
+                Quaternion.Slerp(
+                    currentRotation,
+                    cameraRotation,
+                    timer / faceCameraTime);
+
+            yield return null;
+        }
+
+        transform.rotation = cameraRotation;
+
+        //
+        // Step 3 - Hold pose
+        //
+        animator.SetWeaponPickupPose(true);
+        SetCombatTool(weapon);
+
+        yield return new WaitForSeconds(0.75f);
+
+        animator.SetWeaponPickupPose(false);
+
+        //
+        // Step 4 - Face original direction
+        //
+        float rotateBackTime = 0.18f;
+
+        timer = 0f;
+
+        Quaternion startRotation = transform.rotation;
+
+        while (timer < rotateBackTime)
+        {
+            timer += Time.deltaTime;
+
+            transform.rotation =
+                Quaternion.Slerp(
+                    startRotation,
+                    originalRotation,
+                    timer / rotateBackTime);
+
+            yield return null;
+        }
+
+        transform.rotation = originalRotation;
+
+        rb.isKinematic = false;
+        rb.linearVelocity = Vector3.zero;
+
+        controller.SetMovementLocked(false);
+    }
+
+    public void PlayWeaponPickupAnimation(CombatTool weapon)
+    {
+        StartCoroutine(WeaponPickupAnimation(weapon));
     }
 
     //=============== BAT ===================

@@ -61,6 +61,7 @@ public class PlayerController3D : MonoBehaviour
 
     bool isLongJumping;
     bool isGroundSlamLeaping;
+    bool movementLocked;
 
     [Header("Carrying")] 
     [SerializeField] Transform holdPoint;
@@ -506,6 +507,9 @@ public class PlayerController3D : MonoBehaviour
 
     void Move()
     {
+        if (movementLocked)
+            return;
+
         Vector3 move = GetCameraRelativeMovement();
 
         Vector3 desiredXZ = new Vector3(
@@ -582,6 +586,9 @@ public class PlayerController3D : MonoBehaviour
 
     void RotateTowardsMovement()
     {
+        if (movementLocked)
+            return;
+
         Vector3 move = GetCameraRelativeMovement();
 
         if (move.sqrMagnitude < 0.01f) return;
@@ -1208,5 +1215,16 @@ public class PlayerController3D : MonoBehaviour
             playerAnimator.StopGemPose();
 
         isKnockedBack = false;
+    }
+
+    public void SetMovementLocked(bool locked)
+    {
+        movementLocked = locked;
+
+        if (locked)
+        {
+            moveInput = Vector2.zero;
+            rb.linearVelocity = Vector3.zero;
+        }
     }
 }

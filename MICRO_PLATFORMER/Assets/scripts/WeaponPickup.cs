@@ -13,7 +13,7 @@ public class WeaponPickup : MonoBehaviour
         if (combat == null)
             return;
 
-        combat.SetCombatTool(weapon);
+        combat.PlayWeaponPickupAnimation(weapon);
 
         Destroy(gameObject);
     }

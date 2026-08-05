@@ -122,6 +122,7 @@ public class PlayerAnimator : MonoBehaviour
     float groundSlamImpactBlend;
     bool rightPunch;
 
+    bool isWeaponPickupPose;
 
     Vector3 bodyStartPos;
 
@@ -214,6 +215,11 @@ public class PlayerAnimator : MonoBehaviour
     public void SetGroundSlamImpact(bool active)
     {
         isGroundSlamImpact = active;
+    }
+
+    public void SetWeaponPickupPose(bool active)
+    {
+        isWeaponPickupPose = active;
     }
 
     public void SetGroundPound(bool active)
@@ -389,7 +395,11 @@ public class PlayerAnimator : MonoBehaviour
         AnimateGroundSlamJump(groundSlamJumpBlend);
         AnimateGroundSlamImpact(groundSlamImpactBlend);
 
-        
+        if (isWeaponPickupPose)
+        {
+            AnimateWeaponPickupPose(1f);
+            return;
+        }
     }
 
     void AnimateWalk()
@@ -1333,5 +1343,74 @@ public class PlayerAnimator : MonoBehaviour
             blend);
     }
 
+    void AnimateWeaponPickupPose(float blend)
+    {
+        if (blend <= 0f)
+            return;
+
+        leftArm.localPosition = Vector3.Lerp(
+            leftArm.localPosition,
+            new Vector3(
+                0.467f,
+                0.294f,
+                -0.017f),
+            blend);
+
+        leftArm.localRotation = Quaternion.Lerp(
+            leftArm.localRotation,
+            Quaternion.Euler(
+                90f,
+                0f,
+                69.65f),
+            blend);
+
+        rightArm.localPosition = Vector3.Lerp(
+            rightArm.localPosition,
+            new Vector3(
+                -0.435f,
+                0.301f,
+                0.027f),
+            blend);
+
+        rightArm.localRotation = Quaternion.Lerp(
+            rightArm.localRotation,
+            Quaternion.Euler(
+                90f,
+                0f,
+                292.28f),
+            blend);
+
+        leftLeg.localPosition = Vector3.Lerp(
+            leftLeg.localPosition,
+            new Vector3(
+                0.320f,
+                -0.423f,
+                -0.024f),
+            blend);
+
+        leftLeg.localRotation = Quaternion.Lerp(
+            leftLeg.localRotation,
+            Quaternion.Euler(
+                0f,
+                0f,
+                15.53f),
+            blend);
+
+        rightLeg.localPosition = Vector3.Lerp(
+            rightLeg.localPosition,
+            new Vector3(
+                -0.319f,
+                -0.446f,
+                -0.026f),
+            blend);
+
+        rightLeg.localRotation = Quaternion.Lerp(
+            rightLeg.localRotation,
+            Quaternion.Euler(
+                0f,
+                0f,
+                341.44f),
+            blend);
+    }
 }
 
