@@ -175,4 +175,19 @@ public class SpinMeterUI : MonoBehaviour
 
         PlayPopOutAnimation();
     }
+
+    public void HideInstant()
+    {
+        if (scaleRoutine != null)
+            StopCoroutine(scaleRoutine);
+
+        if (hideRoutine != null)
+            StopCoroutine(hideRoutine);
+
+        meterRoot.SetActive(false);
+        meterRoot.transform.localScale = originalScale;
+
+        wasVisible = false;
+        wasFullyCharged = true;
+    }
 }

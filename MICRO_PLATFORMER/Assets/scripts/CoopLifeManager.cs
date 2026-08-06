@@ -77,6 +77,13 @@ public class CoopLifeManager : MonoBehaviour
 
     void BubblePlayer(int deadIndex, int aliveIndex)
     {
+        PlayerCombat combat = bubbleByIndex[deadIndex].GetComponent<PlayerCombat>();
+
+        if (combat != null)
+        {
+            combat.LoseWeapon();
+        }
+
         bubbleByIndex[deadIndex].EnterBubble();
 
         if (bubblePrefab == null)

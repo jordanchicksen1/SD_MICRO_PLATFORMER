@@ -277,6 +277,23 @@ public class BoomerangTargetSelector : MonoBehaviour
         reticle.localScale = start;
     }
 
+    public void ResetBoomerang()
+    {
+        selectedTargets.Clear();
+
+        currentTarget = null;
+
+        isAiming = false;
+
+        if (reticleAnimation != null)
+            StopCoroutine(reticleAnimation);
+
+        if (reticle != null)
+            reticle.gameObject.SetActive(false);
+
+        UpdateCounter();
+    }
+
     public List<BoomerangTarget> GetSelectedTargets()
     {
         return new List<BoomerangTarget>(selectedTargets);

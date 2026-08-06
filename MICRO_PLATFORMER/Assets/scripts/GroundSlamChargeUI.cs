@@ -156,4 +156,16 @@ public class GroundSlamChargeUI : MonoBehaviour
 
         meterRoot.transform.localScale = originalScale;
     }
+
+    public void HideInstant()
+    {
+        if (scaleRoutine != null)
+            StopCoroutine(scaleRoutine);
+
+        meterRoot.SetActive(false);
+        meterRoot.transform.localScale = originalScale;
+
+        wasVisible = false;
+        wasFullyCharged = false;
+    }
 }

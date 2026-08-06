@@ -45,6 +45,7 @@ public class PlayerCombat : MonoBehaviour
     float currentSpinTime;
     bool canSpin = true;
     [SerializeField] float batBallForce = 20f;
+    SpinMeterUI spinMeterUI;
 
     [Header("Boomerang")]
     [SerializeField] GameObject boomerangProjectilePrefab;
@@ -52,6 +53,7 @@ public class PlayerCombat : MonoBehaviour
     bool isBoomerangCharging;
     bool isBoomerangAimMode;
     BoomerangTargetSelector targetSelector;
+
 
     [Header("Boxing Gloves")]
     [SerializeField] Transform gloveHitPoint;
@@ -80,6 +82,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private AudioClip groundSlamSFX;
     bool showGroundSlamUI;
     float groundSlamChargeTimer;
+    GroundSlamChargeUI groundSlamChargeUI;
 
     [Header("Weapon Models")]
     [SerializeField] GameObject baseballBatObject;
@@ -121,6 +124,8 @@ public class PlayerCombat : MonoBehaviour
         combatShake = FindFirstObjectByType<CombatCameraShake>();
         playerController = GetComponent<PlayerController3D>();
         targetSelector = GetComponent<BoomerangTargetSelector>();
+        groundSlamChargeUI = GetComponentInChildren<GroundSlamChargeUI>();
+        spinMeterUI = GetComponentInChildren<SpinMeterUI>();
         PlayerInput = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         renderers = GetComponentsInChildren<Renderer>();
@@ -516,6 +521,24 @@ public class PlayerCombat : MonoBehaviour
 
             r.materials = mats;
         }
+    }
+
+    public void LoseWeapon()
+    {
+        StopAllCoroutines();
+
+        animator.SetWeaponPickupPose(false);
+
+        if (spinMeterUI != null)
+            spinMeterUI.HideInstant();
+
+        if (groundSlamChargeUI != null)
+            groundSlamChargeUI.HideInstant();
+
+        if (targetSelector != null)
+            targetSelector.ResetBoomerang();
+
+        SetCombatTool(CombatTool.Kick);
     }
 
     //=============== BAT ===================
