@@ -528,6 +528,8 @@ public class PlayerCombat : MonoBehaviour
     {
         StopAllCoroutines();
 
+        animator.ResetAllAnimations();
+
         animator.SetWeaponPickupPose(false);
 
         if (spinMeterUI != null)

@@ -145,6 +145,49 @@ public class PlayerAnimator : MonoBehaviour
         rightArmStartPos = rightArm.localPosition;
         leftArmStartPos = leftArm.localPosition;
         leftLegStartPos = leftLeg.localPosition;
+        modelStartPos = model.localPosition;
+    }
+
+    public void ResetAllAnimations()
+    {
+        isDiving = false;
+        isGroundPounding = false;
+        isCarrying = false;
+        isGemPose = false;
+        isKicking = false;
+
+        isBatWindup = false;
+        isBatFollowThrough = false;
+        isBatSpin = false;
+
+        isBoomerangWindup = false;
+        isBoomerangThrow = false;
+
+        isGloveWindup = false;
+        isUppercut = false;
+        isGroundSlamJump = false;
+        isGroundSlamImpact = false;
+
+        isWeaponPickupPose = false;
+
+        jumpBlend = 0f;
+        diveBlend = 0f;
+        poundBlend = 0f;
+        carryBlend = 0f;
+        gemBlend = 0f;
+        kickBlend = 0f;
+
+        batWindupBlend = 0f;
+        batFollowBlend = 0f;
+        batSpinBlend = 0f;
+
+        boomerangWindupBlend = 0f;
+        boomerangThrowBlend = 0f;
+
+        gloveWindupBlend = 0f;
+        uppercutBlend = 0f;
+        groundSlamJumpBlend = 0f;
+        groundSlamImpactBlend = 0f;
     }
 
     bool IsGrounded()
@@ -251,6 +294,30 @@ public class PlayerAnimator : MonoBehaviour
 
     void Update()
     {
+        if (!isWeaponPickupPose)
+        {
+            leftArm.localPosition = Vector3.Lerp(
+                leftArm.localPosition,
+                leftArmStartPos,
+                Time.deltaTime * 12f);
+
+            rightArm.localPosition = Vector3.Lerp(
+                rightArm.localPosition,
+                rightArmStartPos,
+                Time.deltaTime * 12f);
+
+            leftLeg.localPosition = Vector3.Lerp(
+                leftLeg.localPosition,
+                leftLegStartPos,
+                Time.deltaTime * 12f);
+
+            rightLeg.localPosition = Vector3.Lerp(
+                rightLeg.localPosition,
+                rightLegStartPos,
+                Time.deltaTime * 12f);
+        }
+
+
         float gemTarget = isGemPose ? 1f : 0f;
         gemBlend = Mathf.MoveTowards(
             gemBlend,
