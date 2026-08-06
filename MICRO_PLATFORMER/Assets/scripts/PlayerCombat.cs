@@ -23,6 +23,7 @@ public class PlayerCombat : MonoBehaviour
     CombatCameraShake combatShake;
     PlayerController3D playerController;
     PlayerInput PlayerInput;
+    PlayerHealthUIManager healthUIManager;
     bool isAttacking;
     bool isBatCharging;
     bool isBatSpinning;
@@ -129,7 +130,7 @@ public class PlayerCombat : MonoBehaviour
         PlayerInput = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         renderers = GetComponentsInChildren<Renderer>();
-
+        healthUIManager = FindFirstObjectByType<PlayerHealthUIManager>();
         originalMaterials = new Material[renderers.Length][];
 
         for (int i = 0; i < renderers.Length; i++)
@@ -1454,6 +1455,15 @@ public class PlayerCombat : MonoBehaviour
         currentTool = tool;
 
         UpdateWeaponVisuals();
+
+        if (healthUIManager != null)
+        {
+            PlayerHealth health = GetComponent<PlayerHealth>();
+
+            healthUIManager.SetPlayerWeapon(
+                health,
+                currentTool);
+        }
     }
 
     void UpdateWeaponVisuals()

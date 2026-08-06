@@ -1,6 +1,8 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
+using static PlayerCombat;
 
 public class PlayerHealthUI : MonoBehaviour
 {
@@ -9,6 +11,13 @@ public class PlayerHealthUI : MonoBehaviour
 
     [Header("Key UI")]
     [SerializeField] GameObject keyIcon;   // drag your key icon object here
+
+    [Header("Weapon UI")]
+    [SerializeField] GameObject batIcon;
+    [SerializeField] GameObject boomerangIcon;
+    [SerializeField] GameObject glovesIcon;
+    Vector3 iconOriginalScale;
+    Coroutine iconAnimation;
 
     PlayerHealth playerHealth;
     int maxHealth;
@@ -26,6 +35,12 @@ public class PlayerHealthUI : MonoBehaviour
         // start hidden
         if (keyIcon != null)
             keyIcon.SetActive(false);
+
+        batIcon.SetActive(false);
+        boomerangIcon.SetActive(false);
+        glovesIcon.SetActive(false);
+
+        iconOriginalScale = batIcon.transform.localScale;
     }
 
     public void SetHasKey(bool hasKey)
@@ -40,5 +55,133 @@ public class PlayerHealthUI : MonoBehaviour
 
         if (healthText != null)
             healthText.text = current.ToString();
+    }
+
+    public void SetWeaponIcon(CombatTool weapon)
+    {
+        if (iconAnimation != null)
+            StopCoroutine(iconAnimation);
+
+        GameObject currentIcon = null;
+
+        if (batIcon.activeSelf)
+            currentIcon = batIcon;
+        else if (boomerangIcon.activeSelf)
+            currentIcon = boomerangIcon;
+        else if (glovesIcon.activeSelf)
+            currentIcon = glovesIcon;
+
+        if (weapon == CombatTool.Kick)
+        {
+            if (currentIcon != null)
+                iconAnimation = StartCoroutine(PopOut(currentIcon));
+
+            return;
+        }
+
+        if (currentIcon != null)
+            currentIcon.SetActive(false);
+
+        GameObject newIcon = null;
+
+        switch (weapon)
+        {
+            case CombatTool.BaseballBat:
+                newIcon = batIcon;
+                break;
+
+            case CombatTool.Boomerang:
+                newIcon = boomerangIcon;
+                break;
+
+            case CombatTool.BoxingGloves:
+                newIcon = glovesIcon;
+                break;
+        }
+
+        if (newIcon != null)
+            iconAnimation = StartCoroutine(PopIn(newIcon));
+    }
+
+    IEnumerator PopIn(GameObject icon)
+    {
+        icon.SetActive(true);
+
+        icon.transform.localScale = Vector3.zero;
+
+        float timer = 0f;
+        float duration = 0.12f;
+
+        Vector3 overshoot = iconOriginalScale * 1.2f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            icon.transform.localScale =
+                Vector3.Lerp(
+                    Vector3.zero,
+                    overshoot,
+                    timer / duration);
+
+            yield return null;
+        }
+
+        timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            icon.transform.localScale =
+                Vector3.Lerp(
+                    overshoot,
+                    iconOriginalScale,
+                    timer / duration);
+
+            yield return null;
+        }
+
+        icon.transform.localScale = iconOriginalScale;
+    }
+
+    IEnumerator PopOut(GameObject icon)
+    {
+        float timer = 0f;
+        float duration = 0.12f;
+
+        Vector3 overshoot = iconOriginalScale * 1.2f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            icon.transform.localScale =
+                Vector3.Lerp(
+                    iconOriginalScale,
+                    overshoot,
+                    timer / duration);
+
+            yield return null;
+        }
+
+        timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            icon.transform.localScale =
+                Vector3.Lerp(
+                    overshoot,
+                    Vector3.zero,
+                    timer / duration);
+
+            yield return null;
+        }
+
+        icon.SetActive(false);
+
+        icon.transform.localScale = iconOriginalScale;
     }
 }

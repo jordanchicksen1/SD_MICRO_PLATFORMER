@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static PlayerCombat;
 
 public class PlayerHealthUIManager : MonoBehaviour
 {
@@ -38,5 +39,19 @@ public class PlayerHealthUIManager : MonoBehaviour
 
         if (index == 0 && p1UI != null) p1UI.SetHasKey(hasKey);
         if (index == 1 && p2UI != null) p2UI.SetHasKey(hasKey);
+    }
+
+    public void SetPlayerWeapon(PlayerHealth health, CombatTool weapon)
+    {
+        if (health == null)
+            return;
+
+        int index = health.GetComponent<PlayerInput>().playerIndex;
+
+        if (index == 0 && p1UI != null)
+            p1UI.SetWeaponIcon(weapon);
+
+        if (index == 1 && p2UI != null)
+            p2UI.SetWeaponIcon(weapon);
     }
 }
