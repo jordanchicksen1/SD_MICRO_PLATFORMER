@@ -9074,6 +9074,10 @@ PrefabInstance:
       propertyPath: levelId
       value: MicroLevel1
       objectReference: {fileID: 0}
+    - target: {fileID: 3604005678044299703, guid: 7b8052df3aa300f4aa89d54a49be2ac7, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: edb7097cee61f1f47abea5ba9dfca9a2, type: 3}
     - target: {fileID: 4430660934101262734, guid: 7b8052df3aa300f4aa89d54a49be2ac7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.93

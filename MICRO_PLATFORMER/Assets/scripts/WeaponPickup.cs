@@ -13,8 +13,9 @@ public class WeaponPickup : MonoBehaviour
         if (combat == null)
             return;
 
-        combat.PlayWeaponPickupAnimation(weapon);
-
-        Destroy(gameObject);
+        if (combat.PickupWeapon(weapon))
+        {
+            Destroy(gameObject);
+        }
     }
 }

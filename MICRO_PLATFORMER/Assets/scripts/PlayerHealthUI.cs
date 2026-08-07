@@ -19,6 +19,13 @@ public class PlayerHealthUI : MonoBehaviour
     Vector3 iconOriginalScale;
     Coroutine iconAnimation;
 
+    [Header("Reserve Weapon Icons")]
+    [SerializeField] GameObject reserveBatIcon;
+    [SerializeField] GameObject reserveBoomerangIcon;
+    [SerializeField] GameObject reserveGlovesIcon;
+    Coroutine reserveIconAnimation;
+    public AudioSource reserveSFX;
+
     PlayerHealth playerHealth;
     int maxHealth;
 
@@ -39,6 +46,9 @@ public class PlayerHealthUI : MonoBehaviour
         batIcon.SetActive(false);
         boomerangIcon.SetActive(false);
         glovesIcon.SetActive(false);
+        reserveBatIcon.SetActive(false);
+        reserveBoomerangIcon.SetActive(false);
+        reserveGlovesIcon.SetActive(false);
 
         iconOriginalScale = batIcon.transform.localScale;
     }
@@ -101,7 +111,64 @@ public class PlayerHealthUI : MonoBehaviour
 
         if (newIcon != null)
             iconAnimation = StartCoroutine(PopIn(newIcon));
+
+        
     }
+
+    public void SetReserveWeaponIcon(CombatTool weapon)
+    {
+        if (reserveIconAnimation != null)
+            StopCoroutine(reserveIconAnimation);
+
+        GameObject currentIcon = null;
+
+        if (reserveBatIcon.activeSelf)
+            currentIcon = reserveBatIcon;
+        else if (reserveBoomerangIcon.activeSelf)
+            currentIcon = reserveBoomerangIcon;
+        else if (reserveGlovesIcon.activeSelf)
+            currentIcon = reserveGlovesIcon;
+
+        if (currentIcon != null)
+            currentIcon.SetActive(false);
+
+        GameObject newIcon = null;
+
+        switch (weapon)
+        {
+            case CombatTool.BaseballBat:
+                newIcon = reserveBatIcon;
+                break;
+
+            case CombatTool.Boomerang:
+                newIcon = reserveBoomerangIcon;
+                break;
+
+            case CombatTool.BoxingGloves:
+                newIcon = reserveGlovesIcon;
+                break;
+        }
+
+        if (newIcon != null)
+            reserveIconAnimation = StartCoroutine(PopIn(newIcon));
+
+        reserveSFX.Play();
+    }
+
+    public void ClearReserveWeaponIcon()
+    {
+        if (reserveIconAnimation != null)
+            StopCoroutine(reserveIconAnimation);
+
+        if (reserveBatIcon.activeSelf)
+            reserveIconAnimation = StartCoroutine(PopOut(reserveBatIcon));
+        else if (reserveBoomerangIcon.activeSelf)
+            reserveIconAnimation = StartCoroutine(PopOut(reserveBoomerangIcon));
+        else if (reserveGlovesIcon.activeSelf)
+            reserveIconAnimation = StartCoroutine(PopOut(reserveGlovesIcon));
+    }
+
+
 
     IEnumerator PopIn(GameObject icon)
     {

@@ -977,6 +977,8 @@ Transform:
   - {fileID: 2476035990218319150}
   - {fileID: 6742853665561135942}
   - {fileID: 268661696464382026}
+  - {fileID: 7847807849510686279}
+  - {fileID: 347482690498168249}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2398046072453190077
@@ -1481,6 +1483,15 @@ MonoBehaviour:
   pickupDongSFX: {fileID: 8300000, guid: b8651145403344444b74c25f267a0545, type: 3}
   pickupFlashSFX: {fileID: 8300000, guid: de5ccfa243d2de34a849f58b2184464e, type: 3}
   pickupStarSFX: {fileID: 8300000, guid: 027015677c4133c4db3b17acac875e09, type: 3}
+  bubbleSpawnPoint: {fileID: 7847807849510686279}
+  reserveBubblePrefab: {fileID: 5089753727549751808, guid: 26fae4a6b7d9db54f97c93b716ab0d84, type: 3}
+  reserveChargeTime: 1.75
+  reserveBubbleDelay: 0.2
+  reserveDeployDistance: 1.2
+  baseballBatPickupPrefab: {fileID: 513503926211246659, guid: de34e53d983dc5b459f54ec27087c5ec, type: 3}
+  boomerangPickupPrefab: {fileID: 9114051775578294396, guid: c52aa0a524d87a94cb4e013fb87af8a3, type: 3}
+  boxingGlovePickupPrefab: {fileID: 5707589956614885112, guid: 7ab24a3ba57f10545883bd8960e1a247, type: 3}
+  reserveBubbleEndPoint: {fileID: 347482690498168249}
 --- !u!114 &1973581416899015860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8385,6 +8396,37 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &4598532200593987742
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 347482690498168249}
+  m_Layer: 3
+  m_Name: bubbleEndPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &347482690498168249
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4598532200593987742}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.347, z: -2.98}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4881151161573125792}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4637980794510014574
 GameObject:
   m_ObjectHideFlags: 0
@@ -9454,6 +9496,37 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &5304030879706890282
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7847807849510686279}
+  m_Layer: 3
+  m_Name: bubbleSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7847807849510686279
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5304030879706890282}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.347, z: -0.967}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4881151161573125792}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5683166508606441753
 GameObject:
   m_ObjectHideFlags: 0

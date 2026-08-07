@@ -15,8 +15,12 @@ public class PlayerCombat : MonoBehaviour
 
     [SerializeField]
     CombatTool currentTool = CombatTool.Kick;
+    bool hasReserveWeapon = false;
+    CombatTool reserveTool = CombatTool.Kick;
 
     public CombatTool CurrentTool => currentTool;
+    public bool HasReserveWeapon => hasReserveWeapon;
+    public CombatTool ReserveTool => reserveTool;
 
     PlayerController3D controller;
     PlayerAnimator animator;
@@ -118,6 +122,24 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] AudioClip pickupStarSFX;
     Rigidbody rb;
 
+    [Header("Reserve Bubble")]
+    [SerializeField] Transform bubbleSpawnPoint;
+    [SerializeField] GameObject reserveBubblePrefab;
+    [SerializeField] float reserveChargeTime = 1.75f;
+    GameObject currentReserveBubble;
+    bool isChargingReserve = false;
+    bool reserveBubbleVisible = false;
+    bool reserveChargeComplete = false;
+    float reserveChargeTimer = 0f;
+    [SerializeField]
+    float reserveBubbleDelay = 0.2f;
+    [SerializeField]
+    float reserveDeployDistance = 1.2f;
+    [SerializeField] GameObject baseballBatPickupPrefab;
+    [SerializeField] GameObject boomerangPickupPrefab;
+    [SerializeField] GameObject boxingGlovePickupPrefab;
+    [SerializeField] Transform reserveBubbleEndPoint;
+
     void Awake()
     {
         controller = GetComponent<PlayerController3D>();
@@ -195,6 +217,206 @@ public class PlayerCombat : MonoBehaviour
 
             Debug.Log("Spin Recharged!");
         }
+
+        if (isChargingReserve)
+        {
+            reserveChargeTimer += Time.deltaTime;
+
+            if (!reserveBubbleVisible &&
+                reserveChargeTimer >= reserveBubbleDelay)
+            {
+                reserveBubbleVisible = true;
+
+                currentReserveBubble = Instantiate( reserveBubblePrefab, bubbleSpawnPoint.position, Quaternion.identity);
+
+                currentReserveBubble.transform.localScale = Vector3.zero;
+
+                reserveBubbleVisible = true;
+
+                controller.SetMovementLocked(true);
+            }
+
+            if (!reserveChargeComplete &&
+                reserveChargeTimer >= reserveChargeTime)
+            {
+                reserveChargeComplete = true;
+
+                Debug.Log("Bubble Fully Charged");
+            }
+
+            if (currentReserveBubble != null && reserveBubbleVisible && !reserveChargeComplete)
+            {
+                currentReserveBubble.transform.position = bubbleSpawnPoint.position;
+
+                float growProgress = Mathf.InverseLerp(reserveBubbleDelay, reserveChargeTime, reserveChargeTimer);
+
+                currentReserveBubble.transform.localScale = Vector3.one * growProgress;
+            }
+        }
+    }
+
+    public void StoreReserveWeapon(CombatTool tool)
+    {
+        hasReserveWeapon = true;
+        reserveTool = tool;
+
+        healthUIManager.SetPlayerReserveWeapon(GetComponent<PlayerHealth>(), reserveTool);
+
+        Debug.Log("Reserve weapon is now: " + reserveTool);
+    }
+
+    public void ClearReserveWeapon()
+    {
+        hasReserveWeapon = false;
+        reserveTool = CombatTool.Kick;
+
+        healthUIManager.ClearPlayerReserveWeapon(GetComponent<PlayerHealth>());
+    }
+
+    public bool PickupWeapon(CombatTool weapon)
+    {
+        // If the player currently has Kick,
+        // always equip the new weapon.
+        if (currentTool == CombatTool.Kick)
+        {
+            PlayWeaponPickupAnimation(weapon);
+            return true;
+        }
+
+        // Otherwise store (or replace) the reserve weapon.
+        StoreReserveWeapon(weapon);
+
+        return true;
+    }
+
+    IEnumerator ChargeReserveBubble()
+    {
+        yield return null;
+    }
+
+    void StartReserveCharge()
+    {
+        isChargingReserve = true;
+
+        reserveChargeComplete = false;
+
+        reserveBubbleVisible = false;
+
+        reserveChargeTimer = 0f;
+    }
+
+    void ReleaseReserveCharge()
+    {
+        isChargingReserve = false;
+
+        if (!reserveBubbleVisible)
+        {
+            StartCoroutine(KickRoutine());
+        }
+        else if (!reserveChargeComplete)
+        {
+            StartCoroutine(ShrinkReserveBubble());
+        }
+        else
+        {
+            StartCoroutine(DeployReserveBubble());
+        }
+
+        reserveBubbleVisible = false;
+        reserveChargeComplete = false;
+        reserveChargeTimer = 0f;
+    }
+
+    IEnumerator DeployReserveBubble()
+    {
+        Vector3 startPosition =
+            currentReserveBubble.transform.position;
+
+        Vector3 endPosition = reserveBubbleEndPoint.position;
+
+        float duration = 0.45f;
+
+        float height = 0.4f;
+
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / duration;
+
+            Vector3 position =
+                Vector3.Lerp(startPosition, endPosition, t);
+
+            position.y += Mathf.Sin(t * Mathf.PI) * height;
+
+            currentReserveBubble.transform.position = position;
+
+            yield return null;
+        }
+
+        currentReserveBubble.transform.position = endPosition;
+
+        GameObject pickup = null;
+
+        switch (reserveTool)
+        {
+            case CombatTool.BaseballBat:
+                pickup = baseballBatPickupPrefab;
+                break;
+
+            case CombatTool.Boomerang:
+                pickup = boomerangPickupPrefab;
+                break;
+
+            case CombatTool.BoxingGloves:
+                pickup = boxingGlovePickupPrefab;
+                break;
+        }
+
+        if (pickup != null)
+        {
+            Instantiate(
+                pickup,
+                reserveBubbleEndPoint.position,
+                Quaternion.identity);
+        }
+
+        Destroy(currentReserveBubble);
+
+        currentReserveBubble = null;
+
+        ClearReserveWeapon();
+
+        controller.SetMovementLocked(false);
+    }
+
+    IEnumerator ShrinkReserveBubble()
+    {
+        Vector3 startScale =
+            currentReserveBubble.transform.localScale;
+
+        float timer = 0f;
+
+        while (timer < 0.2f)
+        {
+            timer += Time.deltaTime;
+
+            currentReserveBubble.transform.localScale =
+                Vector3.Lerp(
+                    startScale,
+                    Vector3.zero,
+                    timer / 0.2f);
+
+            yield return null;
+        }
+
+        Destroy(currentReserveBubble);
+
+        currentReserveBubble = null;
+
+        controller.SetMovementLocked(false);
     }
 
     public void OnAttack(InputAction.CallbackContext context)
@@ -211,7 +433,27 @@ public class PlayerCombat : MonoBehaviour
         switch (currentTool)
         {
             case CombatTool.Kick:
-                StartCoroutine(KickRoutine());
+
+                if (!hasReserveWeapon)
+                {
+                    if (context.canceled)
+                    {
+                        StartCoroutine(KickRoutine());
+                    }
+
+                    break;
+                }
+
+                if (context.started)
+                {
+                    StartReserveCharge();
+                }
+
+                if (context.canceled)
+                {
+                    ReleaseReserveCharge();
+                }
+
                 break;
 
             case CombatTool.BaseballBat:
@@ -528,9 +770,36 @@ public class PlayerCombat : MonoBehaviour
     {
         StopAllCoroutines();
 
+        // ---------- Reset combat state ----------
+        isAttacking = false;
+
+        isBatCharging = false;
+        isBatSpinning = false;
+        canChargeBat = true;
+
+        isBoomerangCharging = false;
+        isBoomerangAimMode = false;
+        boomerangInFlight = false;
+
+        isGloveCharging = false;
+        slamCharged = false;
+        isGroundSlamming = false;
+        hasGroundSlamLanded = false;
+
+        showGroundSlamUI = false;
+        groundSlamChargeTimer = 0f;
+        gloveChargeRoutine = null;
+
         animator.ResetAllAnimations();
 
         animator.SetWeaponPickupPose(false);
+
+        batTrail.emitting = false;
+
+        batAudio.Stop();
+        batAudio.loop = false;
+        batAudio.clip = null;
+        batAudio.pitch = 1.3f;
 
         if (spinMeterUI != null)
             spinMeterUI.HideInstant();
@@ -540,6 +809,8 @@ public class PlayerCombat : MonoBehaviour
 
         if (targetSelector != null)
             targetSelector.ResetBoomerang();
+
+        playerController.SetBoomerangAim(false);
 
         SetCombatTool(CombatTool.Kick);
     }

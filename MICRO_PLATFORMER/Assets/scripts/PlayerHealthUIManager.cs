@@ -54,4 +54,32 @@ public class PlayerHealthUIManager : MonoBehaviour
         if (index == 1 && p2UI != null)
             p2UI.SetWeaponIcon(weapon);
     }
+
+    public void SetPlayerReserveWeapon(PlayerHealth health, CombatTool weapon)
+    {
+        if (health == null)
+            return;
+
+        int index = health.GetComponent<PlayerInput>().playerIndex;
+
+        if (index == 0 && p1UI != null)
+            p1UI.SetReserveWeaponIcon(weapon);
+
+        if (index == 1 && p2UI != null)
+            p2UI.SetReserveWeaponIcon(weapon);
+    }
+
+    public void ClearPlayerReserveWeapon(PlayerHealth health)
+    {
+        if (health == null)
+            return;
+
+        int index = health.GetComponent<PlayerInput>().playerIndex;
+
+        if (index == 0 && p1UI != null)
+            p1UI.ClearReserveWeaponIcon();
+
+        if (index == 1 && p2UI != null)
+            p2UI.ClearReserveWeaponIcon();
+    }
 }
