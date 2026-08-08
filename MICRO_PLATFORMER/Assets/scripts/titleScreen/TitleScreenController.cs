@@ -29,6 +29,29 @@ public class TitleSceneController : MonoBehaviour
 
     bool menuOpened = false;
 
+    [Header("Title Screen Animation")]
+    [SerializeField] TypewriterText titleTypewriter;
+    [SerializeField] TypewriterText subtitleTypewriter;
+    [SerializeField] string titleText = "Tiny Horizons";
+    [SerializeField] string subtitleText = "a co-op platforming adventure";
+    [SerializeField] RectTransform startButtonRect;
+    [SerializeField] Vector2 startButtonTargetPosition;
+    [SerializeField] float startButtonSlideTime = 0.35f;
+
+    [Header("Menu Animation")]
+    [SerializeField] RectTransform playButtonRect;
+    [SerializeField] RectTransform resetButtonRect;
+    [SerializeField] RectTransform quitButtonRect;
+    [SerializeField] Vector2 playTargetPos;
+    [SerializeField] Vector2 resetTargetPos;
+    [SerializeField] Vector2 quitTargetPos;
+    [SerializeField] float menuSlideTime = 0.3f;
+    [SerializeField] float menuButtonDelay = 0.08f;
+
+    [Header("Menu SFX")]
+    [SerializeField] AudioSource uiAudio;
+    [SerializeField] AudioClip slideSFX;
+
     void Awake()
     {
         //set the framerate
@@ -64,6 +87,20 @@ public class TitleSceneController : MonoBehaviour
         // Show title screen
         titleGroup.SetActive(true);
 
+        titleTypewriter.ShowText(titleText);
+
+        yield return new WaitForSeconds(0.35f);
+
+        subtitleTypewriter.ShowText(subtitleText);
+
+        yield return new WaitUntil(() =>
+    !titleTypewriter.IsTyping &&
+    !subtitleTypewriter.IsTyping);
+
+        yield return new WaitForSeconds(1f);
+
+        yield return StartCoroutine(SlideInStartButton());
+
         // Highlight Start button for controller
         EventSystem.current.SetSelectedGameObject(startButton);
     }
@@ -95,8 +132,7 @@ public class TitleSceneController : MonoBehaviour
         titleGroup.SetActive(false);
         menuGroup.SetActive(true);
 
-        // Highlight Play button
-        EventSystem.current.SetSelectedGameObject(playButton);
+        StartCoroutine(MenuOpenRoutine());
     }
 
     public void PressPlay()
@@ -144,6 +180,97 @@ public class TitleSceneController : MonoBehaviour
         yield return fader.FadeTo(1f, 0.5f);
 
         SceneManager.LoadScene("HubWorld");
+    }
+
+    IEnumerator MenuOpenRoutine()
+    {
+        yield return StartCoroutine(SlideInMenu());
+
+        EventSystem.current.SetSelectedGameObject(playButton);
+    }
+
+    IEnumerator SlideInStartButton()
+    {
+        if (slideSFX != null)
+        {
+            uiAudio.PlayOneShot(slideSFX);
+        }
+
+        Vector2 startPosition = startButtonRect.anchoredPosition;
+
+        float timer = 0f;
+
+        while (timer < startButtonSlideTime)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / startButtonSlideTime;
+
+            // Ease Out Cubic
+            t = 1f - Mathf.Pow(1f - t, 3f);
+
+            startButtonRect.anchoredPosition =
+                Vector2.Lerp(
+                    startPosition,
+                    startButtonTargetPosition,
+                    t);
+
+            yield return null;
+        }
+
+        startButtonRect.anchoredPosition = startButtonTargetPosition;
+
+
+    }
+
+    IEnumerator SlideUI(
+    RectTransform rect,
+    Vector2 target)
+    {
+        if (slideSFX != null)
+        {
+            uiAudio.PlayOneShot(slideSFX);
+        }
+
+        Vector2 start = rect.anchoredPosition;
+
+        float timer = 0f;
+
+        while (timer < menuSlideTime)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / menuSlideTime;
+
+            // Ease Out Cubic
+            t = 1f - Mathf.Pow(1f - t, 3f);
+
+            rect.anchoredPosition =
+                Vector2.Lerp(
+                    start,
+                    target,
+                    t);
+
+            yield return null;
+        }
+
+        rect.anchoredPosition = target;
+    }
+
+    IEnumerator SlideInMenu()
+    {
+        yield return StartCoroutine(
+            SlideUI(playButtonRect, playTargetPos));
+
+        yield return new WaitForSeconds(menuButtonDelay);
+
+        yield return StartCoroutine(
+            SlideUI(resetButtonRect, resetTargetPos));
+
+        yield return new WaitForSeconds(menuButtonDelay);
+
+        yield return StartCoroutine(
+            SlideUI(quitButtonRect, quitTargetPos));
     }
 
     public void PressQuit()
