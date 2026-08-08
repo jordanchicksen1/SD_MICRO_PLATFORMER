@@ -55,8 +55,8 @@ public class TitleSceneController : MonoBehaviour
     void Awake()
     {
         //set the framerate
-        Application.targetFrameRate = 60;
-        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = -1;
+        QualitySettings.vSyncCount = 1;
     }
 
     void Start()
