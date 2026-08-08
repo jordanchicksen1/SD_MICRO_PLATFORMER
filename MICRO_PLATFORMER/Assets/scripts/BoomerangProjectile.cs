@@ -177,6 +177,30 @@ public class BoomerangProjectile : MonoBehaviour
         }
     }
 
+    void RemoveCollectedTarget(BoomerangTarget collectedTarget)
+    {
+        if (!targetedThrow || collectedTarget == null)
+            return;
+
+        int collectedIndex = targets.IndexOf(collectedTarget);
+
+        if (collectedIndex == -1)
+            return;
+
+        // The current target is handled by AdvanceToNextTarget(),
+        // which already hides its marker.
+        if (collectedIndex == currentTargetIndex)
+            return;
+
+        // This was a future target that was collected early.
+        if (collectedIndex > currentTargetIndex)
+        {
+            collectedTarget.HideMarker(owner.PlayerIndex);
+
+            targets.RemoveAt(collectedIndex);
+        }
+    }
+
     void CheckHits()
     {
         Collider[] hits = Physics.OverlapSphere(hitPoint.position, hitRadius);
@@ -273,32 +297,40 @@ public class BoomerangProjectile : MonoBehaviour
                 continue;
             }
 
-            CoinPickup coin = hit.GetComponent<CoinPickup>();
+            CoinPickup coin = hit.GetComponentInParent<CoinPickup>();
 
             if (coin != null)
             {
                 if (hitTargets.Contains(coin.gameObject))
                     continue;
 
+                BoomerangTarget target =
+                    coin.GetComponentInParent<BoomerangTarget>();
+
+                bool isCurrentTarget =
+                    targetedThrow &&
+                    currentTargetIndex < targets.Count &&
+                    targets[currentTargetIndex] == target;
+
+                // If this coin is a future target, remember that
+                // we collected it before reaching it.
+                if (targetedThrow && target != null)
+                {
+                    RemoveCollectedTarget(target);
+                }
+
                 hitTargets.Add(coin.gameObject);
 
-                BoomerangTarget target = coin.GetComponent<BoomerangTarget>();
+                audioSource.PlayOneShot(collectPingSFX);
 
-                bool isCurrentTarget = targetedThrow && currentTargetIndex < targets.Count && targets[currentTargetIndex] == target;
-
-                if (!targetedThrow || isCurrentTarget)
+                if (isCurrentTarget)
                 {
-                    audioSource.PlayOneShot(collectPingSFX);
-
-                    collectedItems.Add(coin.transform);
-
-                    coin.transform.SetParent(transform);
-
-                    if (isCurrentTarget)
-                    {
-                        AdvanceToNextTarget();
-                    }
+                    AdvanceToNextTarget();
                 }
+
+                collectedItems.Add(coin.transform);
+
+                coin.transform.SetParent(transform);
 
                 continue;
             }
@@ -308,26 +340,34 @@ public class BoomerangProjectile : MonoBehaviour
                 if (hitTargets.Contains(hit.gameObject))
                     continue;
 
+                BoomerangTarget target =
+                    hit.GetComponentInParent<BoomerangTarget>();
+
+                bool isCurrentTarget =
+                    targetedThrow &&
+                    currentTargetIndex < targets.Count &&
+                    targets[currentTargetIndex] == target;
+
+                // If this heart is a future selected target,
+                // remove it from the remaining target route.
+                if (targetedThrow && target != null)
+                {
+                    RemoveCollectedTarget(target);
+                }
+
                 hitTargets.Add(hit.gameObject);
 
-                BoomerangTarget target = hit.GetComponent<BoomerangTarget>();
+                audioSource.PlayOneShot(collectPingSFX);
 
-                bool isCurrentTarget = targetedThrow && currentTargetIndex < targets.Count && targets[currentTargetIndex] == target;
-
-
-                if (!targetedThrow || isCurrentTarget)
+                // If this is the current target, advance normally.
+                if (isCurrentTarget)
                 {
-                    audioSource.PlayOneShot(collectPingSFX);
-
-                    collectedItems.Add(hit.transform);
-
-                    hit.transform.SetParent(transform);
-
-                    if (isCurrentTarget)
-                    {
-                        AdvanceToNextTarget();
-                    }
+                    AdvanceToNextTarget();
                 }
+
+                collectedItems.Add(hit.transform);
+
+                hit.transform.SetParent(transform);
 
                 continue;
             }
