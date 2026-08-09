@@ -104,6 +104,8 @@ public class CosmeticManager : MonoBehaviour
 
         Player1Hat = HatType.None;
         Player2Hat = HatType.None;
+
+        PlayerPrefs.Save();
     }
 
     public void SetPlayer1Hat(HatType hat)

@@ -170,9 +170,9 @@ public class TitleSceneController : MonoBehaviour
 
         PersistentGemProgress.Instance?.ClearSave();
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        CosmeticManager.Instance?.ResetCosmetics();
 
-        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     IEnumerator PlayRoutine()
