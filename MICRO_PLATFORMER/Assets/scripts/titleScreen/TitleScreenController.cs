@@ -168,9 +168,17 @@ public class TitleSceneController : MonoBehaviour
     {
         Debug.Log("Resetting save data");
 
+        // Reset gem progression
         PersistentGemProgress.Instance?.ClearSave();
 
-        CosmeticManager.Instance?.ResetCosmetics();
+        // Reset cosmetic progression
+        PlayerPrefs.DeleteKey("PurchasedHats");
+        PlayerPrefs.DeleteKey("Player1Hat");
+        PlayerPrefs.DeleteKey("Player2Hat");
+
+        PlayerPrefs.Save();
+
+        Debug.Log("Cosmetic save data cleared");
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
