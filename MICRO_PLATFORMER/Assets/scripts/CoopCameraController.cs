@@ -25,11 +25,8 @@ public class CoopCameraController : MonoBehaviour
     bool wasRotating;
     [SerializeField] float rotationSmoothTime = 0.05f; // small lag for smoothness
     float rotationVelocity; // used for SmoothDamp
-    float splitYawP1;
-    float splitYawP2;
     float sharedYawBeforeSplit;
-    float splitRotationVelocityP1;
-    float splitRotationVelocityP2;
+   
 
     Transform pivot;
     Camera cam;
@@ -174,44 +171,13 @@ public class CoopCameraController : MonoBehaviour
         }
     }
 
-    void SyncSharedCameraToSplitCameras()
-    {
-        if (players.Count < 2)
-            return;
-
-        if (player1Pivot == null || player2Pivot == null)
-            return;
-
-        // Keep the shared camera positioned between the players.
-        Vector3 sharedPosition =
-            (player1Pivot.position + player2Pivot.position) * 0.5f;
-
-        pivot.position = sharedPosition;
-
-        // Keep the shared camera between the two split-camera angles.
-        float yaw1 = splitYawP1;
-        float yaw2 = splitYawP2;
-
-        float averageYaw = Mathf.LerpAngle(yaw1, yaw2, 0.5f);
-
-        currentYaw = averageYaw;
-
-        pivot.rotation =
-            Quaternion.Euler(fixedPitch, averageYaw, 0f);
-
-        // Keep the shared camera zoomed to the appropriate distance.
-        Zoom();
-    }
+    
 
     void SyncSplitCameraTransforms()
     {
+        // Remember the exact shared camera angle
+        // at the moment split-screen begins.
         sharedYawBeforeSplit = pivot.eulerAngles.y;
-
-        splitYawP1 = sharedYawBeforeSplit;
-        splitYawP2 = sharedYawBeforeSplit;
-
-        splitRotationVelocityP1 = 0f;
-        splitRotationVelocityP2 = 0f;
 
         if (players.Count >= 2)
         {
@@ -251,24 +217,32 @@ public class CoopCameraController : MonoBehaviour
 
     public void DisableSplitScreen()
     {
-        // Restore the shared camera's original orientation
-        // before turning it back on.
+        // Restore the exact camera angle from before split-screen.
         currentYaw = sharedYawBeforeSplit;
 
         pivot.rotation =
-            Quaternion.Euler(fixedPitch, sharedYawBeforeSplit, 0f);
+            Quaternion.Euler(
+                fixedPitch,
+                sharedYawBeforeSplit,
+                0f
+            );
 
-        // Make sure the shared camera is positioned correctly
-        // around the current player group.
+        // Re-centre the shared camera on both players.
         Follow();
         Zoom();
 
-        player1Camera.enabled = false;
-        player2Camera.enabled = false;
+        // Turn split cameras off.
+        if (player1Camera != null)
+            player1Camera.enabled = false;
+
+        if (player2Camera != null)
+            player2Camera.enabled = false;
 
         isSplitScreen = false;
 
-        cam.enabled = true;
+        // Turn shared camera back on.
+        if (cam != null)
+            cam.enabled = true;
     }
 
     void LateUpdate()
@@ -276,15 +250,16 @@ public class CoopCameraController : MonoBehaviour
         if (cutsceneActive) return;
         if (players.Count == 0) return;
 
+        // Keep the shared camera's position updated
+        // even while split-screen is active.
+        Follow();
+        Zoom();
+
+        // Only allow camera rotation while the shared
+        // camera is active.
         if (!isSplitScreen)
         {
-            Follow();
-            Zoom();
             Rotate();
-        }
-        else
-        {
-            RotateSplitCameras();
         }
 
         UpdateSplitCameraPositions();
@@ -357,17 +332,7 @@ public class CoopCameraController : MonoBehaviour
         rotationVelocity = value * rotationSpeed;
     }
 
-    public void AddSplitRotationInput(int playerIndex, float value)
-    {
-        if (playerIndex == 0)
-        {
-            splitRotationVelocityP1 = value * rotationSpeed;
-        }
-        else if (playerIndex == 1)
-        {
-            splitRotationVelocityP2 = value * rotationSpeed;
-        }
-    }
+ 
 
     void Rotate()
     {
@@ -382,32 +347,11 @@ public class CoopCameraController : MonoBehaviour
        // rotationVelocity = 0f;
     }
 
-    void RotateSplitCameras()
-    {
-        splitYawP1 += splitRotationVelocityP1 * Time.deltaTime;
-        splitYawP2 += splitRotationVelocityP2 * Time.deltaTime;
-
-        if (player1Pivot != null)
-        {
-            player1Pivot.rotation =
-                Quaternion.Euler(fixedPitch, splitYawP1, 0f);
-        }
-
-        if (player2Pivot != null)
-        {
-            player2Pivot.rotation =
-                Quaternion.Euler(fixedPitch, splitYawP2, 0f);
-        }
-    }
+   
 
 
     public void AddRotationInputForPlayer(int playerIndex, float value)
     {
-        if (isSplitScreen)
-        {
-            AddSplitRotationInput(playerIndex, value);
-        }
-        else
         {
             AddRotationInput(value);
         }
