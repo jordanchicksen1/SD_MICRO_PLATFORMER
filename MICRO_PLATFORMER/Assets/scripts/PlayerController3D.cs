@@ -221,6 +221,9 @@ public class PlayerController3D : MonoBehaviour
 
     private void Start()
     {
+        playerIndex = GetComponent<PlayerInput>().playerIndex;
+        playerNumber = playerIndex + 1;
+
         coopCamera = FindFirstObjectByType<CoopCameraController>();
         if (coopCamera != null)
             coopCamera.RegisterPlayer(transform);
@@ -234,8 +237,7 @@ public class PlayerController3D : MonoBehaviour
             healthUIManager.RegisterPlayer(GetComponent<PlayerHealth>());
 
         playerCombat = GetComponent<PlayerCombat>();
-        playerIndex = GetComponent<PlayerInput>().playerIndex;
-        playerNumber = playerIndex + 1;
+        
 
         if (playerIndex == 0)
             SetLayerRecursively(gameObject, LayerMask.NameToLayer("Player"));
@@ -490,7 +492,13 @@ public class PlayerController3D : MonoBehaviour
 
     Vector3 GetCameraRelativeMovement()
     {
-        Camera cam = Camera.main;
+        if (coopCamera == null)
+            return Vector3.zero;
+
+        Camera cam = coopCamera.GetCameraForPlayer(playerIndex);
+
+        if (cam == null)
+            return Vector3.zero;
 
         Vector3 forward = cam.transform.forward;
         Vector3 right = cam.transform.right;
@@ -683,13 +691,14 @@ public class PlayerController3D : MonoBehaviour
 
     public void OnCameraRotate(InputAction.CallbackContext context)
     {
-        float stickX = context.ReadValue<Vector2>().x; // current frame value
-        coopCamera.AddRotationInput(stickX); // pass it directly to the camera
+        float stickX = context.ReadValue<Vector2>().x;
+
+        if (coopCamera == null)
+            return;
+
+        coopCamera.AddRotationInputForPlayer(playerIndex, stickX);
     }
 
-
-
-   
 
 
     public void OnDive(InputAction.CallbackContext context)

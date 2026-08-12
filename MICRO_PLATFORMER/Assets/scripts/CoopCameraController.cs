@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CoopCameraController : MonoBehaviour
 {
@@ -24,10 +25,22 @@ public class CoopCameraController : MonoBehaviour
     bool wasRotating;
     [SerializeField] float rotationSmoothTime = 0.05f; // small lag for smoothness
     float rotationVelocity; // used for SmoothDamp
-
+    float splitYawP1;
+    float splitYawP2;
+    float splitRotationVelocityP1;
+    float splitRotationVelocityP2;
 
     Transform pivot;
     Camera cam;
+
+    [Header("Split Screen")]
+    [SerializeField] Transform player1Pivot;
+    [SerializeField] Transform player2Pivot;
+    [SerializeField] Camera player1Camera;
+    [SerializeField] Camera player2Camera;
+    [SerializeField] float splitCameraDistance = 10f;
+    [SerializeField] float splitFollowSmoothTime = 0.2f;
+    bool isSplitScreen;
 
     [Header("Cutscene")]
     public bool cutsceneActive;
@@ -54,6 +67,20 @@ public class CoopCameraController : MonoBehaviour
         players.Remove(player);
     }
 
+    public Camera GetCameraForPlayer(int playerIndex)
+    {
+        if (isSplitScreen)
+        {
+            if (playerIndex == 0)
+                return player1Camera;
+
+            if (playerIndex == 1)
+                return player2Camera;
+        }
+
+        return cam;
+    }
+
     public void ReplaceTarget(Transform removeThis, Transform addThis)
     {
         UnregisterPlayer(removeThis);
@@ -74,17 +101,137 @@ public class CoopCameraController : MonoBehaviour
         return bounds.center;
     }
 
+    Transform GetPlayerTarget(int index)
+    {
+        if (index < 0 || index >= players.Count)
+            return null;
+
+        return players[index];
+    }
+
+    void UpdateSplitCameraPositions()
+    {
+        Transform p1 = GetPlayerTarget(0);
+        Transform p2 = GetPlayerTarget(1);
+
+        if (p1 != null && player1Pivot != null)
+        {
+            player1Pivot.position = p1.position;
+        }
+
+        if (p2 != null && player2Pivot != null)
+        {
+            player2Pivot.position = p2.position;
+        }
+    }
+
+    void SyncSplitCamerasToSharedCamera()
+    {
+        if (player1Camera != null)
+        {
+            player1Camera.transform.rotation = pivot.rotation;
+        }
+
+        if (player2Camera != null)
+        {
+            player2Camera.transform.rotation = pivot.rotation;
+        }
+    }
+
+    void SyncSplitCameraTransforms()
+    {
+        splitYawP1 = pivot.eulerAngles.y;
+        splitYawP2 = pivot.eulerAngles.y;
+
+        splitRotationVelocityP1 = 0f;
+        splitRotationVelocityP2 = 0f;
+
+        if (players.Count >= 2)
+        {
+            if (player1Pivot != null)
+            {
+                player1Pivot.position = players[0].position;
+                player1Pivot.rotation = pivot.rotation;
+            }
+
+            if (player2Pivot != null)
+            {
+                player2Pivot.position = players[1].position;
+                player2Pivot.rotation = pivot.rotation;
+            }
+        }
+    }
+
+
+    public void EnableSplitScreen()
+    {
+        if (players.Count < 2)
+            return;
+
+        SyncSplitCameraTransforms();
+
+        isSplitScreen = true;
+
+        if (cam != null)
+            cam.enabled = false;
+
+        if (player1Camera != null)
+            player1Camera.enabled = true;
+
+        if (player2Camera != null)
+            player2Camera.enabled = true;
+    }
+
+    public void DisableSplitScreen()
+    {
+        isSplitScreen = false;
+
+        if (player1Camera != null)
+            player1Camera.enabled = false;
+
+        if (player2Camera != null)
+            player2Camera.enabled = false;
+
+        if (cam != null)
+            cam.enabled = true;
+
+        // Make sure the shared camera is using the current pivot state.
+        pivot.rotation = Quaternion.Euler(fixedPitch, currentYaw, 0f);
+    }
 
     void LateUpdate()
     {
         if (cutsceneActive) return;
         if (players.Count == 0) return;
 
-        Follow();
-        Zoom();
-        Rotate(); // this will use rotationInput
+        if (!isSplitScreen)
+        {
+            Follow();
+            Zoom();
+            Rotate();
+        }
+        else
+        {
+            RotateSplitCameras();
+        }
+
+        UpdateSplitCameraPositions();
     }
 
+    //=================== TEST ======================
+    void Update()
+    {
+        if (Keyboard.current != null)
+        {
+            if (Keyboard.current.f1Key.wasPressedThisFrame)
+                EnableSplitScreen();
+
+            if (Keyboard.current.f2Key.wasPressedThisFrame)
+                DisableSplitScreen();
+        }
+    }
+
+    //=================== TEST =======================
 
     void Follow()
     {
@@ -136,6 +283,18 @@ public class CoopCameraController : MonoBehaviour
         rotationVelocity = value * rotationSpeed;
     }
 
+    public void AddSplitRotationInput(int playerIndex, float value)
+    {
+        if (playerIndex == 0)
+        {
+            splitRotationVelocityP1 = value * rotationSpeed;
+        }
+        else if (playerIndex == 1)
+        {
+            splitRotationVelocityP2 = value * rotationSpeed;
+        }
+    }
+
     void Rotate()
     {
         // Directly add input scaled by deltaTime
@@ -149,11 +308,36 @@ public class CoopCameraController : MonoBehaviour
        // rotationVelocity = 0f;
     }
 
+    void RotateSplitCameras()
+    {
+        splitYawP1 += splitRotationVelocityP1 * Time.deltaTime;
+        splitYawP2 += splitRotationVelocityP2 * Time.deltaTime;
+
+        if (player1Pivot != null)
+        {
+            player1Pivot.rotation =
+                Quaternion.Euler(fixedPitch, splitYawP1, 0f);
+        }
+
+        if (player2Pivot != null)
+        {
+            player2Pivot.rotation =
+                Quaternion.Euler(fixedPitch, splitYawP2, 0f);
+        }
+    }
 
 
-
-
-
+    public void AddRotationInputForPlayer(int playerIndex, float value)
+    {
+        if (isSplitScreen)
+        {
+            AddSplitRotationInput(playerIndex, value);
+        }
+        else
+        {
+            AddRotationInput(value);
+        }
+    }
 
 
 }
