@@ -222,8 +222,10 @@ MonoBehaviour:
   player2Pivot: {fileID: 7867456052303631721}
   player1Camera: {fileID: 5700516897652634525}
   player2Camera: {fileID: 135760346768142372}
-  splitCameraDistance: 10
+  splitCameraDistance: 30
   splitFollowSmoothTime: 0.2
+  splitDistance: 30
+  mergeDistance: 27
   cutsceneActive: 0
 --- !u!114 &3263082720320073175
 MonoBehaviour:
