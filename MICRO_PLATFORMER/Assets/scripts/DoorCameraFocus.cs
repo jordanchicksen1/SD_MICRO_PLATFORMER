@@ -20,8 +20,8 @@ public class DoorCameraFocus : MonoBehaviour
     [SerializeField] bool overrideZoom = true;
     [SerializeField] float cutsceneZoomDistance = 10f; // tweak in inspector
 
-
     Coroutine routine;
+    bool wasSplitScreen;
 
     void Awake()
     {
@@ -44,8 +44,22 @@ public class DoorCameraFocus : MonoBehaviour
 
     IEnumerator FocusRoutine(Transform focusPoint)
     {
-        if (coopCam) coopCam.cutsceneActive = true;
-        
+        if (coopCam)
+        {
+            // Remember whether we were in split-screen.
+            wasSplitScreen = coopCam.IsSplitScreen();
+
+            // Door focuses always use the shared camera.
+            if (wasSplitScreen)
+            {
+                coopCam.DisableSplitScreen();
+            }
+
+            // Stop the normal camera controller from updating
+            // while the focus sequence takes control.
+            coopCam.cutsceneActive = true;
+        }
+
         // Gather player inputs + rigidbodies so we can freeze properly
         List<PlayerInput> inputs = new();
         List<Rigidbody> rbs = new();
@@ -137,21 +151,34 @@ public class DoorCameraFocus : MonoBehaviour
         pivot.rotation = startPivotRot;
         cam.transform.localPosition = startCamLocalPos;
 
-        if (coopCam) coopCam.cutsceneActive = false;
+        // Return control to the normal camera system.
+        if (coopCam)
+        {
+            coopCam.cutsceneActive = false;
+        }
+
+        // Restore split-screen if that was the state
+        // before the door focus started.
+        if (wasSplitScreen && coopCam)
+        {
+            coopCam.EnableSplitScreen();
+        }
 
         // Re-enable input
         if (freezePlayers)
         {
             foreach (var pi in inputs)
-                if (pi && pi.enabled) pi.ActivateInput();
+            {
+                if (pi && pi.enabled)
+                    pi.ActivateInput();
+            }
 
-            if (UI != null) 
+            if (UI != null)
             {
                 UI.SetActive(true);
             }
-
-            
         }
+    
 
         routine = null;
     }

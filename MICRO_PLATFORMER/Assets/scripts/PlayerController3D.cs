@@ -80,7 +80,6 @@ public class PlayerController3D : MonoBehaviour
 
     [Header("Camera Stuff")]
     CoopCameraController coopCamera;
-    OffScreenIndicatorManager indicatorManager;
     [SerializeField] Transform challengeFocusPoint;
     public Transform ChallengeFocusPoint => challengeFocusPoint;
 
@@ -116,6 +115,9 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] Material player1GroundPoundMat;
     [SerializeField] Material player2GroundPoundMat;
     Renderer groundIndicatorRenderer;
+    GroundIndicator groundIndicator;
+    [SerializeField] Material player1ArrowMat;
+    [SerializeField] Material player2ArrowMat;
 
     PlayerAnimator playerAnimator;
 
@@ -228,10 +230,6 @@ public class PlayerController3D : MonoBehaviour
         if (coopCamera != null)
             coopCamera.RegisterPlayer(transform);
 
-        indicatorManager = FindFirstObjectByType<OffScreenIndicatorManager>();
-        if (indicatorManager != null)
-            indicatorManager.RegisterPlayer(this);
-
         PlayerHealthUIManager healthUIManager = FindFirstObjectByType<PlayerHealthUIManager>();
         if (healthUIManager != null)
             healthUIManager.RegisterPlayer(GetComponent<PlayerHealth>());
@@ -294,17 +292,26 @@ public class PlayerController3D : MonoBehaviour
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
 
 
-        GameObject indicator = Instantiate(groundIndicatorPrefab, transform.position, Quaternion.identity);
+        GameObject indicator = Instantiate(groundIndicatorPrefab,transform.position,Quaternion.identity);
 
-        GroundIndicator gi = indicator.GetComponent<GroundIndicator>();
-        gi.SetTarget(transform);
+        groundIndicator = indicator.GetComponent<GroundIndicator>();
+
+        groundIndicator.SetTarget(transform);
 
         groundIndicatorRenderer = indicator.GetComponentInChildren<Renderer>();
 
         if (playerIndex == 0)
+        {
             groundIndicatorRenderer.material = player1Mat;
+            groundIndicator.SetArrowMaterial(player1ArrowMat);
+        }
         else
+        {
             groundIndicatorRenderer.material = player2Mat;
+            groundIndicator.SetArrowMaterial(player2ArrowMat);
+        }
+
+        StartCoroutine(SetupGroundIndicatorOtherPlayer());
 
         var life = FindFirstObjectByType<CoopLifeManager>();
         if (life != null)
@@ -331,6 +338,33 @@ public class PlayerController3D : MonoBehaviour
         foreach (Transform child in obj.transform)
         {
             SetLayerRecursively(child.gameObject, newLayer);
+        }
+    }
+
+    IEnumerator SetupGroundIndicatorOtherPlayer()
+    {
+        while (groundIndicator != null &&
+               coopCamera != null &&
+               coopCamera.players.Count < 2)
+        {
+            yield return null;
+        }
+
+        FindOtherPlayerForGroundIndicator();
+    }
+
+    void FindOtherPlayerForGroundIndicator()
+    {
+        if (groundIndicator == null || coopCamera == null)
+            return;
+
+        foreach (Transform player in coopCamera.players)
+        {
+            if (player != null && player != transform)
+            {
+                groundIndicator.SetOtherPlayer(player);
+                return;
+            }
         }
     }
 

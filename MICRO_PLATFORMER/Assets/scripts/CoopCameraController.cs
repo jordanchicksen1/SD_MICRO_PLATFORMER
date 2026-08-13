@@ -347,8 +347,11 @@ public class CoopCameraController : MonoBehaviour
        // rotationVelocity = 0f;
     }
 
-   
 
+    public bool IsSplitScreen()
+    {
+        return isSplitScreen;
+    }
 
     public void AddRotationInputForPlayer(int playerIndex, float value)
     {
