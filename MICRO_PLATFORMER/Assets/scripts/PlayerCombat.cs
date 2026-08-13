@@ -611,7 +611,21 @@ public class PlayerCombat : MonoBehaviour
         //
 
         RestoreMaterials();
-        Camera cam = Camera.main;
+        CoopCameraController coopCam =
+     FindFirstObjectByType<CoopCameraController>();
+
+        Camera cam = null;
+
+        if (coopCam != null)
+        {
+            cam = coopCam.GetCameraForPlayer(PlayerIndex);
+        }
+
+        if (cam == null)
+        {
+            Debug.LogWarning("Could not find the correct camera for weapon pickup.");
+            yield break;
+        }
 
         Vector3 direction =
             cam.transform.position -
