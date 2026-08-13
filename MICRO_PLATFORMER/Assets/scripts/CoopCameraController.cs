@@ -41,6 +41,7 @@ public class CoopCameraController : MonoBehaviour
     [SerializeField] float splitDistance = 14f;
     [SerializeField] float mergeDistance = 11f;
     bool isSplitScreen;
+    [SerializeField] CameraTransition cameraTransition;
 
     [Header("Cutscene")]
     public bool cutsceneActive;
@@ -130,6 +131,14 @@ public class CoopCameraController : MonoBehaviour
         if (players.Count < 2)
             return;
 
+        // Don't start another camera transition while
+        // the current one is still running.
+        if (cameraTransition != null &&
+            cameraTransition.IsTransitioning)
+        {
+            return;
+        }
+
         float distance = GetPlayerDistance();
 
         if (!isSplitScreen && distance >= splitDistance)
@@ -201,6 +210,20 @@ public class CoopCameraController : MonoBehaviour
         if (players.Count < 2)
             return;
 
+        if (cameraTransition != null)
+        {
+            cameraTransition.PlayTransition(
+                EnableSplitScreenImmediate
+            );
+        }
+        else
+        {
+            EnableSplitScreenImmediate();
+        }
+    }
+
+    void EnableSplitScreenImmediate()
+    {
         SyncSplitCameraTransforms();
 
         isSplitScreen = true;
@@ -217,7 +240,21 @@ public class CoopCameraController : MonoBehaviour
 
     public void DisableSplitScreen()
     {
-        // Restore the exact camera angle from before split-screen.
+        if (cameraTransition != null)
+        {
+            cameraTransition.PlayTransition(
+                DisableSplitScreenImmediate
+            );
+        }
+        else
+        {
+            DisableSplitScreenImmediate();
+        }
+    }
+
+    void DisableSplitScreenImmediate()
+    {
+        // Restore the exact shared camera angle.
         currentYaw = sharedYawBeforeSplit;
 
         pivot.rotation =
@@ -227,11 +264,11 @@ public class CoopCameraController : MonoBehaviour
                 0f
             );
 
-        // Re-centre the shared camera on both players.
+        // Make sure the shared camera is already
+        // positioned correctly around both players.
         Follow();
         Zoom();
 
-        // Turn split cameras off.
         if (player1Camera != null)
             player1Camera.enabled = false;
 
@@ -240,9 +277,14 @@ public class CoopCameraController : MonoBehaviour
 
         isSplitScreen = false;
 
-        // Turn shared camera back on.
         if (cam != null)
             cam.enabled = true;
+    }
+
+    public bool IsCameraTransitioning()
+    {
+        return cameraTransition != null &&
+               cameraTransition.IsTransitioning;
     }
 
     void LateUpdate()

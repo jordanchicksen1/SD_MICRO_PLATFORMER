@@ -53,10 +53,17 @@ public class DoorCameraFocus : MonoBehaviour
             if (wasSplitScreen)
             {
                 coopCam.DisableSplitScreen();
+
+                // Wait for the camera transition to finish
+                // before taking control of the shared camera.
+                while (coopCam.IsCameraTransitioning())
+                {
+                    yield return null;
+                }
             }
 
-            // Stop the normal camera controller from updating
-            // while the focus sequence takes control.
+            // Now that the shared camera is active,
+            // stop the normal camera controller from updating.
             coopCam.cutsceneActive = true;
         }
 
