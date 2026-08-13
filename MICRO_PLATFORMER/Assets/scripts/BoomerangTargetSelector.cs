@@ -13,9 +13,11 @@ public class BoomerangTargetSelector : MonoBehaviour
     [SerializeField] int maxTargets = 3;
     [SerializeField] TMP_Text targetCounterText;
     Camera playerCamera;
+    CoopCameraController coopCam;
     [SerializeField] float reticleSpeed = 1000f;
     [SerializeField] float maxRadius = 300f;
     Vector2 reticlePosition;
+    Vector2 reticleCenter;
     PlayerController3D playerController;
     bool isAiming;
     RectTransform reticle;
@@ -27,7 +29,7 @@ public class BoomerangTargetSelector : MonoBehaviour
 
     void Awake()
     {
-        playerCamera = Camera.main;
+        coopCam = FindFirstObjectByType<CoopCameraController>();
         audioSource = GetComponent<AudioSource>();
         playerController = GetComponent<PlayerController3D>();
         playerInput = GetComponent<PlayerInput>();
@@ -59,8 +61,59 @@ public class BoomerangTargetSelector : MonoBehaviour
         reticle.gameObject.SetActive(false);
         Debug.Log(gameObject.name + " is using " + reticle.name);
     }
+
+    Vector2 GetReticleCenter()
+    {
+        // Shared camera:
+        // centre of the entire screen.
+        if (coopCam == null || !coopCam.IsSplitScreen())
+        {
+            return Vector2.zero;
+        }
+
+        Canvas canvas = reticle.GetComponentInParent<Canvas>();
+
+        if (canvas == null)
+        {
+            Debug.LogWarning("Boomerang reticle could not find its Canvas.");
+            return Vector2.zero;
+        }
+
+        RectTransform canvasRect =
+            canvas.GetComponent<RectTransform>();
+
+        float quarterWidth =
+            canvasRect.rect.width * 0.25f;
+
+        // P1 = centre of left half
+        if (playerInput.playerIndex == 0)
+        {
+            return new Vector2(-quarterWidth, 0f);
+        }
+
+        // P2 = centre of right half
+        return new Vector2(quarterWidth, 0f);
+    }
+
     public void BeginAim()
     {
+        if (coopCam != null)
+        {
+            playerCamera =
+                coopCam.GetCameraForPlayer(playerInput.playerIndex);
+        }
+
+        if (playerCamera == null)
+        {
+            Debug.LogWarning(
+                "BoomerangTargetSelector could not find a camera for Player "
+                + playerInput.playerIndex
+            );
+
+            return;
+        }
+
+
         isAiming = true;
         selectedTargets.Clear();
         UpdateCounter();
@@ -71,7 +124,8 @@ public class BoomerangTargetSelector : MonoBehaviour
             StopCoroutine(reticleAnimation);
 
         reticleAnimation = StartCoroutine(PopInReticle());
-        reticlePosition = Vector2.zero;
+        reticleCenter = GetReticleCenter();
+        reticlePosition = reticleCenter;
         reticle.anchoredPosition = reticlePosition;
     }
 
@@ -81,9 +135,24 @@ public class BoomerangTargetSelector : MonoBehaviour
             return;
 
         Vector2 input = playerController.MoveInput;
-        reticlePosition += input * reticleSpeed * Time.deltaTime;
-        reticlePosition = Vector2.ClampMagnitude(reticlePosition, maxRadius);
-        reticle.anchoredPosition = reticlePosition;
+
+        reticlePosition +=
+            input * reticleSpeed * Time.deltaTime;
+
+        Vector2 offset =
+            reticlePosition - reticleCenter;
+
+        offset =
+            Vector2.ClampMagnitude(
+                offset,
+                maxRadius
+            );
+
+        reticlePosition =
+            reticleCenter + offset;
+
+        reticle.anchoredPosition =
+            reticlePosition;
 
         Vector2 reticleScreenPosition = RectTransformUtility.WorldToScreenPoint(null, reticle.position);
 
