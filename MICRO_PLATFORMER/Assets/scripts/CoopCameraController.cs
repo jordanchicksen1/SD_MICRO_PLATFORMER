@@ -22,11 +22,11 @@ public class CoopCameraController : MonoBehaviour
     [SerializeField] bool snapYaw = true;
     [SerializeField] float snapAngle = 90f;
     float currentYaw; 
-    bool wasRotating;
     [SerializeField] float rotationSmoothTime = 0.05f; // small lag for smoothness
     float rotationVelocity; // used for SmoothDamp
     float sharedYawBeforeSplit;
-   
+    [SerializeField] CameraRotationWarning player1RotationWarning;
+    [SerializeField] CameraRotationWarning player2RotationWarning;
 
     Transform pivot;
     Camera cam;
@@ -409,8 +409,28 @@ public class CoopCameraController : MonoBehaviour
 
     public void AddRotationInputForPlayer(int playerIndex, float value)
     {
+        // Shared camera: right-stick rotation works normally.
+        if (!isSplitScreen)
         {
             AddRotationInput(value);
+            return;
+        }
+
+        // Split-screen: camera rotation is disabled.
+        // Only show the warning when the player actually
+        // moves the right stick.
+        if (Mathf.Abs(value) > 0.1f)
+        {
+            if (playerIndex == 0)
+            {
+                if (player1RotationWarning != null)
+                    player1RotationWarning.Show();
+            }
+            else if (playerIndex == 1)
+            {
+                if (player2RotationWarning != null)
+                    player2RotationWarning.Show();
+            }
         }
     }
 
