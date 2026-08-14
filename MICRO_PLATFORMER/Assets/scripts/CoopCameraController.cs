@@ -102,25 +102,37 @@ public class CoopCameraController : MonoBehaviour
         return bounds.center;
     }
 
-    Transform GetPlayerTarget(int index)
+    Transform GetPlayerTarget(int playerIndex)
     {
-        if (index < 0 || index >= players.Count)
-            return null;
+        foreach (Transform player in players)
+        {
+            if (player == null)
+                continue;
 
-        return players[index];
+            PlayerInput input =
+                player.GetComponent<PlayerInput>();
+
+            if (input != null &&
+                input.playerIndex == playerIndex)
+            {
+                return player;
+            }
+        }
+
+        return null;
     }
 
     float GetPlayerDistance()
     {
-        if (players.Count < 2)
-            return 0f;
+        Transform player1 = GetPlayerTarget(0);
+        Transform player2 = GetPlayerTarget(1);
 
-        if (players[0] == null || players[1] == null)
+        if (player1 == null || player2 == null)
             return 0f;
 
         return Vector3.Distance(
-            players[0].position,
-            players[1].position
+            player1.position,
+            player2.position
         );
     }
 
@@ -180,7 +192,7 @@ public class CoopCameraController : MonoBehaviour
         }
     }
 
-    
+
 
     void SyncSplitCameraTransforms()
     {
@@ -188,19 +200,19 @@ public class CoopCameraController : MonoBehaviour
         // at the moment split-screen begins.
         sharedYawBeforeSplit = pivot.eulerAngles.y;
 
-        if (players.Count >= 2)
-        {
-            if (player1Pivot != null)
-            {
-                player1Pivot.position = players[0].position;
-                player1Pivot.rotation = pivot.rotation;
-            }
+        Transform player1 = GetPlayerTarget(0);
+        Transform player2 = GetPlayerTarget(1);
 
-            if (player2Pivot != null)
-            {
-                player2Pivot.position = players[1].position;
-                player2Pivot.rotation = pivot.rotation;
-            }
+        if (player1 != null && player1Pivot != null)
+        {
+            player1Pivot.position = player1.position;
+            player1Pivot.rotation = pivot.rotation;
+        }
+
+        if (player2 != null && player2Pivot != null)
+        {
+            player2Pivot.position = player2.position;
+            player2Pivot.rotation = pivot.rotation;
         }
     }
 
