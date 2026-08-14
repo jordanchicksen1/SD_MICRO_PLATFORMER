@@ -28,16 +28,69 @@ public class Enemy : MonoBehaviour
 
     [Header("Enemy Stuff")]
     [SerializeField] Transform visuals;
+    [Header("Hit Flash")]
+    [SerializeField] Renderer[] renderers;
+    [SerializeField] float flashDuration = 0.1f;
+    Material[][] cachedMaterials;
 
     int currentHealth;
     bool isDead;
-
+    Coroutine flashRoutine;
     public bool IsDead => isDead;
 
     void Awake()
     {
         currentHealth = maxHealth;
         deathEffect.SetActive(false);
+
+        renderers = GetComponentsInChildren<Renderer>();
+
+        cachedMaterials = new Material[renderers.Length][];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            cachedMaterials[i] = renderers[i].materials;
+        }
+    }
+
+    void SetFlash(bool normal)
+    {
+        for (int i = 0; i < cachedMaterials.Length; i++)
+        {
+            foreach (Material m in cachedMaterials[i])
+            {
+                if (!m.HasProperty("_EmissionColor"))
+                    continue;
+
+                m.EnableKeyword("_EMISSION");
+
+                if (normal)
+                {
+                    m.SetColor("_EmissionColor", Color.black);
+                }
+                else
+                {
+                    m.SetColor("_EmissionColor", Color.white * 3f);
+                }
+            }
+        }
+    }
+
+    void FlashOnHit()
+    {
+        if (flashRoutine != null)
+            StopCoroutine(flashRoutine);
+
+        flashRoutine = StartCoroutine(FlashCoroutine());
+    }
+
+    IEnumerator FlashCoroutine()
+    {
+        SetFlash(false);
+
+        yield return new WaitForSeconds(flashDuration);
+
+        SetFlash(true);
     }
 
     void DisableAI()
@@ -57,6 +110,8 @@ public class Enemy : MonoBehaviour
 
     public void TakeHit()
     {
+        FlashOnHit();
+
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
             rb.linearVelocity = Vector3.zero;
@@ -77,6 +132,8 @@ public class Enemy : MonoBehaviour
 
     public void TakeKick(Vector3 direction)
     {
+        FlashOnHit();
+
         Rigidbody rb = GetComponent<Rigidbody>();
 
         if (rb != null)
@@ -109,6 +166,8 @@ public class Enemy : MonoBehaviour
 
     public void TakeBatHit(Vector3 direction)
     {
+        FlashOnHit();
+
         Rigidbody rb = GetComponent<Rigidbody>();
 
         if (rb != null)
@@ -141,6 +200,8 @@ public class Enemy : MonoBehaviour
 
     public void TakeUppercut(Vector3 direction)
     {
+        FlashOnHit();
+
         Rigidbody rb = GetComponent<Rigidbody>();
 
         if (rb != null)

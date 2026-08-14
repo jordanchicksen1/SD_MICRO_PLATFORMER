@@ -1377,6 +1377,11 @@ MonoBehaviour:
   invulnerabilityTime: 2
   hasDied: 0
   hurtSFX: {fileID: 814280539526220528}
+  hurtSounds:
+  - {fileID: 8300000, guid: e83f7c3078d3ba14abd503825cf1c023, type: 3}
+  - {fileID: 8300000, guid: cba4a1dc3ecf22144a5600e4848c7c2a, type: 3}
+  - {fileID: 8300000, guid: 55f7f7443daec994aaf0894c294b8485, type: 3}
+  - {fileID: 8300000, guid: 2ebbae5a761529d4a97b025625de4b27, type: 3}
 --- !u!114 &6448472338483798396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8827,8 +8832,8 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 8e602e22908810349be19973debf043e, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
+  m_Volume: 0.75
+  m_Pitch: 1.25
   Loop: 0
   Mute: 0
   Spatialize: 0

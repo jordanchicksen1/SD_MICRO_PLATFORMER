@@ -21,7 +21,9 @@ public class PlayerHealth : MonoBehaviour
     public event Action OnDied;
     public bool hasDied;
 
-    public AudioSource hurtSFX;
+    [SerializeField] AudioSource hurtSFX;
+    [SerializeField] AudioClip[] hurtSounds;
+    int lastHurtSoundIndex = -1;
 
     void Awake()
     {
@@ -43,7 +45,23 @@ public class PlayerHealth : MonoBehaviour
 
         OnHealthChanged?.Invoke(currentHealth);
         OnDamaged?.Invoke(sourcePosition);
-        hurtSFX.Play();
+        if (hurtSFX != null && hurtSounds != null && hurtSounds.Length > 0)
+        {
+            int randomHurtSoundIndex;
+
+            do
+            {
+                randomHurtSoundIndex =
+                    UnityEngine.Random.Range(0, hurtSounds.Length);
+            }
+            while (randomHurtSoundIndex == lastHurtSoundIndex);
+
+            lastHurtSoundIndex = randomHurtSoundIndex;
+
+            hurtSFX.PlayOneShot(
+                hurtSounds[randomHurtSoundIndex]
+            );
+        }
         if (currentHealth <= 0)
         {
             Debug.Log($"[{name}] DIED -> OnDied invoked");

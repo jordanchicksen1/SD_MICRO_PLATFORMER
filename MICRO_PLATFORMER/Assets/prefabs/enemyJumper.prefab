@@ -1560,6 +1560,8 @@ MonoBehaviour:
   uppercutSpinForce: 25
   uppercutSFX: {fileID: 2728221371096063801}
   visuals: {fileID: 7533421590669571011}
+  renderers: []
+  flashDuration: 0.1
 --- !u!54 &372100679546201915
 Rigidbody:
   m_ObjectHideFlags: 0
