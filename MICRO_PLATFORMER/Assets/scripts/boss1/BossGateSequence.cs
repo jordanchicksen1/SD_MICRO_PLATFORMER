@@ -17,6 +17,12 @@ public class BossGateSequence : MonoBehaviour
 
     bool sequenceRunning;
 
+    [Header("Boss Button")]
+    [SerializeField] GameObject bossButton;
+    [SerializeField] Transform buttonFocusPoint;
+    [SerializeField] Transform buttonVFXPoint;
+    [SerializeField] GameObject buttonVFX;
+
     void Awake()
     {
         cameraFocus = FindFirstObjectByType<DoorCameraFocus>();
@@ -33,7 +39,10 @@ public class BossGateSequence : MonoBehaviour
     {
         sequenceRunning = true;
 
+        // -------------------------
         // OPEN DOOR
+        // -------------------------
+
         bool firstTime = door.Open();
 
         if (firstTime && cameraFocus && doorFocusPoint)
@@ -41,11 +50,56 @@ public class BossGateSequence : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
+
+        // -------------------------
         // SPAWN GEM
-        Instantiate(gemPrefab, gemSpawnPoint.position, gemSpawnPoint.rotation);
+        // -------------------------
+
+        Instantiate(
+            gemPrefab,
+            gemSpawnPoint.position,
+            gemSpawnPoint.rotation
+        );
 
         // FOCUS GEM
         if (cameraFocus && gemFocusPoint)
             cameraFocus.FocusOn(gemFocusPoint);
+
+        yield return new WaitForSeconds(2f);
+
+
+        // -------------------------
+        // ACTIVATE BUTTON
+        // -------------------------
+
+        if (bossButton != null)
+            bossButton.SetActive(true);
+
+
+        // -------------------------
+        // BUTTON SMOKE
+        // -------------------------
+
+        if (buttonVFX != null)
+        {
+            Transform spawnPoint =
+                buttonVFXPoint != null
+                    ? buttonVFXPoint
+                    : bossButton.transform;
+
+            Instantiate(
+                buttonVFX,
+                spawnPoint.position,
+                spawnPoint.rotation
+            );
+        }
+
+
+        // -------------------------
+        // FOCUS BUTTON
+        // -------------------------
+
+        if (cameraFocus && buttonFocusPoint)
+            cameraFocus.FocusOn(buttonFocusPoint);
     }
 }

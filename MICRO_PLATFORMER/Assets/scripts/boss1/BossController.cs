@@ -38,6 +38,7 @@ public class BossController : MonoBehaviour
     bool vulnerable;
 
     bool fightStarted;
+    public GameObject invisibleWalls;
 
     Vector3 startPos;
     Quaternion startRot;
@@ -134,6 +135,11 @@ public class BossController : MonoBehaviour
         fightStarted = true;
 
         attackRoutine = StartCoroutine(AttackPattern());
+
+        if (invisibleWalls != null)
+        {
+            invisibleWalls.SetActive(true);
+        }
 
         Debug.Log("Boss fight started!");
     }
@@ -432,6 +438,13 @@ public class BossController : MonoBehaviour
         x1.SetActive(false);
         x2.SetActive(false);
         x3.SetActive(false);
+
+        if(invisibleWalls != null)
+        {
+            invisibleWalls.SetActive(false);
+        }
+        
+
 
         // spawn the smoke effect
         GameObject smoke = Instantiate(deathVFX, head.transform.position, Quaternion.identity);
