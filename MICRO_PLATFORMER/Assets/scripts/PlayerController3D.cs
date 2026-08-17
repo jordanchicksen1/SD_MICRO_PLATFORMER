@@ -128,9 +128,14 @@ public class PlayerController3D : MonoBehaviour
     [Header("UI Prompts")]
     [SerializeField] GameObject pickupPromptP1;
     [SerializeField] GameObject pickupPromptP2;
+    [SerializeField] GameObject interactPromptP1;
+    [SerializeField] GameObject interactPromptP2;
 
 
     GameObject pickupPrompt;
+    GameObject interactPrompt;
+
+    bool interactPromptSuppressed;
 
     [SerializeField] GameObject unlockPromptP1;   // "Press Interact to Unlock"
     [SerializeField] GameObject unlockPromptP2;
@@ -258,10 +263,13 @@ public class PlayerController3D : MonoBehaviour
         Debug.Log($"Player {playerNumber} joined");
 
         pickupPrompt = (playerIndex == 0) ? pickupPromptP1 : pickupPromptP2;
+        interactPrompt = (playerIndex == 0) ? interactPromptP1 : interactPromptP2;
 
         // safety
         if (pickupPromptP1) pickupPromptP1.SetActive(false);
         if (pickupPromptP2) pickupPromptP2.SetActive(false);
+        if (interactPromptP1) interactPromptP1.SetActive(false);
+        if (interactPromptP2) interactPromptP2.SetActive(false);
         unlockPrompt = (playerIndex == 0) ? unlockPromptP1 : unlockPromptP2;
         needKeyPrompt = (playerIndex == 0) ? needKeyPromptP1 : needKeyPromptP2;
 
@@ -385,6 +393,7 @@ public class PlayerController3D : MonoBehaviour
 
             UpdatePickupPrompt();
             UpdateUnlockPrompt();
+            UpdateInteractPrompt();
         }
 
         UpdateGroundIndicator();
@@ -462,6 +471,47 @@ public class PlayerController3D : MonoBehaviour
         unlockPrompt.SetActive(lookingAtLock);
     }
 
+    void UpdateInteractPrompt()
+    {
+        if (interactPrompt == null)
+            return;
+
+        if (interactPromptSuppressed)
+        {
+            interactPrompt.SetActive(false);
+            return;
+        }
+
+        Ray ray = new Ray(
+            transform.position + Vector3.down * 0.5f,
+            -transform.forward
+        );
+
+        bool lookingAtTutorialSign = false;
+
+        if (Physics.Raycast(
+            ray,
+            out RaycastHit hit,
+            interactRange,
+            interactLayer))
+        {
+            lookingAtTutorialSign =
+                hit.collider.GetComponentInParent<TutorialSign>() != null;
+        }
+
+        interactPrompt.SetActive(lookingAtTutorialSign);
+    }
+
+    public void SetInteractPromptSuppressed(bool suppressed)
+    {
+        interactPromptSuppressed = suppressed;
+
+        if (suppressed && interactPrompt != null)
+            interactPrompt.SetActive(false);
+
+        if (!suppressed)
+            RequestPromptRefresh();
+    }
 
     void FixedUpdate()
     {

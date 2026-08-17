@@ -23,6 +23,12 @@ public class DoorCameraFocus : MonoBehaviour
     Coroutine routine;
     bool wasSplitScreen;
 
+    bool manualFocus;
+
+    Vector3 savedCameraPosition;
+    Quaternion savedPivotRotation;
+    Vector3 savedCameraLocalPosition;
+
     void Awake()
     {
         if (!coopCam) coopCam = GetComponent<CoopCameraController>();
@@ -40,6 +46,32 @@ public class DoorCameraFocus : MonoBehaviour
             UI.SetActive(false);
         }
         
+    }
+
+    public void FocusUntilClosed(Transform focusPoint, System.Action onFocusComplete = null)
+    {
+        if (!focusPoint)
+            return;
+
+        if (routine != null)
+            StopCoroutine(routine);
+
+        manualFocus = true;
+
+        routine = StartCoroutine(FocusManualRoutine(focusPoint, onFocusComplete));
+    }
+
+    public void CloseManualFocus()
+    {
+        if (!manualFocus)
+            return;
+
+        manualFocus = false;
+
+        if (routine != null)
+            StopCoroutine(routine);
+
+        routine = StartCoroutine(ReturnFromManualFocus());
     }
 
     IEnumerator FocusRoutine(Transform focusPoint)
@@ -187,6 +219,189 @@ public class DoorCameraFocus : MonoBehaviour
         }
     
 
+        routine = null;
+    }
+
+    IEnumerator FocusManualRoutine(Transform focusPoint, System.Action onFocusComplete)
+    {
+        if (coopCam)
+        {
+            wasSplitScreen = coopCam.IsSplitScreen();
+
+            if (wasSplitScreen)
+            {
+                coopCam.DisableSplitScreen();
+
+                while (coopCam.IsCameraTransitioning())
+                    yield return null;
+            }
+
+            coopCam.cutsceneActive = true;
+        }
+
+        // Lock player movement without disabling PlayerInput.
+        if (coopCam != null)
+        {
+            foreach (Transform p in coopCam.players)
+            {
+                if (p == null)
+                    continue;
+
+                PlayerController3D player =
+                    p.GetComponent<PlayerController3D>();
+
+                if (player != null)
+                {
+                    player.SetMovementLocked(true);
+                }
+            }
+        }
+
+        Transform pivot = transform.GetChild(0);
+        Camera cam = pivot.GetComponentInChildren<Camera>();
+
+        // Save the current camera state.
+        savedCameraPosition = transform.position;
+        savedPivotRotation = pivot.rotation;
+        savedCameraLocalPosition = cam.transform.localPosition;
+
+        // Target state.
+        Vector3 targetPosition = focusPoint.position;
+        Quaternion targetRotation = focusPoint.rotation;
+
+        Vector3 targetCameraLocalPosition = savedCameraLocalPosition;
+
+        if (overrideZoom)
+        {
+            targetCameraLocalPosition = new Vector3(
+                savedCameraLocalPosition.x,
+                savedCameraLocalPosition.y,
+                -cutsceneZoomDistance
+            );
+        }
+
+        // Move camera toward the sign.
+        float t = 0f;
+
+        while (t < moveDuration)
+        {
+            t += Time.deltaTime;
+
+            float a = ease.Evaluate(
+                Mathf.Clamp01(t / moveDuration)
+            );
+
+            transform.position =
+                Vector3.Lerp(
+                    savedCameraPosition,
+                    targetPosition,
+                    a
+                );
+
+            pivot.rotation =
+                Quaternion.Slerp(
+                    savedPivotRotation,
+                    targetRotation,
+                    a
+                );
+
+            cam.transform.localPosition =
+                Vector3.Lerp(
+                    savedCameraLocalPosition,
+                    targetCameraLocalPosition,
+                    a
+                );
+
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+        pivot.rotation = targetRotation;
+        cam.transform.localPosition = targetCameraLocalPosition;
+
+        // Tell the tutorial sign that the camera has arrived.
+        onFocusComplete?.Invoke();
+
+        // Stay focused until the player presses Interact again.
+        while (manualFocus)
+        {
+            yield return null;
+        }
+    }
+
+    IEnumerator ReturnFromManualFocus()
+    {
+        Transform pivot = transform.GetChild(0);
+        Camera cam = pivot.GetComponentInChildren<Camera>();
+
+        Vector3 startPosition = transform.position;
+        Quaternion startRotation = pivot.rotation;
+        Vector3 startCameraLocalPosition = cam.transform.localPosition;
+
+        float t = 0f;
+
+        while (t < moveDuration)
+        {
+            t += Time.deltaTime;
+
+            float a = ease.Evaluate(
+                Mathf.Clamp01(t / moveDuration)
+            );
+
+            transform.position =
+                Vector3.Lerp(
+                    startPosition,
+                    savedCameraPosition,
+                    a
+                );
+
+            pivot.rotation =
+                Quaternion.Slerp(
+                    startRotation,
+                    savedPivotRotation,
+                    a
+                );
+
+            cam.transform.localPosition =
+                Vector3.Lerp(
+                    startCameraLocalPosition,
+                    savedCameraLocalPosition,
+                    a
+                );
+
+            yield return null;
+        }
+
+        transform.position = savedCameraPosition;
+        pivot.rotation = savedPivotRotation;
+        cam.transform.localPosition = savedCameraLocalPosition;
+
+        // Restore normal camera control.
+        if (coopCam)
+        {
+            coopCam.cutsceneActive = false;
+
+            if (wasSplitScreen)
+                coopCam.EnableSplitScreen();
+        }
+
+        // Restore player movement.
+        if (coopCam != null)
+        {
+            foreach (Transform p in coopCam.players)
+            {
+                if (p == null)
+                    continue;
+
+                PlayerController3D player =
+                    p.GetComponent<PlayerController3D>();
+
+                if (player != null)
+                    player.SetMovementLocked(false);
+            }
+        }
+
+        manualFocus = false;
         routine = null;
     }
 }
