@@ -1084,6 +1084,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5531846144392959258}
     - target: {fileID: 1806785584540068255, guid: 56f4f073bf1165348b71348854249072, type: 3}
+      propertyPath: splitScreenDelay
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1806785584540068255, guid: 56f4f073bf1165348b71348854249072, type: 3}
       propertyPath: player1RotationWarning
       value: 
       objectReference: {fileID: 6244863493590371426}

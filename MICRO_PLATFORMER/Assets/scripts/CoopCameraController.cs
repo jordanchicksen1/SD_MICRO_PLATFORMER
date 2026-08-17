@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,6 +7,7 @@ public class CoopCameraController : MonoBehaviour
 {
     [Header("Targets")]
     public List<Transform> players = new();
+    Dictionary<PlayerHealth, System.Action> deathHandlers = new Dictionary<PlayerHealth, System.Action>();
 
     [Header("Follow")]
     [SerializeField] float followSmoothTime = 0.2f;
@@ -42,6 +44,8 @@ public class CoopCameraController : MonoBehaviour
     [SerializeField] float mergeDistance = 11f;
     bool isSplitScreen;
     [SerializeField] CameraTransition cameraTransition;
+    [SerializeField] float splitScreenDelay = 0.5f;
+    Coroutine splitScreenDelayRoutine;
 
     [Header("Cutscene")]
     public bool cutsceneActive;
@@ -58,14 +62,53 @@ public class CoopCameraController : MonoBehaviour
 
     public void RegisterPlayer(Transform player)
     {
+        if (player == null)
+            return;
+
         if (!players.Contains(player))
             players.Add(player);
+
+        PlayerHealth health = player.GetComponent<PlayerHealth>();
+
+        if (health != null && !deathHandlers.ContainsKey(health))
+        {
+            System.Action handler = () => OnPlayerDied(player);
+
+            deathHandlers.Add(health, handler);
+            health.OnDied += handler;
+        }
     }
 
     public void UnregisterPlayer(Transform player)
     {
-        if (player == null) return;
+        if (player == null)
+            return;
+
+        PlayerHealth health = player.GetComponent<PlayerHealth>();
+
+        if (health != null &&
+            deathHandlers.TryGetValue(health, out System.Action handler))
+        {
+            health.OnDied -= handler;
+            deathHandlers.Remove(health);
+        }
+
         players.Remove(player);
+    }
+
+    void OnPlayerDied(Transform deadPlayer)
+    {
+        Debug.Log($"Camera: {deadPlayer.name} died. Forcing shared camera.");
+
+        // Cancel any pending split-screen activation.
+        CancelSplitScreenDelay();
+
+        // If split-screen is currently active, immediately begin
+        // returning to the shared camera.
+        if (isSplitScreen)
+        {
+            DisableSplitScreen();
+        }
     }
 
     public Camera GetCameraForPlayer(int playerIndex)
@@ -143,24 +186,156 @@ public class CoopCameraController : MonoBehaviour
         if (players.Count < 2)
             return;
 
-        // Don't start another camera transition while
-        // the current one is still running.
-        if (cameraTransition != null &&
-            cameraTransition.IsTransitioning)
+        // Death always forces shared camera.
+        if (IsEitherPlayerDead())
         {
+            CancelSplitScreenDelay();
+
+            if (isSplitScreen)
+                DisableSplitScreen();
+
             return;
         }
 
-        float distance = GetPlayerDistance();
+        // Don't make another decision while the camera
+        // is already transitioning.
+        if (IsCameraTransitioning())
+            return;
 
-        if (!isSplitScreen && distance >= splitDistance)
+        Transform player1Transform = GetPlayerTarget(0);
+        Transform player2Transform = GetPlayerTarget(1);
+
+        if (player1Transform == null || player2Transform == null)
+            return;
+
+        PlayerController3D player1 =
+            player1Transform.GetComponent<PlayerController3D>();
+
+        PlayerController3D player2 =
+            player2Transform.GetComponent<PlayerController3D>();
+
+        if (player1 == null || player2 == null)
+            return;
+
+        float distance = Vector3.Distance(
+            player1Transform.position,
+            player2Transform.position
+        );
+
+        bool bothPlayersGrounded =
+            player1.IsPlayerGrounded() &&
+            player2.IsPlayerGrounded();
+
+        // =========================
+        // ENTER SPLIT SCREEN
+        // =========================
+
+        if (!isSplitScreen)
         {
-            EnableSplitScreen();
+            if (distance >= splitDistance &&
+                bothPlayersGrounded)
+            {
+                if (splitScreenDelayRoutine == null)
+                {
+                    splitScreenDelayRoutine =
+                        StartCoroutine(DelayedSplitScreen());
+                }
+            }
+            else
+            {
+                CancelSplitScreenDelay();
+            }
+
+            return;
         }
-        else if (isSplitScreen && distance <= mergeDistance)
+
+        // =========================
+        // RETURN TO SHARED CAMERA
+        // =========================
+
+        if (distance <= mergeDistance &&
+            bothPlayersGrounded)
         {
             DisableSplitScreen();
         }
+    }
+
+    IEnumerator DelayedSplitScreen()
+    {
+        yield return new WaitForSeconds(splitScreenDelay);
+
+        splitScreenDelayRoutine = null;
+
+        if (players.Count < 2)
+            yield break;
+
+        if (IsCameraTransitioning())
+            yield break;
+
+        Transform player1Transform = GetPlayerTarget(0);
+        Transform player2Transform = GetPlayerTarget(1);
+
+        if (player1Transform == null || player2Transform == null)
+            yield break;
+
+        PlayerController3D player1 =
+            player1Transform.GetComponent<PlayerController3D>();
+
+        PlayerController3D player2 =
+            player2Transform.GetComponent<PlayerController3D>();
+
+        if (player1 == null || player2 == null)
+            yield break;
+
+        // Don't split if either player has died.
+        if (IsEitherPlayerDead())
+            yield break;
+
+        float distance = Vector3.Distance(
+            player1Transform.position,
+            player2Transform.position
+        );
+
+        bool bothPlayersGrounded =
+            player1.IsPlayerGrounded() &&
+            player2.IsPlayerGrounded();
+
+        // Check the conditions AGAIN after the delay.
+        if (distance >= splitDistance &&
+            bothPlayersGrounded &&
+            !isSplitScreen)
+        {
+            EnableSplitScreen();
+        }
+    }
+
+    void CancelSplitScreenDelay()
+    {
+        if (splitScreenDelayRoutine != null)
+        {
+            StopCoroutine(splitScreenDelayRoutine);
+            splitScreenDelayRoutine = null;
+        }
+    }
+
+    bool IsEitherPlayerDead()
+    {
+        Transform player1Transform = GetPlayerTarget(0);
+        Transform player2Transform = GetPlayerTarget(1);
+
+        if (player1Transform == null || player2Transform == null)
+            return false;
+
+        PlayerHealth player1Health =
+            player1Transform.GetComponent<PlayerHealth>();
+
+        PlayerHealth player2Health =
+            player2Transform.GetComponent<PlayerHealth>();
+
+        if (player1Health == null || player2Health == null)
+            return false;
+
+        return player1Health.hasDied || player2Health.hasDied;
     }
 
 

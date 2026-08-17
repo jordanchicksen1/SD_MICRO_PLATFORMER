@@ -894,6 +894,11 @@ public class PlayerController3D : MonoBehaviour
         return Physics.Raycast(transform.position, Vector3.down, out hit, 1.1f, groundMask);
     }
 
+    public bool IsPlayerGrounded()
+    {
+        return IsGrounded(out RaycastHit hit);
+    }
+
 
     public void ApplyKnockback(Vector3 sourcePosition)
     {
