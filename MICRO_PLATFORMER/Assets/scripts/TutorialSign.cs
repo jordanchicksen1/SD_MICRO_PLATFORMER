@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Video;
 
 public class TutorialSign : MonoBehaviour, IInteractable
 {
     [Header("Instruction UI")]
     [SerializeField] GameObject instructionCanvas;
     [SerializeField] RectTransform instructionPanel;
+
+    [Header("Tutorial Video")]
+    [SerializeField] VideoPlayer videoPlayer;
+    [SerializeField] VideoClip videoClip;
 
     [Header("Panel Animation")]
     [SerializeField] float popInDuration = 0.2f;
@@ -17,6 +22,7 @@ public class TutorialSign : MonoBehaviour, IInteractable
     [SerializeField] Transform focusPoint;
 
     bool isOpen;
+    bool isAnimating;
     Coroutine animationRoutine;
 
     void Awake()
@@ -30,11 +36,20 @@ public class TutorialSign : MonoBehaviour, IInteractable
                 this
             );
         }
+
+        if (videoPlayer != null)
+        {
+            videoPlayer.isLooping = true;
+            videoPlayer.playOnAwake = false;
+
+            if (videoClip != null)
+                videoPlayer.clip = videoClip;
+        }
     }
 
     public void Interact(PlayerController3D player)
     {
-        if (animationRoutine != null)
+        if (isAnimating)
             return;
 
         if (isOpen)
@@ -53,8 +68,10 @@ public class TutorialSign : MonoBehaviour, IInteractable
             return;
 
         isOpen = true;
+        isAnimating = true;
 
         SetPlayerInteractPromptSuppressed(true);
+        SetPlayerTutorialLock(true);
 
         if (instructionCanvas != null)
             instructionCanvas.SetActive(true);
@@ -76,6 +93,16 @@ public class TutorialSign : MonoBehaviour, IInteractable
         if (!isOpen)
             return;
 
+        if (videoPlayer != null)
+        {
+            videoPlayer.Stop();
+
+            if (videoClip != null)
+                videoPlayer.clip = videoClip;
+
+            videoPlayer.Play();
+        }
+
         if (animationRoutine != null)
             StopCoroutine(animationRoutine);
 
@@ -88,8 +115,15 @@ public class TutorialSign : MonoBehaviour, IInteractable
             return;
 
         isOpen = false;
+        isAnimating = true;
 
         SetPlayerInteractPromptSuppressed(false);
+        SetPlayerTutorialLock(false);
+
+        if (videoPlayer != null)
+        {
+            videoPlayer.Stop();
+        }
 
         if (cameraFocus != null)
             cameraFocus.CloseManualFocus();
@@ -118,6 +152,27 @@ public class TutorialSign : MonoBehaviour, IInteractable
 
             if (controller != null)
                 controller.SetInteractPromptSuppressed(suppressed);
+        }
+    }
+
+    void SetPlayerTutorialLock(bool locked)
+    {
+        CoopCameraController coopCam =
+            FindFirstObjectByType<CoopCameraController>();
+
+        if (coopCam == null)
+            return;
+
+        foreach (Transform player in coopCam.players)
+        {
+            if (player == null)
+                continue;
+
+            PlayerController3D controller =
+                player.GetComponent<PlayerController3D>();
+
+            if (controller != null)
+                controller.SetTutorialLocked(locked);
         }
     }
 
@@ -183,6 +238,7 @@ public class TutorialSign : MonoBehaviour, IInteractable
         instructionPanel.localScale = finalScale;
 
         animationRoutine = null;
+        isAnimating = false;
     }
 
     IEnumerator PopOut()
@@ -246,5 +302,6 @@ public class TutorialSign : MonoBehaviour, IInteractable
             instructionCanvas.SetActive(false);
 
         animationRoutine = null;
+        isAnimating = false;
     }
 }

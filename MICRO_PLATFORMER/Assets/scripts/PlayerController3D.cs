@@ -62,6 +62,7 @@ public class PlayerController3D : MonoBehaviour
     bool isLongJumping;
     bool isGroundSlamLeaping;
     bool movementLocked;
+    bool tutorialLocked;
 
     [Header("Carrying")] 
     [SerializeField] Transform holdPoint;
@@ -787,6 +788,9 @@ public class PlayerController3D : MonoBehaviour
 
     public void OnDive(InputAction.CallbackContext context)
     {
+        if (tutorialLocked)
+            return;
+
         if (!context.performed)
             return;
 
@@ -821,6 +825,9 @@ public class PlayerController3D : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (tutorialLocked)
+            return;
+
         if (context.started)
             jumpHeld = true;
 
@@ -1318,6 +1325,17 @@ public class PlayerController3D : MonoBehaviour
     public void SetMovementLocked(bool locked)
     {
         movementLocked = locked;
+
+        if (locked)
+        {
+            moveInput = Vector2.zero;
+            rb.linearVelocity = Vector3.zero;
+        }
+    }
+
+    public void SetTutorialLocked(bool locked)
+    {
+        tutorialLocked = locked;
 
         if (locked)
         {
