@@ -29655,7 +29655,7 @@ Transform:
   m_GameObject: {fileID: 844696612}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.45, y: 6.37, z: 0}
+  m_LocalPosition: {x: 5.43, y: 6.37, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -67049,9 +67049,9 @@ MonoBehaviour:
   entryPoint: {fileID: 336297382}
   arrivalPoint: {fileID: 1192486956}
   exitPoint: {fileID: 844696613}
-  moveSpeed: 14
-  jumpHeight: 4
-  jumpDuration: 0.5
+  moveSpeed: 20
+  jumpHeight: 6
+  jumpDuration: 0.25
 --- !u!4 &1849153520 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5027722315225004115, guid: 1cb075e29695e304799c340cd819c96f, type: 3}
@@ -69794,8 +69794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   irisImage: {fileID: 1094969809}
-  closeDuration: 0.5
-  openDuration: 0.5
+  transitionDuration: 0.6
 --- !u!114 &1915711531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82265,14 +82264,14 @@ SceneRoots:
   - {fileID: 1133142869}
   - {fileID: 515005016}
   - {fileID: 101542543}
+  - {fileID: 959173951}
+  - {fileID: 1915711534}
   - {fileID: 1561805597}
   - {fileID: 1559371735089062178}
   - {fileID: 943451529}
   - {fileID: 132048003}
   - {fileID: 704018964}
-  - {fileID: 959173951}
   - {fileID: 1782637196}
   - {fileID: 560076764}
   - {fileID: 4933481787320870799}
   - {fileID: 2132246}
-  - {fileID: 1915711534}

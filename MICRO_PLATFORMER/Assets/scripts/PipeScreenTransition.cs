@@ -7,8 +7,7 @@ public class PipeScreenTransition : MonoBehaviour
     [SerializeField] Image irisImage;
 
     [Header("Timing")]
-    [SerializeField] float closeDuration = 0.5f;
-    [SerializeField] float openDuration = 0.6f;
+    [SerializeField] float transitionDuration = 0.6f;
 
     Material irisMaterial;
 
@@ -20,8 +19,6 @@ public class PipeScreenTransition : MonoBehaviour
         if (irisImage == null)
             return;
 
-        // Create an instance so we don't modify
-        // the original material asset.
         irisMaterial =
             new Material(irisImage.material);
 
@@ -34,45 +31,45 @@ public class PipeScreenTransition : MonoBehaviour
     public IEnumerator Close()
     {
         yield return StartCoroutine(
-            AnimateIris(
-                0f,
-                1f,
-                closeDuration
-            )
+            AnimateIris(0f, 1f)
         );
+
+        // Make absolutely sure the screen
+        // is completely closed.
+        SetIris(1f);
     }
 
     public IEnumerator Open()
     {
+        // Start completely closed.
+        SetIris(1f);
+
         yield return StartCoroutine(
-            AnimateIris(
-                1f,
-                0f,
-                openDuration
-            )
+            AnimateIris(1f, 0f)
         );
+
+        // Make absolutely sure the screen
+        // is completely open.
+        SetIris(0f);
     }
 
     IEnumerator AnimateIris(
         float start,
-        float end,
-        float duration
+        float end
     )
     {
-        if (irisMaterial == null)
-            yield break;
-
         float timer = 0f;
 
-        while (timer < duration)
+        while (timer < transitionDuration)
         {
             timer += Time.deltaTime;
 
             float t =
                 Mathf.Clamp01(
-                    timer / duration
+                    timer / transitionDuration
                 );
 
+            // Same curve in both directions.
             t = Mathf.SmoothStep(
                 0f,
                 1f,

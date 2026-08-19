@@ -95,16 +95,16 @@ public class HubIslandPipe : MonoBehaviour
             JumpIntoPipe(player)
         );
 
-        if (skyColorTransition != null)
-        {
-            skyColorTransition.SetDestinationSkyColor();
-        }
-
         if (screenTransition != null)
         {
             yield return StartCoroutine(
                 screenTransition.Close()
             );
+        }
+
+        if (skyColorTransition != null)
+        {
+            skyColorTransition.SetDestinationSkyColor();
         }
 
         MovePlayersToArrivalPoint(player);
