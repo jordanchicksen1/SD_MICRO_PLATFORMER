@@ -23,7 +23,7 @@ public class HubFollower : MonoBehaviour
 
     float nextDustTime;
     bool useLeftFoot = true;
-    
+
 
     HubPlayerAnimator anim;
 
@@ -71,7 +71,7 @@ public class HubFollower : MonoBehaviour
         }
 
         // Snap to ground (GroundLayer only)
-       
+
         Vector3 origin = pos + Vector3.up * snapFromAbove;
 
         if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, snapDownDistance, groundMask, QueryTriggerInteraction.Ignore))
@@ -101,12 +101,25 @@ public class HubFollower : MonoBehaviour
 
         if (anim != null)
         {
-            
+
             float speed01 = Mathf.Clamp01(moved / (moveSpeed * Time.fixedDeltaTime));
             anim.SetMoveBlend(speed01);
         }
 
     }
 
-    public void SetTarget(Transform t) => target = t;
+    public void SetTarget(Transform t)
+    {
+        target = t;
+    }
+
+    public void ResumeFollowing(Transform newTarget)
+    {
+        target = newTarget;
+
+        rb.isKinematic = true;
+        rb.useGravity = false;
+
+        enabled = true;
+    }
 }

@@ -105,15 +105,16 @@ public class HubIslandPipe : MonoBehaviour
 
         yield return new WaitForSeconds(0.25f);
 
-        // Turn the players back on at the destination.
+        // Bring the players back at the destination pipe.
         player.gameObject.SetActive(true);
         follower.gameObject.SetActive(true);
 
-        // Reset their movement state before the animation.
-        player.ResetMovementState();
-
-        // Tell the hub camera to follow the player on the new island.
-        RestoreHubCamera(player);
+        // Make sure the camera now follows the player at the destination.
+        if (hubCamera != null)
+        {
+            hubCamera.SetTarget(player.transform);
+            hubCamera.enabled = true;
+        }
 
         yield return new WaitForSeconds(0.2f);
 
@@ -124,13 +125,19 @@ public class HubIslandPipe : MonoBehaviour
             );
         }
 
-        // Jump out of the destination pipe.
+        // Players jump out of the destination pipe.
         yield return StartCoroutine(
             JumpOutOfPipe(player)
         );
 
-        // Restore normal physics and controls.
+        // Now give control back to the normal hub systems.
         RestorePlayerControl(player);
+        follower.ResumeFollowing(player.transform);
+
+        if (gateUI != null)
+        {
+            gateUI.FinishTransport();
+        }
 
         isTransporting = false;
     }
@@ -211,7 +218,9 @@ public class HubIslandPipe : MonoBehaviour
             followerEnd;
     }
 
-    void RestorePlayerControl(HubPlayerController3D player)
+    void RestorePlayerControl(
+    HubPlayerController3D player
+)
     {
         Rigidbody playerRb =
             player.GetComponent<Rigidbody>();
@@ -232,11 +241,6 @@ public class HubIslandPipe : MonoBehaviour
             followerRb.linearVelocity = Vector3.zero;
             followerRb.angularVelocity = Vector3.zero;
         }
-
-        player.ResetMovementState();
-
-        player.enabled = true;
-        follower.enabled = true;
     }
 
     void RestoreHubCamera(

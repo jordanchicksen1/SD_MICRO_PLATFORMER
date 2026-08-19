@@ -261,6 +261,25 @@ public class HubProgressionGateUI : MonoBehaviour
         isOpen = false;
     }
 
+    public void FinishTransport()
+    {
+        UnlockPlayer();
+
+        if (cameraFollowToDisable != null)
+        {
+            cameraFollowToDisable.enabled = true;
+
+            if (currentPlayer != null)
+            {
+                cameraFollowToDisable.SetTarget(
+                    currentPlayer.transform
+                );
+            }
+        }
+
+        isOpen = false;
+    }
+
     IEnumerator ReturnThenEnableFollow()
     {
         if (cameraFocus != null)
