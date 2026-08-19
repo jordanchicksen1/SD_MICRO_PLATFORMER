@@ -4,36 +4,37 @@ using UnityEngine.UI;
 
 public class PipeScreenTransition : MonoBehaviour
 {
-    [SerializeField] Image transitionImage;
+    [SerializeField] Image irisImage;
 
     [Header("Timing")]
     [SerializeField] float closeDuration = 0.5f;
-    [SerializeField] float holdDuration = 0.2f;
-    [SerializeField] float openDuration = 0.5f;
+    [SerializeField] float openDuration = 0.6f;
 
-    bool isTransitioning;
+    Material irisMaterial;
 
-    public bool IsTransitioning => isTransitioning;
+    static readonly int IrisProperty =
+        Shader.PropertyToID("_Iris");
 
     void Awake()
     {
-        if (transitionImage != null)
-        {
-            Color color = transitionImage.color;
-            color.a = 0f;
-            transitionImage.color = color;
-        }
+        if (irisImage == null)
+            return;
+
+        // Create an instance so we don't modify
+        // the original material asset.
+        irisMaterial =
+            new Material(irisImage.material);
+
+        irisImage.material =
+            irisMaterial;
+
+        SetIris(0f);
     }
 
     public IEnumerator Close()
     {
-        if (isTransitioning)
-            yield break;
-
-        isTransitioning = true;
-
         yield return StartCoroutine(
-            AnimateTransition(
+            AnimateIris(
                 0f,
                 1f,
                 closeDuration
@@ -44,23 +45,21 @@ public class PipeScreenTransition : MonoBehaviour
     public IEnumerator Open()
     {
         yield return StartCoroutine(
-            AnimateTransition(
+            AnimateIris(
                 1f,
                 0f,
                 openDuration
             )
         );
-
-        isTransitioning = false;
     }
 
-    IEnumerator AnimateTransition(
+    IEnumerator AnimateIris(
         float start,
         float end,
         float duration
     )
     {
-        if (transitionImage == null)
+        if (irisMaterial == null)
             yield break;
 
         float timer = 0f;
@@ -70,26 +69,39 @@ public class PipeScreenTransition : MonoBehaviour
             timer += Time.deltaTime;
 
             float t =
-                Mathf.Clamp01(timer / duration);
+                Mathf.Clamp01(
+                    timer / duration
+                );
 
-            t = Mathf.SmoothStep(0f, 1f, t);
+            t = Mathf.SmoothStep(
+                0f,
+                1f,
+                t
+            );
 
-            Color color =
-                transitionImage.color;
+            float value =
+                Mathf.Lerp(
+                    start,
+                    end,
+                    t
+                );
 
-            color.a =
-                Mathf.Lerp(start, end, t);
-
-            transitionImage.color = color;
+            SetIris(value);
 
             yield return null;
         }
 
-        Color finalColor =
-            transitionImage.color;
+        SetIris(end);
+    }
 
-        finalColor.a = end;
+    void SetIris(float value)
+    {
+        if (irisMaterial == null)
+            return;
 
-        transitionImage.color = finalColor;
+        irisMaterial.SetFloat(
+            IrisProperty,
+            value
+        );
     }
 }

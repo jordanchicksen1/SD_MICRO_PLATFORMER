@@ -24003,6 +24003,7 @@ GameObject:
   - component: {fileID: 696046152}
   - component: {fileID: 696046153}
   - component: {fileID: 696046154}
+  - component: {fileID: 696046155}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -24183,6 +24184,19 @@ MonoBehaviour:
     m_RotationOrder: 4
   useFovZoom: 0
   focusedFov: 35
+--- !u!114 &696046155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 696046148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb4b2733ac8b75f4fae58dda4000af44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destinationSkyColor: {r: 0.10980392, g: 0.5529412, b: 0.77254903, a: 1}
 --- !u!4 &696055009 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: da82452f7c027194cb32a9379d2276c0, type: 3}
@@ -38504,15 +38518,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Material: {fileID: 2100000, guid: 6714f52e41fc50a41a86dab8390f9819, type: 2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 992f50a9617d57542af11de31c6c70f1, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -69779,9 +69793,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b1c129091e2d6e43b58747f0d81a9ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transitionImage: {fileID: 1094969809}
+  irisImage: {fileID: 1094969809}
   closeDuration: 0.5
-  holdDuration: 0.2
   openDuration: 0.5
 --- !u!114 &1915711531
 MonoBehaviour:

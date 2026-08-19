@@ -17,6 +17,7 @@ public class HubIslandPipe : MonoBehaviour
 
     PipeScreenTransition screenTransition;
     HubCameraFollow hubCamera;
+    HubSkyColorTransition skyColorTransition;
 
     bool isTransporting;
 
@@ -30,8 +31,8 @@ public class HubIslandPipe : MonoBehaviour
         if (player == null)
             return;
 
-        screenTransition =
-    FindFirstObjectByType<PipeScreenTransition>();
+        screenTransition = FindFirstObjectByType<PipeScreenTransition>();
+        skyColorTransition =FindFirstObjectByType<HubSkyColorTransition>();
 
 
         follower = FindFirstObjectByType<HubFollower>();
@@ -94,6 +95,11 @@ public class HubIslandPipe : MonoBehaviour
             JumpIntoPipe(player)
         );
 
+        if (skyColorTransition != null)
+        {
+            skyColorTransition.SetDestinationSkyColor();
+        }
+
         if (screenTransition != null)
         {
             yield return StartCoroutine(
@@ -116,7 +122,7 @@ public class HubIslandPipe : MonoBehaviour
             hubCamera.enabled = true;
         }
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.4f);
 
         if (screenTransition != null)
         {
@@ -126,9 +132,7 @@ public class HubIslandPipe : MonoBehaviour
         }
 
         // Players jump out of the destination pipe.
-        yield return StartCoroutine(
-            JumpOutOfPipe(player)
-        );
+        yield return StartCoroutine(JumpOutOfPipe(player));
 
         // Now give control back to the normal hub systems.
         RestorePlayerControl(player);
