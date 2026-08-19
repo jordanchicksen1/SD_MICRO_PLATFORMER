@@ -89,4 +89,18 @@ public class CurrencyManager : MonoBehaviour
 
         return true;
     }
+
+    public bool SpendGems(int amount)
+    {
+        if (amount <= 0)
+            return true;
+
+        if (Gems < amount)
+            return false;
+
+        Gems -= amount;
+        OnGemsChanged?.Invoke(Gems);
+
+        return true;
+    }
 }

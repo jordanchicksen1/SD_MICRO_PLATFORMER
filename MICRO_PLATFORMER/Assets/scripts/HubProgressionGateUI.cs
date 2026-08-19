@@ -26,6 +26,9 @@ public class HubProgressionGateUI : MonoBehaviour
     [SerializeField] string gameplayMapName = "Gameplay";
     [SerializeField] string uiMapName = "UI";
 
+    [Header("Transport")]
+    [SerializeField] HubIslandPipe destinationPipe;
+
     Rigidbody lockedRb;
     HubPlayerController3D lockedController;
 
@@ -36,6 +39,8 @@ public class HubProgressionGateUI : MonoBehaviour
     Quaternion returnRot;
 
     bool isOpen;
+    HubPlayerController3D currentPlayer;
+    int currentGemCost;
 
     public bool IsOpen => isOpen;
 
@@ -58,20 +63,15 @@ public class HubProgressionGateUI : MonoBehaviour
             cancelButton.onClick.AddListener(Close);
     }
 
-    public void Open(
-     string title,
-     string description,
-     int cost,
-     Transform focusPoint,
-     HubPlayerController3D player
- )
+    public void Open(string title, string description, int cost, Transform focusPoint, HubPlayerController3D player)
     {
-
 
         if (isOpen)
             return;
 
         isOpen = true;
+        currentPlayer = player;
+        currentGemCost = cost;
 
         if (titleText != null)
             titleText.text = title;
@@ -205,7 +205,30 @@ public class HubProgressionGateUI : MonoBehaviour
 
     void OnUnlockPressed()
     {
-        Debug.Log("Unlock button pressed!");
+        if (!isOpen)
+            return;
+
+        if (CurrencyManager.Instance == null)
+            return;
+
+        bool spent =
+            CurrencyManager.Instance.SpendGems(currentGemCost);
+
+        if (!spent)
+        {
+            Debug.Log("Not enough gems to unlock this island.");
+            return;
+        }
+
+        if (HubProgressionManager.Instance != null)
+        {
+            HubProgressionManager.Instance.UnlockIsland2();
+        }
+
+        if (destinationPipe != null)
+        {
+            destinationPipe.StartTransport(currentPlayer);
+        }
     }
 
     public void Close()
@@ -223,6 +246,19 @@ public class HubProgressionGateUI : MonoBehaviour
         isOpen = false;
 
         StartCoroutine(ReturnThenEnableFollow());
+    }
+
+    public void CloseForTransport()
+    {
+        if (!isOpen)
+            return;
+
+        if (panelRoot != null)
+            panelRoot.SetActive(false);
+
+        PlayerInputUtil.ExitUIMode(gameplayMapName);
+
+        isOpen = false;
     }
 
     IEnumerator ReturnThenEnableFollow()

@@ -16,6 +16,9 @@ public class ProgressionGateTrigger : MonoBehaviour
     [Header("UI")]
     [SerializeField] HubProgressionGateUI ui;
 
+    [Header("Transport")]
+    [SerializeField] HubIslandPipe destinationPipe;
+
     void Awake()
     {
         if (ui == null)
@@ -36,6 +39,9 @@ public class ProgressionGateTrigger : MonoBehaviour
         if (player == null)
             return;
 
+        if (IsUnlocked())
+            return;
+
         ui.Open(
             gateTitle,
             gateDescription,
@@ -43,5 +49,24 @@ public class ProgressionGateTrigger : MonoBehaviour
             cameraFocusPoint,
             player
         );
+    }
+
+    public bool IsUnlocked()
+    {
+        if (HubProgressionManager.Instance == null)
+        {
+            Debug.LogWarning(
+                "[ProgressionGateTrigger] No HubProgressionManager found!"
+            );
+
+            return false;
+        }
+
+        Debug.Log(
+            $"[ProgressionGateTrigger] Island2Unlocked = " +
+            $"{HubProgressionManager.Instance.Island2Unlocked}"
+        );
+
+        return HubProgressionManager.Instance.Island2Unlocked;
     }
 }

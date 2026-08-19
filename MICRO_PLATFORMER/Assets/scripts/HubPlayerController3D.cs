@@ -164,6 +164,24 @@ public class HubPlayerController3D : MonoBehaviour
     {
         inputLockUntil = Time.time + duration;
     }
+
+    public void ResetMovementState()
+    {
+        moveInput = Vector2.zero;
+        jumpHeld = false;
+
+        isGroundPounding = false;
+        groundPoundQueued = false;
+        endGroundPoundQueued = false;
+
+        isDiving = false;
+        isLongJumping = false;
+        isKnockedBack = false;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
     bool IsGrounded()
     {
         if (groundMask == 0)
@@ -483,7 +501,7 @@ public class HubPlayerController3D : MonoBehaviour
 
     void PlayFootstep()
     {
-        Debug.Log($"FOOTSTEP from {gameObject.name} at {Time.time}");
+        //Debug.Log($"FOOTSTEP from {gameObject.name} at {Time.time}");
 
         AudioClip clip = useFirstClip ? footstepClipA : footstepClipB;
 
