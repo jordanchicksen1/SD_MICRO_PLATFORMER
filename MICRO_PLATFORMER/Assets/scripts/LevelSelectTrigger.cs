@@ -8,6 +8,7 @@ public class LevelSelectTrigger : MonoBehaviour
     [SerializeField] string levelId;               // NEW (must match gem pickups)
     [SerializeField] int totalGemsInLevel = 3;     // NEW
     [SerializeField] string levelTitle;
+    [SerializeField] int hubIslandID;
 
     [TextArea(2, 4)]
     [SerializeField] string levelDescription;
@@ -46,7 +47,8 @@ public class LevelSelectTrigger : MonoBehaviour
             player,
             playerRb,
             levelId,            
-            totalGemsInLevel    
+            totalGemsInLevel,
+            hubIslandID
         );
     }
 }

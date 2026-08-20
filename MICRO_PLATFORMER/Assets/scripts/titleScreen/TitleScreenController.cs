@@ -171,6 +171,18 @@ public class TitleSceneController : MonoBehaviour
         // Reset gem progression
         PersistentGemProgress.Instance?.ClearSave();
 
+        // Reset Hub progression
+        if (HubProgressionManager.Instance != null)
+        {
+            HubProgressionManager.Instance.ResetProgression();
+        }
+
+        // Reset Hub island location
+        if (HubIslandSaveManager.Instance != null)
+        {
+            HubIslandSaveManager.Instance.ResetIslandSave();
+        }
+
         // Reset cosmetic progression
         PlayerPrefs.DeleteKey("PurchasedHats");
         PlayerPrefs.DeleteKey("Player1Hat");
@@ -178,9 +190,11 @@ public class TitleSceneController : MonoBehaviour
 
         PlayerPrefs.Save();
 
-        Debug.Log("Cosmetic save data cleared");
+        Debug.Log("Save data cleared");
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(
+            SceneManager.GetActiveScene().name
+        );
     }
 
     IEnumerator PlayRoutine()

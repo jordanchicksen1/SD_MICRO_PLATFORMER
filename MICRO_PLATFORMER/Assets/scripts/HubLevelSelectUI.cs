@@ -35,6 +35,7 @@ public class HubLevelSelectUI : MonoBehaviour
     Quaternion returnRot;
 
     string pendingSceneName;
+    int pendingHubIslandID;
     Transform pendingFocusPoint;
 
     [Header("Text")]
@@ -74,7 +75,8 @@ public class HubLevelSelectUI : MonoBehaviour
 
         // NEW: finite-gems progress
         string levelId,
-        int totalGemsInLevel
+        int totalGemsInLevel,
+        int hubIslandID
     )
     {
         if (isOpen) return;
@@ -82,6 +84,7 @@ public class HubLevelSelectUI : MonoBehaviour
 
         pendingSceneName = sceneName;
         pendingFocusPoint = focusPoint;
+        pendingHubIslandID = hubIslandID;
 
         if (panelRoot) panelRoot.SetActive(true);
 
@@ -149,16 +152,34 @@ public class HubLevelSelectUI : MonoBehaviour
 
     IEnumerator PlayRoutine()
     {
-        if (panelRoot) panelRoot.SetActive(false);
+        if (panelRoot)
+            panelRoot.SetActive(false);
+
         isLoading = true;
 
-        if (playButton) playButton.interactable = false;
-        if (cancelButton) cancelButton.interactable = false;
+        if (playButton)
+            playButton.interactable = false;
+
+        if (cancelButton)
+            cancelButton.interactable = false;
+
+        // Remember which Hub island this level belongs to.
+        if (HubIslandSaveManager.Instance != null)
+        {
+            HubIslandSaveManager.Instance.SetCurrentIsland(
+                pendingHubIslandID
+            );
+        }
 
         if (fader != null)
-            yield return fader.FadeTo(1f, fadeOutDuration);
+            yield return fader.FadeTo(
+                1f,
+                fadeOutDuration
+            );
 
-        SceneManager.LoadScene(pendingSceneName);
+        SceneManager.LoadScene(
+            pendingSceneName
+        );
     }
 
     void OnCancelPressed()
