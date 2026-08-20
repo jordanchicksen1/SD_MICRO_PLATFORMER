@@ -9,11 +9,15 @@ public class HubIslandPipe : MonoBehaviour
     [Header("Destination")]
     [SerializeField] Transform arrivalPoint;
     [SerializeField] Transform exitPoint;
+    [SerializeField] Transform playerExitPoint;
+    [SerializeField] Transform followerExitPoint;
 
     [Header("Movement")]
     [SerializeField] float moveSpeed = 4f;
     [SerializeField] float jumpHeight = 2f;
     [SerializeField] float jumpDuration = 0.6f;
+    [SerializeField] float pipeEntryDepth = 1.2f;
+    [SerializeField] float pipeShrinkDuration = 0.25f;
 
     PipeScreenTransition screenTransition;
     HubCameraFollow hubCamera;
@@ -163,18 +167,17 @@ public class HubIslandPipe : MonoBehaviour
 )
     {
         Vector3 playerStart =
-            arrivalPoint.position;
+            exitPoint.position;
 
         Vector3 followerStart =
-            arrivalPoint.position
+            exitPoint.position
             - arrivalPoint.forward * 0.5f;
 
         Vector3 playerEnd =
-            exitPoint.position;
+            playerExitPoint.position;
 
         Vector3 followerEnd =
-            exitPoint.position
-            - arrivalPoint.forward * 0.5f;
+            followerExitPoint.position;
 
         float timer = 0f;
 
@@ -183,34 +186,32 @@ public class HubIslandPipe : MonoBehaviour
             timer += Time.deltaTime;
 
             float t =
-                Mathf.Clamp01(timer / jumpDuration);
-
-            float height =
-                Mathf.Sin(t * Mathf.PI)
-                * jumpHeight;
-
-            Vector3 playerPosition =
-                Vector3.Lerp(
-                    playerStart,
-                    playerEnd,
-                    t
+                Mathf.Clamp01(
+                    timer / jumpDuration
                 );
 
-            Vector3 followerPosition =
-                Vector3.Lerp(
-                    followerStart,
-                    followerEnd,
+            float smoothT =
+                Mathf.SmoothStep(
+                    0f,
+                    1f,
                     t
                 );
-
-            playerPosition.y += height;
-            followerPosition.y += height;
 
             player.transform.position =
-                playerPosition;
+                GetArcPosition(
+                    playerStart,
+                    playerEnd,
+                    jumpHeight,
+                    smoothT
+                );
 
             follower.transform.position =
-                followerPosition;
+                GetArcPosition(
+                    followerStart,
+                    followerEnd,
+                    jumpHeight,
+                    smoothT
+                );
 
             yield return null;
         }
@@ -315,8 +316,8 @@ public class HubIslandPipe : MonoBehaviour
     }
 
     IEnumerator JumpIntoPipe(
-        HubPlayerController3D player
-    )
+    HubPlayerController3D player
+)
     {
         Vector3 playerStart =
             player.transform.position;
@@ -338,34 +339,33 @@ public class HubIslandPipe : MonoBehaviour
             timer += Time.deltaTime;
 
             float t =
-                Mathf.Clamp01(timer / jumpDuration);
-
-            float height =
-                Mathf.Sin(t * Mathf.PI)
-                * jumpHeight;
-
-            Vector3 playerPosition =
-                Vector3.Lerp(
-                    playerStart,
-                    playerEnd,
-                    t
+                Mathf.Clamp01(
+                    timer / jumpDuration
                 );
 
-            Vector3 followerPosition =
-                Vector3.Lerp(
-                    followerStart,
-                    followerEnd,
+            // Smooth the movement along the arc.
+            float smoothT =
+                Mathf.SmoothStep(
+                    0f,
+                    1f,
                     t
                 );
-
-            playerPosition.y += height;
-            followerPosition.y += height;
 
             player.transform.position =
-                playerPosition;
+                GetArcPosition(
+                    playerStart,
+                    playerEnd,
+                    jumpHeight,
+                    smoothT
+                );
 
             follower.transform.position =
-                followerPosition;
+                GetArcPosition(
+                    followerStart,
+                    followerEnd,
+                    jumpHeight,
+                    smoothT
+                );
 
             yield return null;
         }
@@ -376,8 +376,28 @@ public class HubIslandPipe : MonoBehaviour
         follower.transform.position =
             followerEnd;
 
-        // Hide the characters once they have entered the pipe.
         player.gameObject.SetActive(false);
         follower.gameObject.SetActive(false);
+    }
+
+    Vector3 GetArcPosition(
+    Vector3 start,
+    Vector3 end,
+    float height,
+    float t
+)
+    {
+        Vector3 midpoint =
+            Vector3.Lerp(start, end, 0.5f);
+
+        Vector3 controlPoint =
+            midpoint + Vector3.up * height;
+
+        float oneMinusT = 1f - t;
+
+        return
+            oneMinusT * oneMinusT * start +
+            2f * oneMinusT * t * controlPoint +
+            t * t * end;
     }
 }

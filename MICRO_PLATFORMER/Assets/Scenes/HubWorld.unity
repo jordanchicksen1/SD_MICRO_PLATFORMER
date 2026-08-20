@@ -391,6 +391,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5027722315225004115, guid: 1cb075e29695e304799c340cd819c96f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 844696613}
+    - targetCorrespondingSourceObject: {fileID: 5027722315225004115, guid: 1cb075e29695e304799c340cd819c96f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 719192640}
+    - targetCorrespondingSourceObject: {fileID: 5027722315225004115, guid: 1cb075e29695e304799c340cd819c96f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 917380930}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5660424820756194025, guid: 1cb075e29695e304799c340cd819c96f, type: 3}
       insertIndex: -1
@@ -25562,6 +25568,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 718380869}
   m_CullTransparentMesh: 1
+--- !u!1 &719192639
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 719192640}
+  m_Layer: 6
+  m_Name: FollowerExitPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &719192640
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719192639}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.48, y: 0, z: -1.77}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1849153520}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &719988450
 GameObject:
   m_ObjectHideFlags: 0
@@ -32133,6 +32170,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da82452f7c027194cb32a9379d2276c0, type: 3}
+--- !u!1 &917380929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 917380930}
+  m_Layer: 6
+  m_Name: PlayerExitPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &917380930
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917380929}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.48, y: 0, z: 2.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1849153520}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &917666132
 GameObject:
   m_ObjectHideFlags: 0
@@ -67049,9 +67117,13 @@ MonoBehaviour:
   entryPoint: {fileID: 336297382}
   arrivalPoint: {fileID: 1192486956}
   exitPoint: {fileID: 844696613}
-  moveSpeed: 20
-  jumpHeight: 6
-  jumpDuration: 0.25
+  playerExitPoint: {fileID: 917380930}
+  followerExitPoint: {fileID: 719192640}
+  moveSpeed: 6
+  jumpHeight: 2
+  jumpDuration: 0.5
+  pipeEntryDepth: 1.2
+  pipeShrinkDuration: 0.25
 --- !u!4 &1849153520 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5027722315225004115, guid: 1cb075e29695e304799c340cd819c96f, type: 3}
