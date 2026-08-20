@@ -84,7 +84,7 @@ Shader "UI/Simple Iris"
                 return output;
             }
 
-            half4 frag(Varyings input) : SV_Target
+half4 frag(Varyings input) : SV_Target
 {
     float2 centre = float2(0.5, 0.5);
 
@@ -100,14 +100,6 @@ Shader "UI/Simple Iris"
     float distanceFromCentre =
         length(offset);
 
-    /*
-     * Iris = 0:
-     * Completely transparent.
-     *
-     * Iris = 1:
-     * Fully closed.
-     */
-
     float radius =
         _HoleRadius * (1.0 - _Iris);
 
@@ -121,12 +113,20 @@ Shader "UI/Simple Iris"
             distanceFromCentre
         );
 
-    float transitionAlpha =
-        _Iris * holeMask;
+    // Keep the black overlay fully opaque
+    // while the iris is opening/closing.
+    float alpha = holeMask;
+
+    // Only remove the overlay once the
+    // circle has reached its maximum size.
+    if (_Iris <= 0.001)
+    {
+        alpha = 0.0;
+    }
 
     return half4(
         _Color.rgb,
-        transitionAlpha *
+        alpha *
         _Color.a *
         input.color.a
     );
