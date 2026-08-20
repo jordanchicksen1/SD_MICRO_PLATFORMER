@@ -119,14 +119,34 @@ public class HubIslandPipe : MonoBehaviour
         player.gameObject.SetActive(true);
         follower.gameObject.SetActive(true);
 
-        // Make sure the camera now follows the player at the destination.
+        // Make sure they are at the destination pipe.
+        player.transform.position =
+            exitPoint.position;
+
+        follower.transform.position =
+            exitPoint.position
+            - arrivalPoint.forward * 0.5f;
+
+        // Make sure their scale is restored.
+        player.transform.localScale =
+            Vector3.one;
+
+        follower.transform.localScale =
+            Vector3.one;
+
+        // Make sure the camera follows the destination player.
         if (hubCamera != null)
         {
             hubCamera.SetTarget(player.transform);
             hubCamera.enabled = true;
         }
 
-        yield return new WaitForSeconds(0.4f);
+        // Give the camera a brief moment to catch the player.
+        yield return new WaitForSeconds(0.2f);
+
+        // Start the exit jump and iris opening together.
+        Coroutine jumpOutRoutine =
+            StartCoroutine(JumpOutOfPipe(player));
 
         if (screenTransition != null)
         {
@@ -135,8 +155,8 @@ public class HubIslandPipe : MonoBehaviour
             );
         }
 
-        // Players jump out of the destination pipe.
-        yield return StartCoroutine(JumpOutOfPipe(player));
+        // Make absolutely sure the jump has finished.
+        yield return jumpOutRoutine;
 
         // Now give control back to the normal hub systems.
         RestorePlayerControl(player);
@@ -325,14 +345,28 @@ public class HubIslandPipe : MonoBehaviour
         Vector3 followerStart =
             follower.transform.position;
 
-        Vector3 playerEnd =
+        // The top/rim of the pipe.
+        Vector3 playerPipeTop =
             entryPoint.position;
 
-        Vector3 followerEnd =
+        Vector3 followerPipeTop =
             entryPoint.position
             - entryPoint.forward * 0.5f;
 
+        // Move down into the vertical pipe.
+        Vector3 playerPipeBottom =
+            playerPipeTop
+            + Vector3.down * pipeEntryDepth;
+
+        Vector3 followerPipeBottom =
+            followerPipeTop
+            + Vector3.down * pipeEntryDepth;
+
         float timer = 0f;
+
+        // ------------------------------------------------
+        // PART 1: Jump into the pipe
+        // ------------------------------------------------
 
         while (timer < jumpDuration)
         {
@@ -343,7 +377,6 @@ public class HubIslandPipe : MonoBehaviour
                     timer / jumpDuration
                 );
 
-            // Smooth the movement along the arc.
             float smoothT =
                 Mathf.SmoothStep(
                     0f,
@@ -354,7 +387,7 @@ public class HubIslandPipe : MonoBehaviour
             player.transform.position =
                 GetArcPosition(
                     playerStart,
-                    playerEnd,
+                    playerPipeTop,
                     jumpHeight,
                     smoothT
                 );
@@ -362,7 +395,7 @@ public class HubIslandPipe : MonoBehaviour
             follower.transform.position =
                 GetArcPosition(
                     followerStart,
-                    followerEnd,
+                    followerPipeTop,
                     jumpHeight,
                     smoothT
                 );
@@ -370,11 +403,89 @@ public class HubIslandPipe : MonoBehaviour
             yield return null;
         }
 
+        // Make sure they're exactly at the pipe rim.
         player.transform.position =
-            playerEnd;
+            playerPipeTop;
 
         follower.transform.position =
-            followerEnd;
+            followerPipeTop;
+
+        // ------------------------------------------------
+        // PART 2: Sink into the pipe + shrink
+        // ------------------------------------------------
+
+        Vector3 playerStartScale =
+            player.transform.localScale;
+
+        Vector3 followerStartScale =
+            follower.transform.localScale;
+
+        Vector3 playerEndScale =
+            Vector3.zero;
+
+        Vector3 followerEndScale =
+            Vector3.zero;
+
+        timer = 0f;
+
+        while (timer < pipeShrinkDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t =
+                Mathf.Clamp01(
+                    timer / pipeShrinkDuration
+                );
+
+            float smoothT =
+                Mathf.SmoothStep(
+                    0f,
+                    1f,
+                    t
+                );
+
+            player.transform.position =
+                Vector3.Lerp(
+                    playerPipeTop,
+                    playerPipeBottom,
+                    smoothT
+                );
+
+            follower.transform.position =
+                Vector3.Lerp(
+                    followerPipeTop,
+                    followerPipeBottom,
+                    smoothT
+                );
+
+            player.transform.localScale =
+                Vector3.Lerp(
+                    playerStartScale,
+                    playerEndScale,
+                    smoothT
+                );
+
+            follower.transform.localScale =
+                Vector3.Lerp(
+                    followerStartScale,
+                    followerEndScale,
+                    smoothT
+                );
+
+            yield return null;
+        }
+
+        player.transform.position =
+            playerPipeBottom;
+
+        follower.transform.position =
+            followerPipeBottom;
+
+        player.transform.localScale =
+            playerEndScale;
+
+        follower.transform.localScale =
+            followerEndScale;
 
         player.gameObject.SetActive(false);
         follower.gameObject.SetActive(false);
