@@ -19,38 +19,60 @@ public class PipeScreenTransition : MonoBehaviour
         if (irisImage == null)
             return;
 
+        // Create our own runtime copy of the material.
         irisMaterial =
             new Material(irisImage.material);
 
         irisImage.material =
             irisMaterial;
 
+        // Start completely open.
         SetIris(0f);
+
+        // The Iris does not need to render during
+        // normal gameplay.
+        irisImage.enabled = false;
     }
 
     public IEnumerator Close()
     {
+        if (irisImage == null || irisMaterial == null)
+            yield break;
+
+        // Make the Image visible BEFORE starting
+        // the animation.
+        irisImage.enabled = true;
+
+        // Start completely open.
+        SetIris(0f);
+
         yield return StartCoroutine(
             AnimateIris(0f, 1f)
         );
 
-        // Make absolutely sure the screen
-        // is completely closed.
+        // Make absolutely sure the screen is closed.
         SetIris(1f);
     }
 
     public IEnumerator Open()
     {
+        if (irisImage == null || irisMaterial == null)
+            yield break;
+
         // Start completely closed.
+        irisImage.enabled = true;
         SetIris(1f);
 
         yield return StartCoroutine(
             AnimateIris(1f, 0f)
         );
 
-        // Make absolutely sure the screen
-        // is completely open.
+        // Make absolutely sure the screen is fully open.
         SetIris(0f);
+
+        // Stop rendering the full-screen image
+        // during normal gameplay.
+        irisImage.enabled = false;
     }
 
     IEnumerator AnimateIris(
