@@ -24,6 +24,8 @@ public class HubIslandPipe : MonoBehaviour
     HubSkyColorTransition skyColorTransition;
 
     bool isTransporting;
+    Vector3 playerOriginalScale;
+    Vector3 followerOriginalScale;
 
     HubFollower follower;
 
@@ -67,6 +69,12 @@ public class HubIslandPipe : MonoBehaviour
 
         // Disable follower control.
         follower.enabled = false;
+
+        playerOriginalScale =
+    player.transform.localScale;
+
+        followerOriginalScale =
+            follower.transform.localScale;
 
         // Stop rigidbody movement.
         Rigidbody playerRb =
@@ -129,10 +137,10 @@ public class HubIslandPipe : MonoBehaviour
 
         // Make sure their scale is restored.
         player.transform.localScale =
-            Vector3.one;
+     playerOriginalScale;
 
         follower.transform.localScale =
-            Vector3.one;
+            followerOriginalScale;
 
         // Make sure the camera follows the destination player.
         if (hubCamera != null)
@@ -418,6 +426,12 @@ public class HubIslandPipe : MonoBehaviour
             player.transform.localScale;
 
         Vector3 followerStartScale =
+            follower.transform.localScale;
+
+        Vector3 playerOriginalScale =
+    player.transform.localScale;
+
+        Vector3 followerOriginalScale =
             follower.transform.localScale;
 
         Vector3 playerEndScale =
