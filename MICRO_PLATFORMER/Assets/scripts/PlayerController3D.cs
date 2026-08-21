@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -50,8 +51,8 @@ public class PlayerController3D : MonoBehaviour
     [SerializeField] float diveDuration = 0.35f;
     [SerializeField] float diveControlLockTime = 0.2f;
     bool hasUsedAirDive;
-
     bool isDiving;
+    [SerializeField] AudioSource diveSFX;
 
     [Header("Long Jump")]
     [SerializeField] float longJumpForwardForce = 14f;
@@ -188,6 +189,11 @@ public class PlayerController3D : MonoBehaviour
 
     float nextStepTime;
     bool useFirstClip = true;
+
+    [Header("Landing Dust")]
+    [SerializeField] float landingDustRadius = 0.35f;
+    [SerializeField] float landingDustHeight = 0.05f;
+    [SerializeField] int landingDustCount = 6;
 
     bool isBoomerangAiming;
     public Vector2 MoveInput => moveInput;
@@ -531,6 +537,8 @@ public class PlayerController3D : MonoBehaviour
         {
             if (!wasGrounded)
             {
+                SpawnLandingDust();
+
                 playerCombat.ResetUppercutLift();
 
                 if (isGroundSlamLeaping)
@@ -676,6 +684,37 @@ public class PlayerController3D : MonoBehaviour
         footstepSource.pitch = Random.Range(0.80f, 1.05f);
     }
 
+    void SpawnLandingDust()
+    {
+        if (DustPool.Instance == null)
+            return;
+
+        for (int i = 0; i < landingDustCount; i++)
+        {
+            float angle =
+                (360f / landingDustCount) * i;
+
+            float radians =
+                angle * Mathf.Deg2Rad;
+
+            Vector3 offset =
+                new Vector3(
+                    Mathf.Cos(radians),
+                    0f,
+                    Mathf.Sin(radians)
+                ) * landingDustRadius;
+
+            Vector3 spawnPosition =
+                transform.position
+                + offset
+                + Vector3.up * landingDustHeight;
+
+            DustPool.Instance.Spawn(
+                spawnPosition
+            );
+        }
+    }
+
 
     void RotateTowardsMovement()
     {
@@ -793,6 +832,9 @@ public class PlayerController3D : MonoBehaviour
 
         if (!context.performed)
             return;
+        
+        
+
 
         if (IsGrounded(out RaycastHit hit))
         {
@@ -800,6 +842,10 @@ public class PlayerController3D : MonoBehaviour
             if (!isLongJumping && !isGroundPounding && !isKnockedBack && !isBoomerangAiming)
             {
                 StartCoroutine(LongJumpCoroutine());
+                if (diveSFX != null)
+                {
+                    diveSFX.Play();
+                }
             }
         }
         else
@@ -811,7 +857,11 @@ public class PlayerController3D : MonoBehaviour
                 {
                     hasUsedAirDive = true;
                     StartCoroutine(DiveCoroutine());
+                if (diveSFX != null)
+                {
+                    diveSFX.Play();
                 }
+            }
             
         }
     }

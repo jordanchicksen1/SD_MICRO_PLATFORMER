@@ -5,9 +5,13 @@ using UnityEngine.UI;
 public class PipeScreenTransition : MonoBehaviour
 {
     [SerializeField] Image irisImage;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip irisCloseSFX;
+    [SerializeField] AudioClip irisOpenSFX;
 
     [Header("Timing")]
     [SerializeField] float transitionDuration = 0.6f;
+    [SerializeField] float closedPauseDuration = 0.5f;
 
     Material irisMaterial;
 
@@ -46,6 +50,13 @@ public class PipeScreenTransition : MonoBehaviour
         // Start completely open.
         SetIris(0f);
 
+        // Play the iris closing sound.
+        if (audioSource != null &&
+            irisCloseSFX != null)
+        {
+            audioSource.PlayOneShot(irisCloseSFX);
+        }
+
         yield return StartCoroutine(
             AnimateIris(0f, 1f)
         );
@@ -62,6 +73,19 @@ public class PipeScreenTransition : MonoBehaviour
         // Start completely closed.
         irisImage.enabled = true;
         SetIris(1f);
+
+        // Hold the screen fully closed before
+        // starting the opening animation.
+        yield return new WaitForSeconds(
+            closedPauseDuration
+        );
+
+        // Play the iris opening sound.
+        if (audioSource != null &&
+            irisOpenSFX != null)
+        {
+            audioSource.PlayOneShot(irisOpenSFX);
+        }
 
         yield return StartCoroutine(
             AnimateIris(1f, 0f)
