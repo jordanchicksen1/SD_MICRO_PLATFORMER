@@ -43,7 +43,7 @@ public class HubProgressionManager : MonoBehaviour
 
     private void Start()
     {
-     // ResetProgression();
+      ResetProgression();
     }
 
     void LoadProgression()
@@ -82,5 +82,31 @@ public class HubProgressionManager : MonoBehaviour
         Debug.Log(
             "[HubProgressionManager] Progression reset."
         );
+    }
+
+    public bool IsIslandUnlocked(int islandID)
+    {
+        // The starting island is always unlocked.
+        if (islandID == 0)
+            return true;
+
+        // Island 1 is the island currently controlled
+        // by our existing Island2Unlocked save.
+        if (islandID == 1)
+            return island2Unlocked;
+
+        // Any other island is not implemented yet.
+        return false;
+    }
+
+    public void UnlockIsland(int islandID)
+    {
+        if (islandID == 0)
+            return;
+
+        if (islandID == 1)
+        {
+            UnlockIsland2();
+        }
     }
 }

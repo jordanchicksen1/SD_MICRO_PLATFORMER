@@ -15,22 +15,26 @@ public class ProgressionGateTrigger : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] HubProgressionGateUI ui;
+    [SerializeField] HubPipeTravelUI travelUI;
 
     [Header("Transport")]
     [SerializeField] HubIslandPipe destinationPipe;
+    [SerializeField] int destinationIslandID;
+
+    bool ignoreTrigger;
 
     void Awake()
     {
         if (ui == null)
             ui = FindFirstObjectByType<HubProgressionGateUI>();
+
+        if (travelUI == null)
+            travelUI = FindFirstObjectByType<HubPipeTravelUI>();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (ui == null)
-            return;
-
-        if (ui.IsOpen)
+        if (ignoreTrigger)
             return;
 
         HubPlayerController3D player =
@@ -39,7 +43,27 @@ public class ProgressionGateTrigger : MonoBehaviour
         if (player == null)
             return;
 
+        // If this destination is already unlocked,
+        // use normal fast travel.
         if (IsUnlocked())
+        {
+            if (travelUI != null)
+            {
+                travelUI.Open(
+                    destinationPipe,
+                    player
+                );
+            }
+
+            return;
+        }
+
+        // Destination is still locked.
+        // Use the normal progression UI.
+        if (ui == null)
+            return;
+
+        if (ui.IsOpen)
             return;
 
         ui.Open(
@@ -62,11 +86,35 @@ public class ProgressionGateTrigger : MonoBehaviour
             return false;
         }
 
-        Debug.Log(
-            $"[ProgressionGateTrigger] Island2Unlocked = " +
-            $"{HubProgressionManager.Instance.Island2Unlocked}"
+        return HubProgressionManager.Instance.IsIslandUnlocked(
+            destinationIslandID
         );
-
-        return HubProgressionManager.Instance.Island2Unlocked;
     }
+
+    void OpenTravelUI(
+    HubPlayerController3D player
+)
+    {
+        if (travelUI == null)
+            return;
+
+        if (destinationPipe == null)
+            return;
+
+        travelUI.Open(
+            destinationPipe,
+            player
+        );
+    }
+
+    public void DisableTriggerTemporarily()
+    {
+        ignoreTrigger = true;
+    }
+
+    public void EnableTrigger()
+    {
+        ignoreTrigger = false;
+    }
+
 }

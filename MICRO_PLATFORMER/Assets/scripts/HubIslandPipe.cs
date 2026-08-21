@@ -11,6 +11,14 @@ public class HubIslandPipe : MonoBehaviour
     [SerializeField] Transform exitPoint;
     [SerializeField] Transform playerExitPoint;
     [SerializeField] Transform followerExitPoint;
+    
+    [Header("Travel Destination")]
+    [SerializeField] int destinationIslandID;
+    [SerializeField] string destinationIslandName;
+    public int DestinationIslandID =>
+    destinationIslandID;
+    public string DestinationIslandName =>
+        destinationIslandName;
 
     [Header("Movement")]
     [SerializeField] float moveSpeed = 4f;
@@ -22,6 +30,8 @@ public class HubIslandPipe : MonoBehaviour
     PipeScreenTransition screenTransition;
     HubCameraFollow hubCamera;
     HubSkyColorTransition skyColorTransition;
+    [SerializeField] ProgressionGateTrigger progressionGateTrigger;
+
 
     bool isTransporting;
     Vector3 playerOriginalScale;
@@ -176,6 +186,11 @@ public class HubIslandPipe : MonoBehaviour
         }
 
         isTransporting = false;
+
+        if (progressionGateTrigger != null)
+        {
+            progressionGateTrigger.EnableTrigger();
+        }
     }
 
     void MovePlayersToArrivalPoint(
@@ -524,5 +539,178 @@ public class HubIslandPipe : MonoBehaviour
             oneMinusT * oneMinusT * start +
             2f * oneMinusT * t * controlPoint +
             t * t * end;
+    }
+
+    public void StartFastTravel(HubPlayerController3D player)
+    {
+        if (isTransporting)
+            return;
+
+        if (player == null)
+            return;
+
+        // Make absolutely sure the travel UI is closed.
+        HubPipeTravelUI travelUI =
+            FindFirstObjectByType<HubPipeTravelUI>();
+
+        if (travelUI != null)
+        {
+            travelUI.Close();
+        }
+
+        screenTransition =
+            FindFirstObjectByType<PipeScreenTransition>();
+
+        skyColorTransition =
+            FindFirstObjectByType<HubSkyColorTransition>();
+
+        follower =
+            FindFirstObjectByType<HubFollower>();
+
+        hubCamera =
+            FindFirstObjectByType<HubCameraFollow>();
+
+        if (follower == null)
+            return;
+
+        isTransporting = true;
+
+        StartCoroutine(
+            FastTravelSequence(player)
+        );
+    }
+
+    IEnumerator FastTravelSequence(
+    HubPlayerController3D player
+)
+    {
+        // Disable player control.
+        player.enabled = false;
+
+        // Disable follower control.
+        follower.enabled = false;
+
+        // Stop player physics.
+        Rigidbody playerRb =
+            player.GetComponent<Rigidbody>();
+
+        if (playerRb != null)
+        {
+            playerRb.linearVelocity = Vector3.zero;
+            playerRb.angularVelocity = Vector3.zero;
+            playerRb.isKinematic = true;
+        }
+
+        // Stop follower physics.
+        Rigidbody followerRb =
+            follower.GetComponent<Rigidbody>();
+
+        if (followerRb != null)
+        {
+            followerRb.linearVelocity = Vector3.zero;
+            followerRb.angularVelocity = Vector3.zero;
+            followerRb.isKinematic = true;
+        }
+
+        // Close the iris.
+        if (screenTransition != null)
+        {
+            yield return StartCoroutine(
+                screenTransition.Close()
+            );
+        }
+
+        // Change the sky while the screen is black.
+        if (skyColorTransition != null)
+        {
+            skyColorTransition.SetDestinationSkyColor();
+        }
+
+        // Find the spawn point for the destination island.
+        HubIslandSpawnPoint[] spawnPoints =
+            FindObjectsByType<HubIslandSpawnPoint>(
+                FindObjectsSortMode.None
+            );
+
+        HubIslandSpawnPoint destinationSpawn = null;
+
+        foreach (
+            HubIslandSpawnPoint spawnPoint
+            in spawnPoints
+        )
+        {
+            if (
+                spawnPoint.IslandID ==
+                destinationIslandID
+            )
+            {
+                destinationSpawn = spawnPoint;
+                break;
+            }
+        }
+
+        if (destinationSpawn == null)
+        {
+            Debug.LogError(
+                $"[HubIslandPipe] No HubIslandSpawnPoint found for island {destinationIslandID}."
+            );
+
+            RestorePlayerControl(player);
+
+            follower.ResumeFollowing(
+                player.transform
+            );
+
+            isTransporting = false;
+
+            yield break;
+        }
+
+        // Teleport the player.
+        player.transform.position =
+            destinationSpawn.transform.position;
+
+        // Put the follower beside the player.
+        follower.transform.position =
+            destinationSpawn.transform.position
+            - destinationSpawn.transform.right * 1.5f;
+
+        // Save the new island.
+        if (HubIslandSaveManager.Instance != null)
+        {
+            HubIslandSaveManager.Instance.SetCurrentIsland(
+                destinationIslandID
+            );
+        }
+
+        // Make sure the camera follows the player.
+        if (hubCamera != null)
+        {
+            hubCamera.SetTarget(
+                player.transform
+            );
+
+            hubCamera.enabled = true;
+        }
+
+        // Give the camera one frame to update.
+        yield return null;
+
+        // Open the iris.
+        if (screenTransition != null)
+        {
+            yield return StartCoroutine(
+                screenTransition.Open()
+            );
+        }
+
+        // Restore normal movement.
+        RestorePlayerControl(player);
+
+        follower.ResumeFollowing(
+            player.transform
+        );
+
+        isTransporting = false;
     }
 }

@@ -28,6 +28,8 @@ public class HubProgressionGateUI : MonoBehaviour
 
     [Header("Transport")]
     [SerializeField] HubIslandPipe destinationPipe;
+    [SerializeField] ProgressionGateTrigger progressionGateTrigger;
+
 
     Rigidbody lockedRb;
     HubPlayerController3D lockedController;
@@ -223,6 +225,11 @@ public class HubProgressionGateUI : MonoBehaviour
         if (HubProgressionManager.Instance != null)
         {
             HubProgressionManager.Instance.UnlockIsland2();
+        }
+
+        if (progressionGateTrigger != null)
+        {
+            progressionGateTrigger.DisableTriggerTemporarily();
         }
 
         if (destinationPipe != null)

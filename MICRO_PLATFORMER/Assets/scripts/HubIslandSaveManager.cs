@@ -41,7 +41,7 @@ public class HubIslandSaveManager : MonoBehaviour
 
     private void Start()
     {
-    //ResetIslandSave();
+    ResetIslandSave();
     }
 
     public void SetCurrentIsland(int islandID)
