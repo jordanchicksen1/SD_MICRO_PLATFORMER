@@ -16,11 +16,21 @@ public class HubPipeTravelUI : MonoBehaviour
     [SerializeField] string uiMapName = "UI";
 
     bool isOpen;
-
+    bool travelInProgress;
     HubIslandPipe currentPipe;
     HubPlayerController3D currentPlayer;
 
     public bool IsOpen => isOpen;
+
+    public void BeginTravel()
+    {
+        travelInProgress = true;
+    }
+
+    public void EndTravel()
+    {
+        travelInProgress = false;
+    }
 
     void Awake()
     {
@@ -39,6 +49,9 @@ public class HubPipeTravelUI : MonoBehaviour
         HubPlayerController3D player
     )
     {
+        if (travelInProgress)
+            return;
+
         if (isOpen)
             return;
 
@@ -83,17 +96,36 @@ public class HubPipeTravelUI : MonoBehaviour
         if (!isOpen)
             return;
 
-        if (currentPipe == null)
-            return;
-
-        if (currentPlayer == null)
-            return;
-
         HubIslandPipe pipe = currentPipe;
         HubPlayerController3D player = currentPlayer;
 
-        Close();
+        // Hide the travel UI immediately.
+        if (panelRoot != null)
+        {
+            panelRoot.SetActive(false);
+        }
 
+        // Return control to the gameplay input map.
+        PlayerInputUtil.ExitUIMode(
+            gameplayMapName
+        );
+
+        // Mark the UI as closed.
+        isOpen = false;
+
+        // Clear the stored references.
+        currentPipe = null;
+        currentPlayer = null;
+
+        // If the travel information is missing,
+        // stop here. The UI has still been closed.
+        if (pipe == null)
+            return;
+
+        if (player == null)
+            return;
+
+        // Start the actual fast travel.
         pipe.StartFastTravel(player);
     }
 

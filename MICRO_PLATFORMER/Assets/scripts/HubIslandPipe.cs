@@ -31,6 +31,9 @@ public class HubIslandPipe : MonoBehaviour
     HubCameraFollow hubCamera;
     HubSkyColorTransition skyColorTransition;
     [SerializeField] ProgressionGateTrigger progressionGateTrigger;
+    HubPipeTravelUI travelUI;
+
+
 
 
     bool isTransporting;
@@ -275,6 +278,9 @@ public class HubIslandPipe : MonoBehaviour
 
         Rigidbody followerRb =
             follower.GetComponent<Rigidbody>();
+
+        // Re-enable the player's movement controller.
+        player.enabled = true;
 
         if (playerRb != null)
         {
@@ -550,12 +556,13 @@ public class HubIslandPipe : MonoBehaviour
             return;
 
         // Make absolutely sure the travel UI is closed.
-        HubPipeTravelUI travelUI =
-            FindFirstObjectByType<HubPipeTravelUI>();
+        travelUI =
+     FindFirstObjectByType<HubPipeTravelUI>();
 
         if (travelUI != null)
         {
             travelUI.Close();
+            travelUI.BeginTravel();
         }
 
         screenTransition =
@@ -710,6 +717,11 @@ public class HubIslandPipe : MonoBehaviour
         follower.ResumeFollowing(
             player.transform
         );
+
+        if (travelUI != null)
+        {
+            travelUI.EndTravel();
+        }
 
         isTransporting = false;
     }
