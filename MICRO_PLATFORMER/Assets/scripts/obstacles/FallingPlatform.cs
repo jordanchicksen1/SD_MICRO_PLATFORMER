@@ -8,6 +8,10 @@ public class FallingPlatform : MonoBehaviour
     [SerializeField] float fallDelay = 0.5f;
     [SerializeField] float respawnDelay = 2.5f;
 
+    [Header("Respawn Scale")]
+    [SerializeField] float respawnScaleDuration = 0.2f;
+    [SerializeField] float respawnStartScale = 0.05f;
+
     [Header("Fall")]
     [SerializeField] bool disableColliderWhileFallen = true;
 
@@ -26,6 +30,7 @@ public class FallingPlatform : MonoBehaviour
 
     Vector3 startPos;
     Quaternion startRot;
+    Vector3 startScale;
 
     bool triggered;
 
@@ -36,6 +41,7 @@ public class FallingPlatform : MonoBehaviour
 
         startPos = transform.position;
         startRot = transform.rotation;
+        startScale = transform.localScale;
 
         rb.isKinematic = true;
         rb.useGravity = true;
@@ -80,12 +86,67 @@ public class FallingPlatform : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
 
         rb.isKinematic = true;
-        transform.SetPositionAndRotation(startPos, startRot);
+
+        // Put the platform back at its original position and rotation.
+        transform.SetPositionAndRotation(
+            startPos,
+            startRot
+        );
+
+        // Start tiny, then grow back to normal size.
+        transform.localScale =
+            startScale * respawnStartScale;
 
         if (disableColliderWhileFallen && col != null)
             col.enabled = true;
 
+        // Grow the platform back in.
+        yield return StartCoroutine(
+            RespawnScaleRoutine()
+        );
+
         triggered = false;
+    }
+
+    IEnumerator RespawnScaleRoutine()
+    {
+        float timer = 0f;
+
+        Vector3 startScaleValue =
+            startScale * respawnStartScale;
+
+        while (timer < respawnScaleDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t =
+                respawnScaleDuration <= 0f
+                    ? 1f
+                    : Mathf.Clamp01(
+                        timer / respawnScaleDuration
+                    );
+
+            // Smooth the growth so it doesn't feel mechanical.
+            t = Mathf.SmoothStep(
+                0f,
+                1f,
+                t
+            );
+
+            transform.localScale =
+                Vector3.Lerp(
+                    startScaleValue,
+                    startScale,
+                    t
+                );
+
+            yield return null;
+        }
+
+        // Make absolutely sure the platform ends
+        // at its exact original scale.
+        transform.localScale =
+            startScale;
     }
 
     IEnumerator ShakeRoutine(float duration)

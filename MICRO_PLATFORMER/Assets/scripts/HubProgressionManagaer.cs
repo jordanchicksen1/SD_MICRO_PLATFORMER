@@ -43,7 +43,7 @@ public class HubProgressionManager : MonoBehaviour
 
     private void Start()
     {
-      ResetProgression();
+     // ResetProgression();
     }
 
     void LoadProgression()
