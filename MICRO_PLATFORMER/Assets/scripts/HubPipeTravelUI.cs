@@ -139,9 +139,10 @@ public class HubPipeTravelUI : MonoBehaviour
         // Start fast travel using the destination
         // supplied by the interaction that opened the UI.
         pipe.StartFastTravel(
-            player,
-            destinationIslandID
-        );
+    player,
+    destinationIslandID,
+    currentDestinationIslandName
+);
     }
 
     void CancelTravel()

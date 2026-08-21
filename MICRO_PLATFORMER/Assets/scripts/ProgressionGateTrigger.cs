@@ -21,7 +21,7 @@ public class ProgressionGateTrigger : MonoBehaviour
     [SerializeField] HubIslandPipe destinationPipe;
     [SerializeField] int destinationIslandID;
     [SerializeField] string destinationIslandName;
-
+    public string DestinationIslandName => destinationIslandName;
     bool ignoreTrigger;
 
     void Awake()

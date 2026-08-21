@@ -32,7 +32,7 @@ public class HubIslandPipe : MonoBehaviour
     HubSkyColorTransition skyColorTransition;
     [SerializeField] ProgressionGateTrigger progressionGateTrigger;
     HubPipeTravelUI travelUI;
-
+    IslandTitleUI islandTitleUI;
 
 
 
@@ -51,8 +51,8 @@ public class HubIslandPipe : MonoBehaviour
             return;
 
         screenTransition = FindFirstObjectByType<PipeScreenTransition>();
-        skyColorTransition =FindFirstObjectByType<HubSkyColorTransition>();
-
+        skyColorTransition = FindFirstObjectByType<HubSkyColorTransition>();
+        islandTitleUI = FindFirstObjectByType<IslandTitleUI>();
 
         follower = FindFirstObjectByType<HubFollower>();
 
@@ -188,6 +188,16 @@ public class HubIslandPipe : MonoBehaviour
             gateUI.FinishTransport();
         }
 
+        // Show the island title after arriving.
+        if (islandTitleUI != null &&
+            progressionGateTrigger != null)
+        {
+            islandTitleUI.ShowTitle(
+                progressionGateTrigger.DestinationIslandName
+            );
+        }
+
+
         isTransporting = false;
 
         if (progressionGateTrigger != null)
@@ -297,24 +307,22 @@ public class HubIslandPipe : MonoBehaviour
         }
     }
 
-    void RestoreHubCamera(
+
+    IEnumerator MoveCharactersToPipe(
     HubPlayerController3D player
 )
     {
-        if (hubCamera == null)
-            return;
-
-        hubCamera.SetTarget(player.transform);
-    }
-
-    IEnumerator MoveCharactersToPipe(
-        HubPlayerController3D player
-    )
-    {
-        Vector3 playerTarget = entryPoint.position;
+        Vector3 playerTarget =
+            entryPoint.position;
 
         Vector3 followerTarget =
             entryPoint.position
+            - entryPoint.forward * 0.8f;
+
+        // Snap the follower next to the player
+        // before the pipe-entry movement begins.
+        follower.transform.position =
+            player.transform.position
             - entryPoint.forward * 0.8f;
 
         while (true)
@@ -322,23 +330,20 @@ public class HubIslandPipe : MonoBehaviour
             Vector3 playerPosition =
                 player.transform.position;
 
-            Vector3 followerPosition =
-                follower.transform.position;
-
             playerPosition = Vector3.MoveTowards(
                 playerPosition,
                 playerTarget,
                 moveSpeed * Time.deltaTime
             );
 
-            followerPosition = Vector3.MoveTowards(
-                followerPosition,
-                followerTarget,
-                moveSpeed * Time.deltaTime
-            );
-
             player.transform.position =
                 playerPosition;
+
+            // Keep the follower beside the player
+            // while the player walks to the pipe.
+            Vector3 followerPosition =
+                player.transform.position
+                - entryPoint.forward * 0.8f;
 
             follower.transform.position =
                 followerPosition;
@@ -347,10 +352,6 @@ public class HubIslandPipe : MonoBehaviour
                 Vector3.Distance(
                     playerPosition,
                     playerTarget
-                ) < 0.05f &&
-                Vector3.Distance(
-                    followerPosition,
-                    followerTarget
                 ) < 0.05f
             )
             {
@@ -360,8 +361,13 @@ public class HubIslandPipe : MonoBehaviour
             yield return null;
         }
 
-        player.transform.position = playerTarget;
-        follower.transform.position = followerTarget;
+        // Make sure both characters are exactly
+        // where the pipe-entry animation expects them.
+        player.transform.position =
+            playerTarget;
+
+        follower.transform.position =
+            followerTarget;
     }
 
     IEnumerator JumpIntoPipe(
@@ -548,9 +554,10 @@ public class HubIslandPipe : MonoBehaviour
     }
 
     public void StartFastTravel(
-     HubPlayerController3D player,
-     int travelDestinationIslandID
- )
+    HubPlayerController3D player,
+    int travelDestinationIslandID,
+    string travelDestinationIslandName
+)
     {
         if (isTransporting)
             return;
@@ -559,8 +566,7 @@ public class HubIslandPipe : MonoBehaviour
             return;
 
         // Make absolutely sure the travel UI is closed.
-        travelUI =
-            FindFirstObjectByType<HubPipeTravelUI>();
+        travelUI = FindFirstObjectByType<HubPipeTravelUI>();
 
         if (travelUI != null)
         {
@@ -568,17 +574,15 @@ public class HubIslandPipe : MonoBehaviour
             travelUI.BeginTravel();
         }
 
-        screenTransition =
-            FindFirstObjectByType<PipeScreenTransition>();
+        screenTransition = FindFirstObjectByType<PipeScreenTransition>();
 
-        skyColorTransition =
-            FindFirstObjectByType<HubSkyColorTransition>();
+        skyColorTransition = FindFirstObjectByType<HubSkyColorTransition>();
 
-        follower =
-            FindFirstObjectByType<HubFollower>();
+        follower = FindFirstObjectByType<HubFollower>();
 
-        hubCamera =
-            FindFirstObjectByType<HubCameraFollow>();
+        hubCamera = FindFirstObjectByType<HubCameraFollow>();
+
+        islandTitleUI = FindFirstObjectByType<IslandTitleUI>();
 
         if (follower == null)
             return;
@@ -588,14 +592,15 @@ public class HubIslandPipe : MonoBehaviour
         StartCoroutine(
             FastTravelSequence(
                 player,
-                travelDestinationIslandID
+                travelDestinationIslandID, travelDestinationIslandName
             )
         );
     }
 
     IEnumerator FastTravelSequence(
     HubPlayerController3D player,
-    int travelDestinationIslandID
+    int travelDestinationIslandID,
+    string travelDestinationIslandName
 )
     {
         // Disable player control.
@@ -735,6 +740,14 @@ public class HubIslandPipe : MonoBehaviour
         if (travelUI != null)
         {
             travelUI.EndTravel();
+        }
+
+        // Show the island title after arriving.
+        if (islandTitleUI != null)
+        {
+            islandTitleUI.ShowTitle(
+                travelDestinationIslandName
+            );
         }
 
         isTransporting = false;
