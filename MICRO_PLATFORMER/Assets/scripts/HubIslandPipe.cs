@@ -129,9 +129,7 @@ public class HubIslandPipe : MonoBehaviour
 
         if (skyColorTransition != null)
         {
-            skyColorTransition.SetDestinationSkyColor(
-                destinationIslandID
-            );
+            skyColorTransition.SetDestinationSkyColor(1);
         }
 
         MovePlayersToArrivalPoint(player);
@@ -549,7 +547,10 @@ public class HubIslandPipe : MonoBehaviour
             t * t * end;
     }
 
-    public void StartFastTravel(HubPlayerController3D player)
+    public void StartFastTravel(
+     HubPlayerController3D player,
+     int travelDestinationIslandID
+ )
     {
         if (isTransporting)
             return;
@@ -559,7 +560,7 @@ public class HubIslandPipe : MonoBehaviour
 
         // Make absolutely sure the travel UI is closed.
         travelUI =
-     FindFirstObjectByType<HubPipeTravelUI>();
+            FindFirstObjectByType<HubPipeTravelUI>();
 
         if (travelUI != null)
         {
@@ -585,12 +586,16 @@ public class HubIslandPipe : MonoBehaviour
         isTransporting = true;
 
         StartCoroutine(
-            FastTravelSequence(player)
+            FastTravelSequence(
+                player,
+                travelDestinationIslandID
+            )
         );
     }
 
     IEnumerator FastTravelSequence(
-    HubPlayerController3D player
+    HubPlayerController3D player,
+    int travelDestinationIslandID
 )
     {
         // Disable player control.
@@ -631,11 +636,16 @@ public class HubIslandPipe : MonoBehaviour
 
         // Change the sky while the screen is black.
         if (skyColorTransition != null)
-        {
-            skyColorTransition.SetDestinationSkyColor(
-                destinationIslandID
-            );
-        }
+{
+    Debug.Log(
+        $"[FastTravel] Changing sky to island " +
+        $"{travelDestinationIslandID}"
+    );
+
+    skyColorTransition.SetDestinationSkyColor(
+        travelDestinationIslandID
+    );
+}
 
         // Find the spawn point for the destination island.
         HubIslandSpawnPoint[] spawnPoints =
@@ -651,9 +661,9 @@ public class HubIslandPipe : MonoBehaviour
         )
         {
             if (
-                spawnPoint.IslandID ==
-                destinationIslandID
-            )
+    spawnPoint.IslandID ==
+    travelDestinationIslandID
+)
             {
                 destinationSpawn = spawnPoint;
                 break;
@@ -690,8 +700,8 @@ public class HubIslandPipe : MonoBehaviour
         if (HubIslandSaveManager.Instance != null)
         {
             HubIslandSaveManager.Instance.SetCurrentIsland(
-                destinationIslandID
-            );
+    travelDestinationIslandID
+);
         }
 
         // Make sure the camera follows the player.

@@ -20,6 +20,7 @@ public class ProgressionGateTrigger : MonoBehaviour
     [Header("Transport")]
     [SerializeField] HubIslandPipe destinationPipe;
     [SerializeField] int destinationIslandID;
+    [SerializeField] string destinationIslandName;
 
     bool ignoreTrigger;
 
@@ -51,6 +52,8 @@ public class ProgressionGateTrigger : MonoBehaviour
             {
                 travelUI.Open(
                     destinationPipe,
+                    destinationIslandID,
+                    destinationIslandName,
                     player
                 );
             }
@@ -103,6 +106,8 @@ public class ProgressionGateTrigger : MonoBehaviour
 
         travelUI.Open(
             destinationPipe,
+            destinationIslandID,
+            destinationIslandName,
             player
         );
     }

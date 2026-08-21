@@ -28,7 +28,12 @@ public class HubIslandPipeTrigger : MonoBehaviour
         if (ui == null)
             return;
 
-        ui.Open(pipe, player);
+        ui.Open(
+    pipe,
+    pipe.DestinationIslandID,
+    pipe.DestinationIslandName,
+    player
+);
     }
 
     void OnTriggerExit(Collider other)

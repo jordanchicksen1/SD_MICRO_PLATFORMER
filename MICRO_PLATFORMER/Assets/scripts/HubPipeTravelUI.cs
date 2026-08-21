@@ -19,6 +19,8 @@ public class HubPipeTravelUI : MonoBehaviour
     bool travelInProgress;
     HubIslandPipe currentPipe;
     HubPlayerController3D currentPlayer;
+    int currentDestinationIslandID;
+    string currentDestinationIslandName;
 
     public bool IsOpen => isOpen;
 
@@ -45,9 +47,11 @@ public class HubPipeTravelUI : MonoBehaviour
     }
 
     public void Open(
-        HubIslandPipe pipe,
-        HubPlayerController3D player
-    )
+     HubIslandPipe pipe,
+     int destinationIslandID,
+     string destinationIslandName,
+     HubPlayerController3D player
+ )
     {
         if (travelInProgress)
             return;
@@ -64,13 +68,19 @@ public class HubPipeTravelUI : MonoBehaviour
         currentPipe = pipe;
         currentPlayer = player;
 
+        currentDestinationIslandID =
+            destinationIslandID;
+
+        currentDestinationIslandName =
+            destinationIslandName;
+
         isOpen = true;
 
         if (destinationText != null)
         {
             destinationText.text =
                 $"Do you want to travel to " +
-                $"{pipe.DestinationIslandName} Island?";
+                $"{currentDestinationIslandName}?";
         }
 
         if (panelRoot != null)
@@ -99,13 +109,16 @@ public class HubPipeTravelUI : MonoBehaviour
         HubIslandPipe pipe = currentPipe;
         HubPlayerController3D player = currentPlayer;
 
+        int destinationIslandID =
+            currentDestinationIslandID;
+
         // Hide the travel UI immediately.
         if (panelRoot != null)
         {
             panelRoot.SetActive(false);
         }
 
-        // Return control to the gameplay input map.
+        // Return control to gameplay.
         PlayerInputUtil.ExitUIMode(
             gameplayMapName
         );
@@ -113,20 +126,22 @@ public class HubPipeTravelUI : MonoBehaviour
         // Mark the UI as closed.
         isOpen = false;
 
-        // Clear the stored references.
+        // Clear the stored UI references.
         currentPipe = null;
         currentPlayer = null;
 
-        // If the travel information is missing,
-        // stop here. The UI has still been closed.
         if (pipe == null)
             return;
 
         if (player == null)
             return;
 
-        // Start the actual fast travel.
-        pipe.StartFastTravel(player);
+        // Start fast travel using the destination
+        // supplied by the interaction that opened the UI.
+        pipe.StartFastTravel(
+            player,
+            destinationIslandID
+        );
     }
 
     void CancelTravel()
