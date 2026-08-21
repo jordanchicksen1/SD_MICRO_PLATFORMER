@@ -85,5 +85,15 @@ public class HubSpawner : MonoBehaviour
 
         if (cam != null)
             cam.SetTarget(p1.transform);
+
+        HubSkyColorTransition sky =
+    FindFirstObjectByType<HubSkyColorTransition>();
+
+        if (sky != null)
+        {
+            sky.SetCurrentIslandSkyColor(
+                currentIsland
+            );
+        }
     }
 }

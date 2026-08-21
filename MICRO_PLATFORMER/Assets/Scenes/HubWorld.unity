@@ -24437,7 +24437,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb4b2733ac8b75f4fae58dda4000af44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destinationSkyColor: {r: 0.10980392, g: 0.5529412, b: 0.77254903, a: 1}
+  island0SkyColor: {r: 0, g: 0.29803923, b: 0.7647059, a: 1}
+  island1SkyColor: {r: 0.10980392, g: 0.5529412, b: 0.77254903, a: 1}
 --- !u!4 &696055009 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: da82452f7c027194cb32a9379d2276c0, type: 3}
@@ -68355,7 +68356,7 @@ MonoBehaviour:
   playerExitPoint: {fileID: 917380930}
   followerExitPoint: {fileID: 719192640}
   destinationIslandID: 0
-  destinationIslandName: Verdant Island
+  destinationIslandName: The First Island
   moveSpeed: 6
   jumpHeight: 2
   jumpDuration: 0.5

@@ -129,7 +129,9 @@ public class HubIslandPipe : MonoBehaviour
 
         if (skyColorTransition != null)
         {
-            skyColorTransition.SetDestinationSkyColor();
+            skyColorTransition.SetDestinationSkyColor(
+                destinationIslandID
+            );
         }
 
         MovePlayersToArrivalPoint(player);
@@ -630,7 +632,9 @@ public class HubIslandPipe : MonoBehaviour
         // Change the sky while the screen is black.
         if (skyColorTransition != null)
         {
-            skyColorTransition.SetDestinationSkyColor();
+            skyColorTransition.SetDestinationSkyColor(
+                destinationIslandID
+            );
         }
 
         // Find the spawn point for the destination island.
