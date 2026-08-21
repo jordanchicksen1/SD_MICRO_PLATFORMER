@@ -46,6 +46,23 @@ public class CameraRotationWarning : MonoBehaviour
         warningRoutine = StartCoroutine(WarningRoutine());
     }
 
+    public void Hide()
+    {
+        if (warningRoutine != null)
+        {
+            StopCoroutine(warningRoutine);
+            warningRoutine = null;
+        }
+
+        rectTransform.anchoredPosition =
+            originalPosition;
+
+        rectTransform.localScale =
+            Vector3.zero;
+
+        SetAlpha(0f);
+    }
+
     IEnumerator WarningRoutine()
     {
         rectTransform.anchoredPosition = originalPosition;

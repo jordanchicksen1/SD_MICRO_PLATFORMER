@@ -165,20 +165,6 @@ public class CoopCameraController : MonoBehaviour
         return null;
     }
 
-    float GetPlayerDistance()
-    {
-        Transform player1 = GetPlayerTarget(0);
-        Transform player2 = GetPlayerTarget(1);
-
-        if (player1 == null || player2 == null)
-            return 0f;
-
-        return Vector3.Distance(
-            player1.position,
-            player2.position
-        );
-    }
-
 
 
     void UpdateSplitScreenState()
@@ -464,8 +450,21 @@ public class CoopCameraController : MonoBehaviour
 
         isSplitScreen = false;
 
+        // Hide any right-stick warnings when
+        // the shared camera becomes active.
+        if (player1RotationWarning != null)
+        {
+            player1RotationWarning.Hide();
+        }
+
+        if (player2RotationWarning != null)
+        {
+            player2RotationWarning.Hide();
+        }
+
         if (cam != null)
             cam.enabled = true;
+
     }
 
     public bool IsCameraTransitioning()
